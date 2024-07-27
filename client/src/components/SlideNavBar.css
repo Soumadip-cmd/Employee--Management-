@@ -1,0 +1,173 @@
+/* SlideNavBar.css */
+
+::after,
+::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.NavBody {
+    text-decoration: none;
+}
+.wrapper {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+}
+
+/* .main {
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    background-color: #e5e6eb;
+} */
+
+#sidebar {
+    width: 70px;
+    min-width: 70px;
+    transition: all .25s ease-in-out;
+    height: auto;
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    top: 50px;
+    bottom: 0;
+    
+    background-color: #0e2238;
+    /* overflow: scroll; */
+}
+
+  
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
+
+.toggle-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
+
+.toggle-btn i {
+    font-size: 1.5rem;
+    color: #FFF;
+}
+
+.sidebar-logo {
+    margin: auto 0;
+}
+
+.sidebar-logo a {
+    color: #FFF;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+#sidebar:not(.expand) .sidebar-logo,
+#sidebar:not(.expand) a.sidebar-link span {
+    display: none;
+}
+/* Add this CSS rule to initially hide the main navigation */
+.main-navigation {
+    display: none;
+  }
+  
+  /* Add this CSS rule to show the main navigation when the sidebar is expanded */
+  .visible {
+    display: block;
+  }
+  
+.sidebar-nav {
+    padding: 1rem 0;
+    flex: 1 1 auto;
+}
+
+a.sidebar-link {
+    padding: .995rem 1.625rem;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    margin-right: .75rem;
+}
+
+a.sidebar-link:hover {
+    background-color: rgba(255, 255, 255, .075);
+    border-left: 3px solid #3b7ddd;
+}
+
+.sidebar-item {
+    position: relative;
+    list-style: none;
+}
+
+#sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    background-color: #0e2238;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+
+#sidebar:not(.expand) .sidebar-item:hover .has-dropdown+.sidebar-dropdown {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+
+.backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.151);
+    z-index: 998;
+}
+
+.backdrop.show {
+    display: block;
+}
+.form-control::placeholder {
+    color: #ffffff; /* Change this to your desired color */
+    opacity: 1; /* Ensures the color is fully applied */
+  }
+  .sidebar-nav .sidebar-item + .sidebar-item {
+    border-top: 1px solid #586682b0; /* Separator line */
+    
+    
+  }
+  

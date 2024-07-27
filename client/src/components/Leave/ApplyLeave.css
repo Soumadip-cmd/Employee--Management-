@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+@media screen and (max-width: 765px) {
+    .extra-special {
+      padding: 1.5rem; /* Adjust height for smaller screens */
+    }
+  }
+  
+  /* Media query for medium screens */
+  @media screen and (min-width: 766px)  {
+    .extra-special {
+      padding: 3rem; /* Adjust height for medium screens */
+    }
+  }
+  
+  /* Media query for larger screens */
+  @media screen and (min-width: 820px) {
+    .extra-special {
+      padding: 100px; /* Adjust height for larger screens */
+    }
+  }
+  @media screen and (min-width: 1300px) {
+    .extra-special {
+      padding: 200px; /* Adjust height for larger screens */
+    }
+  }
+@media screen and (max-width: 765px) {
+    .extra-special3 {
+      padding: 1rem; /* Adjust height for smaller screens */
+    }
+  }
+  
+  /* Media query for medium screens */
+  @media screen and (min-width: 766px)  {
+    .extra-special3 {
+      padding: 3rem; /* Adjust height for medium screens */
+    }
+  }
+  
+  /* Media query for larger screens */
+  @media screen and (min-width: 820px) {
+    .extra-special3 {
+      padding: 100px; /* Adjust height for larger screens */
+    }
+  }
+  @media screen and (min-width: 1300px) {
+    .extra-special3 {
+      padding: 200px; /* Adjust height for larger screens */
+    }
+  }
+.tablestyle{
+    border:1px solid rgba(0, 0, 0, 0.758);
+    font-family: 'Poppins', sans-serif;
+}
+

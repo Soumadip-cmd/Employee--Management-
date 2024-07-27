@@ -1,0 +1,25 @@
+.card{
+    border-radius:0%;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+  }
+  .card-footer{
+    display: flex;
+      justify-content: center;
+      text-decoration: none;
+      font-weight: 800;
+  }
+  .card-body{
+    color: white;
+    /* background-color: none; */
+    border-radius: 5px;
+  }
+
+  .card-responsive{
+    width: auto;
+  }
+  @media (min-width: 1279px) {
+    .card {
+      width: 17rem; /* Adjust this value as needed */
+    }
+  }

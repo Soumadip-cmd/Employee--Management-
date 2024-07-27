@@ -1,0 +1,24 @@
+@media screen and (max-width: 765px) {
+    .extra-special2 {
+      padding: 1rem; /* Adjust height for smaller screens */
+    }
+  }
+  
+  /* Media query for medium screens */
+  @media screen and (min-width: 766px) and (max-width: 1019px) {
+    .extra-special2 {
+      padding: 1.5rem; /* Adjust height for medium screens */
+    }
+  }
+  
+  /* Media query for larger screens */
+  @media screen and (min-width: 1020px) {
+    .extra-special2 {
+      padding: 81px; /* Adjust height for larger screens */
+    }
+  }
+  @media screen and (min-width: 1300px) {
+    .extra-special2 {
+      padding: 200px; /* Adjust height for larger screens */
+    }
+  }
