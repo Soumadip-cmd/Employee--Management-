@@ -14,7 +14,7 @@ const Profile = () => {
         className=" d-flex justify-content-center align-items-center flex-column "
         style={{ height: "100vh" }}
       >
-        <div className="form-container mt-5">
+        <div className="form-container p-3 p-md-4 mt-5">
           <div className=" bg-light p-lg-4 p-2 rounded shadow-sm">
             <h2 className="h4 mb-3">Profile</h2>
             <p className="text-muted">You can update the details:</p>
