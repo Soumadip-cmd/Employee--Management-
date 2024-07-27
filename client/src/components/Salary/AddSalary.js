@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Select, { components } from "react-select";
 import { NavLink } from "react-router-dom";
 
 export default function AddSalary() {
-
+  const [isFocused, setIsFocused] = useState(false);
 
   function calculate() {
     let n1 = parseInt(document.getElementById("num1").value);
@@ -11,6 +11,7 @@ export default function AddSalary() {
     let sum = n1 + n2;
     document.getElementById("total").value = sum;
   }
+
   const options = [
     { value: "1", label: "Soumadip Stark" },
     { value: "2", label: "Ram Swal" },
@@ -20,6 +21,14 @@ export default function AddSalary() {
 
   const handleChange = (selectedOption) => {
     console.log(selectedOption);
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
   };
 
   // Custom styles
@@ -43,10 +52,19 @@ export default function AddSalary() {
       overflow: "hidden",
       textOverflow: "ellipsis",
     }),
+    clearIndicator: (base) => ({
+      ...base,
+      display: isFocused ? 'block' : 'none',
+    }),
   };
 
-  // Custom DropdownIndicator (removing the default arrow)
+  // Custom DropdownIndicator (always hidden)
   const DropdownIndicator = () => null;
+
+  // Custom ClearIndicator (conditionally shown on focus)
+  const ClearIndicator = (props) => {
+    return isFocused ? <components.ClearIndicator {...props} /> : null;
+  };
 
   return (
     <>
@@ -129,10 +147,10 @@ export default function AddSalary() {
               <table className="table table-bordered bg-white rounded-lg table-striped tablestyle">
                 <thead className="tablestyle">
                   <tr>
-                    <th className=" px-4 py-2 text-start">Staff</th>
-                    <th className=" px-4 py-2 text-start">Basic Salary($)</th>
-                    <th className=" px-4 py-2 text-start">Allowance($)</th>
-                    <th className=" px-4 py-2 text-start">Total($)</th>
+                    <th className="px-4 py-2 text-start">Staff</th>
+                    <th className="px-4 py-2 text-start">Basic Salary($)</th>
+                    <th className="px-4 py-2 text-start">Allowance($)</th>
+                    <th className="px-4 py-2 text-start">Total($)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -146,7 +164,9 @@ export default function AddSalary() {
                         menuPortalTarget={document.body}
                         styles={customStyles}
                         menuPosition="fixed"
-                        components={{ DropdownIndicator }}
+                        components={{ DropdownIndicator, ClearIndicator }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
                       />
                     </td>
                     <td className="p-1 px-2 tablestyle">
