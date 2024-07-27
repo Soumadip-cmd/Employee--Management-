@@ -1,29 +1,57 @@
-import React, { useEffect } from "react";
-
+import React from "react";
+import Select, { components } from "react-select";
 import { NavLink } from "react-router-dom";
 
 export default function AddSalary() {
-  let boxstyle = {
-    background: "white",
-    padding: "21px",
-    borderTop: "5px solid #004dffe8",
-    borderRadius: "5px",
-  };
+
+
   function calculate() {
     let n1 = parseInt(document.getElementById("num1").value);
     let n2 = parseInt(document.getElementById("num2").value);
     let sum = n1 + n2;
-    //  console.log(sum
     document.getElementById("total").value = sum;
   }
+  const options = [
+    { value: "1", label: "Soumadip Stark" },
+    { value: "2", label: "Ram Swal" },
+    { value: "3", label: "Sam Well" },
+    { value: "4", label: "Jon Snow" },
+  ];
+
+  const handleChange = (selectedOption) => {
+    console.log(selectedOption);
+  };
+
+  // Custom styles
+  const customStyles = {
+    container: (provided) => ({
+      ...provided,
+      width: "100%",
+    }),
+    control: (provided) => ({
+      ...provided,
+      borderColor: "#ced4da",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#ced4da",
+      },
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    option: (provided) => ({
+      ...provided,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    }),
+  };
+
+  // Custom DropdownIndicator (removing the default arrow)
+  const DropdownIndicator = () => null;
 
   return (
     <>
-      {/* <div class="alert alert-success m-3" role="alert"  >
-        A simple success alert—check it out!
-      </div> */}
       <nav
-        className="navbar navbar-expand-lg "
+        className="navbar navbar-expand-lg"
         style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
       >
         <div className="container mt-5">
@@ -38,14 +66,13 @@ export default function AddSalary() {
           >
             Salary
           </NavLink>
-
-          <div className=" mt-2 pt-2">
+          <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
                   <NavLink
                     to="/"
-                    className=" text-dark fw-semibold text-decoration-none"
+                    className="text-dark fw-semibold text-decoration-none"
                   >
                     Home
                   </NavLink>
@@ -59,7 +86,7 @@ export default function AddSalary() {
                 <li className="breadcrumb-item">
                   <NavLink
                     to="/manageSalary"
-                    className=" text-dark fw-semibold text-decoration-none"
+                    className="text-dark fw-semibold text-decoration-none"
                   >
                     ManageSalary
                   </NavLink>
@@ -69,11 +96,11 @@ export default function AddSalary() {
           </div>
         </div>
       </nav>
-      <div className="bg-muted pt-2   extra-special2 min-h-screen d-flex justify-content-center align-items-center">
+      <div className="bg-muted pt-2 extra-special2 min-h-screen d-flex justify-content-center align-items-center">
         <div className="bg-card p-6 w-100 max-w-4xl">
           <h1 className="text-2xl font-bold text-foreground mb-4">Salary</h1>
           <div
-            className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1  "
+            className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1"
             style={{ borderTop: "5px solid #004dffe8" }}
           >
             <h2 className="text-xl font-semibold text-foreground mb-4">
@@ -88,12 +115,12 @@ export default function AddSalary() {
               </label>
 
               <select className="form-control" style={{ border: "1px solid" }}>
-                <option disabled selected default Value={"--Department Name--"}>
+                <option disabled selected defaultValue={"--Department Name--"}>
                   --Department Name--
                 </option>
-                <option>Backend developement</option>
+                <option>Backend development</option>
                 <option>Designing</option>
-                <option>Front-end developement</option>
+                <option>Front-end development</option>
                 <option>Marketing</option>
                 <option>Finance</option>
               </select>
@@ -110,30 +137,41 @@ export default function AddSalary() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className=" p-1 px-2 tablestyle">Soumadip santra</td>
-                    <td className=" p-1 px-2 tablestyle">
+                    <td className="p-1 px-2 tablestyle">
+                      <Select
+                        options={options}
+                        onChange={handleChange}
+                        placeholder="Select an option..."
+                        isClearable
+                        menuPortalTarget={document.body}
+                        styles={customStyles}
+                        menuPosition="fixed"
+                        components={{ DropdownIndicator }}
+                      />
+                    </td>
+                    <td className="p-1 px-2 tablestyle">
                       <input
                         type="number"
                         id="num1"
-                        className=" rounded-2 w-100 px-2 "
+                        className="rounded-2 w-100 px-2"
                         style={{ border: "1px solid black" }}
                         onChange={calculate}
                       />
                     </td>
-                    <td className=" p-1 px-2 tablestyle">
+                    <td className="p-1 px-2 tablestyle">
                       <input
                         type="number"
                         id="num2"
-                        className=" rounded-2 w-100 px-2 "
+                        className="rounded-2 w-100 px-2"
                         style={{ border: "1px solid black" }}
                         onChange={calculate}
                       />
                     </td>
-                    <td className=" p-1 px-2 tablestyle">
+                    <td className="p-1 px-2 tablestyle">
                       <input
                         type="number"
                         id="total"
-                        className=" rounded-2  w-100 px-2"
+                        className="rounded-2 w-100 px-2"
                         style={{ border: "1px solid black" }}
                         readOnly
                       />
@@ -149,7 +187,7 @@ export default function AddSalary() {
             </div>
           </div>
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 }
