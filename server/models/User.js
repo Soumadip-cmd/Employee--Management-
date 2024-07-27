@@ -4,14 +4,11 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  Fname: {
+  name: {
     type: String,
     required: true,
   },
-  Lname: {
-    type: String,
-    required: true,
-  },
+  
   email: {
     type: String,
     required: true,
@@ -24,6 +21,16 @@ const userSchema = new Schema({
   adminId: {
     type: String,
     required: true,
+  },
+  avatar:{
+    public_id:{
+      type:String,
+      required:true
+    },
+    url:{
+      type:String,
+      required:true
+    }
   },
   Date: {
     type: Date,

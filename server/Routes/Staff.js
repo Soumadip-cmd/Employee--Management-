@@ -3,7 +3,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const FetchUser = require("../middleware/FetchUser");
 const Staff = require("../models/StaffSchema");
-const cloudinary = require("../cloudnary");
+const cloudinary = require("../Cloudnary");
 
 const router = express.Router();
 
