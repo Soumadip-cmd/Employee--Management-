@@ -51,9 +51,9 @@ const Profile = () => {
                   type="text"
                   className="form-control"
                   id="floatingInput"
-                  placeholder="name@example.com"
+                  placeholder="Soumadip Santra"
                 />
-                <label for="floatingInput">Full Nsame</label>
+                <label for="floatingInput">Full Name</label>
               </div>
               
               <div className="form-floating">
