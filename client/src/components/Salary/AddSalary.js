@@ -12,6 +12,10 @@ export default function AddSalary() {
     document.getElementById("total").value = sum;
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   const options = [
     { value: "1", label: "Soumadip Stark" },
     { value: "2", label: "Ram Swal" },
@@ -54,7 +58,7 @@ export default function AddSalary() {
     }),
     clearIndicator: (base) => ({
       ...base,
-      display: isFocused ? 'block' : 'none',
+      display: isFocused ? "block" : "none",
     }),
   };
 
@@ -121,90 +125,104 @@ export default function AddSalary() {
             className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1"
             style={{ borderTop: "5px solid #004dffe8" }}
           >
-            <h2 className="text-xl font-semibold text-foreground mb-4">
-              Add Salary
-            </h2>
-            <div className="mb-4">
-              <label
-                htmlFor="department"
-                className="form-label text-muted-foreground mb-2"
-              >
-                <b>Department Name</b>
-              </label>
+            <form action="" onSubmit={handleSubmit}>
+              <h2 className="text-xl font-semibold text-foreground mb-4">
+                Add Salary
+              </h2>
+              <div className="mb-4">
+                <label
+                  htmlFor="department"
+                  className="form-label text-muted-foreground mb-2"
+                >
+                  <b>Department Name</b>
+                </label>
 
-              <select className="form-control" style={{ border: "1px solid" }}>
-                <option disabled selected defaultValue={"--Department Name--"}>
-                  --Department Name--
-                </option>
-                <option>Backend development</option>
-                <option>Designing</option>
-                <option>Front-end development</option>
-                <option>Marketing</option>
-                <option>Finance</option>
-              </select>
-            </div>
-            <div className="table-responsive">
-              <table className="table table-bordered bg-white rounded-lg table-striped tablestyle">
-                <thead className="tablestyle">
-                  <tr>
-                    <th className="px-4 py-2 text-start">Staff</th>
-                    <th className="px-4 py-2 text-start">Basic Salary($)</th>
-                    <th className="px-4 py-2 text-start">Allowance($)</th>
-                    <th className="px-4 py-2 text-start">Total($)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="p-1 px-2 tablestyle">
-                      <Select
-                        options={options}
-                        onChange={handleChange}
-                        placeholder="Select an option..."
-                        isClearable
-                        menuPortalTarget={document.body}
-                        styles={customStyles}
-                        menuPosition="fixed"
-                        components={{ DropdownIndicator, ClearIndicator }}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                      />
-                    </td>
-                    <td className="p-1 px-2 tablestyle">
-                      <input
-                        type="number"
-                        id="num1"
-                        className="rounded-2 w-100 px-2"
-                        style={{ border: "1px solid black" }}
-                        onChange={calculate}
-                      />
-                    </td>
-                    <td className="p-1 px-2 tablestyle">
-                      <input
-                        type="number"
-                        id="num2"
-                        className="rounded-2 w-100 px-2"
-                        style={{ border: "1px solid black" }}
-                        onChange={calculate}
-                      />
-                    </td>
-                    <td className="p-1 px-2 tablestyle">
-                      <input
-                        type="number"
-                        id="total"
-                        className="rounded-2 w-100 px-2"
-                        style={{ border: "1px solid black" }}
-                        readOnly
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-4 d-flex justify-content-end">
-              <button className="btn btn-primary text-primary-foreground hover:bg-primary/80 px-4 py-2 rounded-lg">
-                Submit
-              </button>
-            </div>
+                <select
+                  className="form-control"
+                  style={{ border: "1px solid" }}
+                  required
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    --Department Name--
+                  </option>
+                  <option value="Backend development">
+                    Backend development
+                  </option>
+                  <option value="Designing">Designing</option>
+                  <option value="Front-end development">
+                    Front-end development
+                  </option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Finance">Finance</option>
+                </select>
+              </div>
+              <div className="table-responsive">
+                <table className="table table-bordered bg-white rounded-lg table-striped tablestyle">
+                  <thead className="tablestyle">
+                    <tr>
+                      <th className="px-4 py-2 text-start">Staff</th>
+                      <th className="px-4 py-2 text-start">Basic Salary($)</th>
+                      <th className="px-4 py-2 text-start">Allowance($)</th>
+                      <th className="px-4 py-2 text-start">Total($)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-1 px-2 tablestyle">
+                        <Select
+                          options={options}
+                          onChange={handleChange}
+                          placeholder="Select an option..."
+                          isClearable
+                          menuPortalTarget={document.body}
+                          styles={customStyles}
+                          menuPosition="fixed"
+                          components={{ DropdownIndicator, ClearIndicator }}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur}
+                          required
+                        />
+                      </td>
+                      <td className="p-1 px-2 tablestyle">
+                        <input
+                          type="number"
+                          id="num1"
+                          className="rounded-2 w-100 px-2"
+                          style={{ border: "1px solid black" }}
+                          onChange={calculate}
+                          required
+                        />
+                      </td>
+                      <td className="p-1 px-2 tablestyle">
+                        <input
+                          type="number"
+                          id="num2"
+                          className="rounded-2 w-100 px-2"
+                          style={{ border: "1px solid black" }}
+                          onChange={calculate}
+                          required
+                        />
+                      </td>
+                      <td className="p-1 px-2 tablestyle">
+                        <input
+                          type="number"
+                          id="total"
+                          className="rounded-2 w-100 px-2"
+                          style={{ border: "1px solid black" }}
+                          readOnly
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 d-flex justify-content-end">
+                <button className="btn btn-primary text-primary-foreground hover:bg-primary/80 px-4 py-2 rounded-lg">
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

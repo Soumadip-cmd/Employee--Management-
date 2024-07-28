@@ -20,7 +20,7 @@ const Dashboard = () => {
       />
       <div className="container my-2 ">
         <div className="row" style={{ transform: "translateY(-19px)" }}>
-          <div className="col-sm-6 col-md-6 col-lg-3">
+          <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
               number="10"
               category="Department"

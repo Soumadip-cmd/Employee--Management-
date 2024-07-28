@@ -7,6 +7,11 @@ const AddAdmin = () => {
     borderTop: "5px solid #004dffe8",
     borderRadius: "5px",
   };
+
+  const handleSubmit=(e)=>{
+    e.preventDefault()
+  }
+
   return (
     <>
       <nav
@@ -65,6 +70,7 @@ const AddAdmin = () => {
             Add Admin
           </h5>
           <hr />
+          <form action="" onSubmit={handleSubmit}>
           <div className="col-12">
             <div className="mb-3">
               <b>Admin Name</b>
@@ -76,6 +82,7 @@ const AddAdmin = () => {
                 name="user_id"
                 placeholder="Full Name"
                 style={{ border: "1px solid" }}
+                required
               />
             </div>
             <div className="mb-3">
@@ -85,7 +92,7 @@ const AddAdmin = () => {
                 type="file"
                 className="form-control"
                 
-                
+                required
                 placeholder="Full Name"
                 style={{ border: "1px solid" }}
               />
@@ -99,6 +106,7 @@ const AddAdmin = () => {
                 id="reason"
                 name="reason"
                 placeholder="name@mail.com"
+                required
                 style={{ border: "1px solid" }}
               />
             </div>
@@ -119,6 +127,7 @@ const AddAdmin = () => {
               </button>
             </div>
           </div>
+          </form>
         </div>
       </div>
     </>

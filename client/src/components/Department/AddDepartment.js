@@ -7,6 +7,10 @@ const AddDepartment = () => {
     borderTop: "5px solid #004dffe8",
     borderRadius: "5px",
   };
+
+  const handleSubmit=(e)=>{
+    e.preventDefault()
+  }
   return (
     <>
       <nav
@@ -66,46 +70,52 @@ const AddDepartment = () => {
           </h5>
           <hr />
           <div className="col-12">
-            <div className="mb-3">
-              <b>Enter Your Employee ID</b>
-              <span style={{ color: "red" }}>*</span>
-              <input
-                type="text"
-                className="form-control"
-                id="user_id"
-                name="user_id"
-                placeholder="Employee ID"
-                style={{ border: "1px solid" }}
-              />
-            </div>
-            <div className="mb-3">
-              <b>Department Name </b>
-              <span style={{ color: "red" }}>*</span>
-              <input
-                type="text"
-                className="form-control"
-                id="reason"
-                name="reason"
-                placeholder="Reason"
-                style={{ border: "1px solid" }}
-              />
-            </div>
-            <div className="">
-              <button
-                type="submit"
-                className="btn btn-outline-danger float-end mx-1"
-                id="applyleave"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary float-end mx-1"
-                id="applyleave"
-              >
-                Submit
-              </button>
-            </div>
+            <form action="" onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <b>Enter Your Employee ID</b>
+                <span style={{ color: "red" }}>*</span>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="user_id"
+                  name="user_id"
+                  placeholder="Employee ID"
+                  style={{ border: "1px solid" }}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <b>Department Name </b>
+                <span style={{ color: "red" }}>*</span>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="reason"
+                  name="reason"
+                  placeholder="Reason"
+                  style={{ border: "1px solid" }}
+                  required
+                />
+              </div>
+              <div className="">
+                <button
+                  type="submit"
+                  className="btn btn-outline-danger float-end mx-1"
+                  id="applyleave"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  
+                  className="btn btn-primary float-end mx-1"
+                  id="applyleave"
+                  to='/manageDepartment'
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

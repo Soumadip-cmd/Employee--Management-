@@ -40,7 +40,7 @@ export default function SlideNavbar() {
       <div className="wrapper">
         <div className="backdrop"></div>
     
-        <aside id="sidebar">
+        <aside id="sidebar" className="scroll">
           <div className="d-flex">
             <button className="toggle-btn" type="button">
               <i className="fa-solid fa-compact-disc"></i>

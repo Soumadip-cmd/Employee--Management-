@@ -171,3 +171,16 @@ a.sidebar-link:hover {
     
   }
   
+  @media (max-height: 377px) {
+    .scroll {
+      overflow-y: scroll;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+    
+    .scroll::-webkit-scrollbar { /* WebKit-based browsers */
+      display: none;
+    }
+  }
+  
+  
