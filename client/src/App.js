@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from 'react-router-dom';
-import Test from './components/Test';
-import SlideNavbar from './components/SlideNavbar';
-import NavBar from './components/NavBar';
-import Dashboard from './components/Dashboard/Dashboard';
-import ApplyLeave from './components/Leave/ApplyLeave';
-import LeaveHistory from './components/Leave/LeaveHistory';
-import ManageSalary from './components/Salary/ManageSalary';
-import YourSalary from './components/Salary/YourSalary';
-import AddSalary from './components/Salary/AddSalary';
-import AddDepartment from './components/Department/AddDepartment';
-import ManageDepartment from './components/Department/ManageDepartment';
-import AddStaff from './components/Staff/Add Staff';
-import ManageStaff from './components/Staff/ManageStaff';
-import Login from './components/Authentication/Login';
-import SignUp from './components/Authentication/SignUp';
-import StaffLeave from './components/Leave/StaffLeave';
-import AddAdmin from './components/Admin/AddAdmin';
-import ManageAdmin from './components/Admin/ManageAdmin';
-import Profile from './components/Profile/Profile';
+import React, { useState, useEffect } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Test from "./components/Test";
+import SlideNavbar from "./components/SlideNavbar";
+import NavBar from "./components/NavBar";
+import Dashboard from "./components/Dashboard/Dashboard";
+import ApplyLeave from "./components/Leave/ApplyLeave";
+import LeaveHistory from "./components/Leave/LeaveHistory";
+import ManageSalary from "./components/Salary/ManageSalary";
+import YourSalary from "./components/Salary/YourSalary";
+import AddSalary from "./components/Salary/AddSalary";
+import AddDepartment from "./components/Department/AddDepartment";
+import ManageDepartment from "./components/Department/ManageDepartment";
+import AddStaff from "./components/Staff/Add Staff";
+import ManageStaff from "./components/Staff/ManageStaff";
+import Login from "./components/Authentication/Login";
+import SignUp from "./components/Authentication/SignUp";
+import StaffLeave from "./components/Leave/StaffLeave";
+import AddAdmin from "./components/Admin/AddAdmin";
+import ManageAdmin from "./components/Admin/ManageAdmin";
+import Profile from "./components/Profile/Profile";
+import DataState from "./context/DataState";
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -30,33 +28,33 @@ function App() {
     const handleResize = () => {
       setIsLargeDevice(window.innerWidth >= 1300);
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: (
         <>
-          { <SlideNavbar />}
+          {<SlideNavbar />}
           <NavBar />
           <Dashboard />
         </>
       ),
     },
     {
-      path: '/login',
+      path: "/login",
       element: <Login />,
     },
     {
-      path: '/signup',
+      path: "/signup",
       element: <SignUp />,
     },
     {
-      path: '/addDepartment',
+      path: "/addDepartment",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -66,47 +64,47 @@ function App() {
       ),
     },
     {
-      path: '/addAdmin',
+      path: "/addAdmin",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <AddAdmin/>
+          <AddAdmin />
         </>
       ),
     },
     {
-      path: '/manageAdmin',
+      path: "/manageAdmin",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <ManageAdmin/>
+          <ManageAdmin />
         </>
       ),
     },
     {
-      path: '/Staffleave',
+      path: "/Staffleave",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <StaffLeave/>
+          <StaffLeave />
         </>
       ),
     },
     {
-      path: '/profile',
+      path: "/profile",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <Profile/>
+          <Profile />
         </>
       ),
     },
     {
-      path: '/manageDepartment',
+      path: "/manageDepartment",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -116,7 +114,7 @@ function App() {
       ),
     },
     {
-      path: '/addStaff',
+      path: "/addStaff",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -126,7 +124,7 @@ function App() {
       ),
     },
     {
-      path: '/manageStaff',
+      path: "/manageStaff",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -136,7 +134,7 @@ function App() {
       ),
     },
     {
-      path: '/addSalary',
+      path: "/addSalary",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -146,7 +144,7 @@ function App() {
       ),
     },
     {
-      path: '/manageSalary',
+      path: "/manageSalary",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -156,17 +154,17 @@ function App() {
       ),
     },
     {
-      path: '/yoursalary',
+      path: "/yoursalary",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <YourSalary/>
+          <YourSalary />
         </>
       ),
     },
     {
-      path: '/applyLeave',
+      path: "/applyLeave",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -176,7 +174,7 @@ function App() {
       ),
     },
     {
-      path: '/leaveHistory',
+      path: "/leaveHistory",
       element: (
         <>
           {isLargeDevice && <SlideNavbar />}
@@ -186,12 +184,18 @@ function App() {
       ),
     },
     {
-      path: '/test',
+      path: "/test",
       element: <Test />,
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <DataState>
+        <RouterProvider router={router} />
+      </DataState>
+    </>
+  );
 }
 
 export default App;
