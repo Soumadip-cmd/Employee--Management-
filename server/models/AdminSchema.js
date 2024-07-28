@@ -12,7 +12,13 @@ const AdminSchema = new Schema({
     required: true,
   },
   photo: {
-    type: String,
+    public_id:{
+      type:String,
+    },
+    url:{
+      type:String,
+      required:true
+    }
   },
   email: {
     type: String,

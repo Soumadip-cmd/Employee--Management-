@@ -80,7 +80,7 @@ const AddAdmin = () => {
                 className="form-control"
                 id="user_id"
                 name="user_id"
-                placeholder="Full Name"
+                
                 style={{ border: "1px solid" }}
                 required
               />
@@ -93,7 +93,7 @@ const AddAdmin = () => {
                 className="form-control"
                 
                 required
-                placeholder="Full Name"
+                
                 style={{ border: "1px solid" }}
               />
             </div>
@@ -105,7 +105,7 @@ const AddAdmin = () => {
                 className="form-control"
                 id="reason"
                 name="reason"
-                placeholder="name@mail.com"
+                
                 required
                 style={{ border: "1px solid" }}
               />
