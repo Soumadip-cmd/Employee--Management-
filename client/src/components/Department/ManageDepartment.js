@@ -88,8 +88,8 @@ const ManageDepartment = () => {
               <td className="py-2 px-4 ">1</td>
               <td className="py-2 px-4 ">Human Resources</td>
               <td className="py-2 px-4 ">
-              <span class="badge text-bg-success mx-1 px-2">Edit</span>
-              <span class="badge text-bg-danger mx-1 px-2">Delete</span>
+              <span className="badge text-bg-success mx-1 px-2">Edit</span>
+              <span className="badge text-bg-danger mx-1 px-2">Delete</span>
               </td>
             </tr>
             <tr>

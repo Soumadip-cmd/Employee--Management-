@@ -214,7 +214,7 @@ export default function SlideNavbar() {
                 aria-expanded="false"
                 aria-controls="Admin"
               >
-                <i class="fas fa-user-shield"></i>
+                <i className="fas fa-user-shield"></i>
                 <span>Admin</span>
               </NavLink>
               <ul
