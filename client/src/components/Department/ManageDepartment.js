@@ -109,7 +109,7 @@ const ManageDepartment = () => {
               <input
                 type="text"
                 placeholder="Search"
-                className="form-control d-none d-md-flex"
+                className=" form-control d-none d-md-flex"
                 value={search}
                 onChange={handleSearch}
               />

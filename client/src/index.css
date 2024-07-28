@@ -26,3 +26,10 @@ body{
     padding-right: 1.5rem;
   }
 }
+
+/* More specific selector targeting input with form-control class */
+input.form-control::placeholder {
+  color: black;
+  opacity: 1;
+}
+

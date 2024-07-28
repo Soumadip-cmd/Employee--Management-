@@ -94,7 +94,7 @@ const AddDepartment = () => {
                   id="employeeId"
                   name="employeeId"
                   value={add_dept.employeeId}
-                  placeholder="Employee ID"
+                  
                   style={{ border: "1px solid" }}
                   onChange={handleChange}
                   required
@@ -109,7 +109,7 @@ const AddDepartment = () => {
                   id="deptName"
                   name="deptName"
                   value={add_dept.deptName}
-                  placeholder="Reason"
+                  
                   style={{ border: "1px solid" }}
                   onChange={handleChange}
                   required

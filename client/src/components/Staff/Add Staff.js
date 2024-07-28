@@ -80,7 +80,7 @@ export default function AddStaff() {
                   type="text"
                   className="form-control"
                   required
-                  placeholder="William Smith"
+                  
                   style={{ border: "1px solid" }}
                 />
               </div>
