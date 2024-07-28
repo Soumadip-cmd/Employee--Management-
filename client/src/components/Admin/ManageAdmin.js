@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import DataContext from "../../context/DataContext";
 
 const ManageAdmin = () => {
   const [search, setSearch] = useState("");
+  const { getAdmin, admin } = useContext(DataContext);
+
+  useEffect(() => {
+    getAdmin();
+  }, []);
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
     // Filter department logic here
@@ -117,25 +124,30 @@ const ManageAdmin = () => {
                   <th className="py-2 px-4 ">Actions</th>
                 </tr>
               </thead>
-              <tbody className="">
-                <tr>
-                  <td className="py-2 px-4 ">1</td>
-                  <td className="py-2 px-4 ">Soumadip</td>
-                  <td className="text-center">
-                    <img
-                      className=" rounded-2 "
-                      src="https://placehold.co/64x64"
-                      alt="img-Profile"
-                    />
-                  </td>
-                  <td className="py-2 px-4 ">Soumadip@mail.com</td>
-                  <td className="py-2 px-4 ">
-                    <span className="badge text-bg-success mx-1 px-2">Edit</span>
-                    <span className="badge text-bg-danger mx-1 px-2">Delete</span>
-                  </td>
-                </tr>
-                
-              </tbody>
+              {admin.map((item, index) => (
+                <tbody className="" key={index}>
+                  <tr>
+                    <td className="py-2 px-4 ">{index + 1}</td>
+                    <td className="py-2 px-4 ">{item.name}</td>
+                    <td className="text-center">
+                      <img
+                        className=" rounded-2 "
+                        src={item.photo.url}
+                        alt="img-Profile"
+                      />
+                    </td>
+                    <td className="py-2 px-4 ">{item.email}</td>
+                    <td className="py-2 px-4 ">
+                      <span className="badge text-bg-success mx-1 px-2">
+                        Edit
+                      </span>
+                      <span className="badge text-bg-danger mx-1 px-2">
+                        Delete
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
             </table>
           </div>
           <div className="d-flex justify-content-between align-items-center mt-4">

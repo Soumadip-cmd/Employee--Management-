@@ -124,14 +124,33 @@ const DataState = (props) => {
   const [admin, setAdmin] = useState([]);
   const [upload, setUpload] = useState();
 
+  //get Admin
+  const getAdmin = async () => {
+    const url = `http://localhost:8800/get-admins`;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`, // Replace with your actual token
+        },
+        method: "GET",
+      });
+
+      const data = await response.json();
+      console.log(data)
+      setAdmin(data)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   //addAdmin
-  const addAdmin = async ( name, email, photo ) => {
-    const url = `http://localhost:8800/add-admin`;  
+  const addAdmin = async (name, email, photo) => {
+    const url = `http://localhost:8800/add-admin`;
     try {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          "token": `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`, // Replace with your actual token
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`, // Replace with your actual token
         },
         method: "POST",
         body: JSON.stringify({
@@ -140,27 +159,17 @@ const DataState = (props) => {
           photo: String(photo),
         }),
       });
-  
+
       const data = await response.json();
-      setAdmin(admin.concat())
-      // if (response.ok) {
-      //   console.log("Admin added successfully:", data);
-      // } else {
-      //   console.error("Failed to add admin:", data);
-      // }
+      setAdmin(admin.concat());
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  
-  
-  
-  
-  
 
   return (
     <DataContext.Provider
-      value={{ addDept, getDept, dept, deleteDept, editDept, addAdmin, upload }}
+      value={{ addDept, getDept, dept, deleteDept, editDept, addAdmin, upload,getAdmin,admin }}
     >
       {props.children}
     </DataContext.Provider>
