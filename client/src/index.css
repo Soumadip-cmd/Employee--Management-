@@ -17,3 +17,12 @@ body{
     transition: all 0.35s ease-in-out;
     background-color: #e5e6eb;
 } */
+ @media (max-width: 768px) {
+  .custom-select-no-caret {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: none;
+    padding-right: 1.5rem;
+  }
+}

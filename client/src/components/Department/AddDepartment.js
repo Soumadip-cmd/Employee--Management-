@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
+import DataContext from "../../context/DataContext";
 const AddDepartment = () => {
+
+  const [add_dept,setAdd_dept]=useState({"employeeId":"","deptName":""})
+  const {addDept}=useContext(DataContext)
+
   let boxstyle = {
     background: "white",
     padding: "21px",
@@ -10,7 +15,16 @@ const AddDepartment = () => {
 
   const handleSubmit=(e)=>{
     e.preventDefault()
+    addDept(add_dept.deptName,add_dept.employeeId)
+    setAdd_dept({"employeeId":" ","deptName":" "})
   }
+
+  const handleChange=(e)=>{
+    // console.log("change")
+    setAdd_dept({...add_dept,[e.target.name]:[e.target.value]})
+
+  }
+
   return (
     <>
       <nav
@@ -77,10 +91,12 @@ const AddDepartment = () => {
                 <input
                   type="text"
                   className="form-control"
-                  id="user_id"
-                  name="user_id"
+                  id="employeeId"
+                  name="employeeId"
+                  value={add_dept.employeeId}
                   placeholder="Employee ID"
                   style={{ border: "1px solid" }}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -90,10 +106,12 @@ const AddDepartment = () => {
                 <input
                   type="text"
                   className="form-control"
-                  id="reason"
-                  name="reason"
+                  id="deptName"
+                  name="deptName"
+                  value={add_dept.deptName}
                   placeholder="Reason"
                   style={{ border: "1px solid" }}
+                  onChange={handleChange}
                   required
                 />
               </div>
