@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const ManageAdmin = () => {
-  const [entries, setEntries] = useState(1);
   const [search, setSearch] = useState("");
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    // Filter department logic here
+  };
+
   return (
     <>
       <nav
@@ -63,20 +67,21 @@ const ManageAdmin = () => {
           <h2 className="fs-4 fw-semibold mb-4 border-bottom pb-2">
             View Admin
           </h2>
-          <div className="d-flex justify-content-between align-items-center mb-4">
+          <div className="d-flex justify-content-between align-items-center gap-4 mb-4">
             <div className="d-flex align-items-center gap-2">
               <label htmlFor="entries" className=" fs-6">
                 Show
               </label>
               <select
                 id="entries"
-                className="form-select border-1  border-black form-select-sm"
-                value={entries}
-                onChange={(e) => setEntries(e.target.value)}
+                className="border-1 border-black rounded-2"
+                onChange={(e) => {
+                  // Handle entries change
+                }}
               >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
               </select>
               <span className="fs-6">entries</span>
             </div>
@@ -84,12 +89,21 @@ const ManageAdmin = () => {
             <div className="d-flex align-items-center gap-2">
               <input
                 type="text"
-                placeholder="Search"
-                className="form-control  d-none d-md-flex"
+                placeholder="Search..."
+                className="form-control d-block d-md-none"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearch}
               />
-              <button className="btn btn-danger btn-sm">Search</button>
+              <input
+                type="text"
+                placeholder="Search"
+                className=" form-control d-none d-md-flex"
+                value={search}
+                onChange={handleSearch}
+              />
+              <button className="btn btn-danger btn-sm d-none d-md-flex">
+                Search
+              </button>
             </div>
           </div>
           <div className="table-responsive">

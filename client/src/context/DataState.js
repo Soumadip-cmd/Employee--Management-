@@ -142,11 +142,12 @@ const DataState = (props) => {
       });
   
       const data = await response.json();
-      if (response.ok) {
-        console.log("Admin added successfully:", data);
-      } else {
-        console.error("Failed to add admin:", data);
-      }
+      setAdmin(admin.concat())
+      // if (response.ok) {
+      //   console.log("Admin added successfully:", data);
+      // } else {
+      //   console.error("Failed to add admin:", data);
+      // }
     } catch (error) {
       console.error("Error:", error);
     }
