@@ -8,7 +8,7 @@ const ManageDepartment = () => {
 
   useEffect(() => {
     getDept();
-  }, [getDept]);
+  }, []);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
