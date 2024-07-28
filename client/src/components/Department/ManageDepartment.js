@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 
 const ManageDepartment = () => {
   const [search, setSearch] = useState("");
   const { getDept, dept, deleteDept } = useContext(DataContext);
+
+  let history=useNavigate()
 
   useEffect(() => {
     getDept();
@@ -18,6 +20,14 @@ const ManageDepartment = () => {
   const delDept = (id) => {
     deleteDept(id);
   };
+
+
+  const EditDept=(id)=>{
+    history(`/editDepartment/${id}`)
+    
+
+  }
+  
 
   return (
     <>
@@ -142,7 +152,7 @@ const ManageDepartment = () => {
                       <td className="py-2 px-4">{index + 1}</td>
                       <td className="py-2 px-4">{item.deptName}</td>
                       <td className="py-2 px-4">
-                        <span className="badge text-bg-success mx-1 px-2">
+                        <span className="badge text-bg-success mx-1 px-2"   style={{ cursor: "pointer" }} onClick={()=>EditDept(item._id)}>
                           Edit
                         </span>
                         <span

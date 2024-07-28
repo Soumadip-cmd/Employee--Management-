@@ -83,11 +83,47 @@ const DataState = (props) => {
     }
   };
   
+
+  //edit department
+  const editDept=async(id,deptName, employeeId)=>{
+    const url = `http://localhost:8800/edit-department/${id}`;
+  
+    if (Array.isArray(deptName)) {
+      deptName = deptName[0];
+    }
+    if (Array.isArray(employeeId)) {
+      employeeId = employeeId[0];
+    }
+  
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4"
+      },
+      method: "PUT",
+      body: JSON.stringify({ deptName: String(deptName), employeeId: String(employeeId) }),
+    });
+  
+    const responseData = await response.json();
+    const data=JSON.parse(JSON.stringify(dept))
+    for(let i=0;i<data.length;i++)
+    {
+      const element=data[i]
+      if(element._id===id)
+      {
+        element.employeeId=employeeId
+        element.deptName=deptName
+        break
+      }
+    }
+    setDept(data)
+
+  }
   
   
       
   return (
-    <DataContext.Provider value={{ addDept,getDept,dept,deleteDept }}>
+    <DataContext.Provider value={{ addDept,getDept,dept,deleteDept,editDept }}>
       {props.children}
     </DataContext.Provider>
   );
