@@ -19,7 +19,7 @@ router.get("/get-admins", FetchUser, async (req, res) => {
   }
 });
 
-// Add admin
+
 router.post(
   "/add-admin",
   [
@@ -33,10 +33,16 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
     try {
       const { name, photo, email } = req.body;
-      const emailExist = await Admin.findOne({ email });
 
+      // Check if photo is a base64 string
+      if (!photo || typeof photo !== 'string' || !photo.startsWith('data:image/')) {
+        return res.status(400).json({ success: false, msg: "Invalid photo format" });
+      }
+
+      const emailExist = await Admin.findOne({ email });
       if (emailExist) {
         return res.status(400).json({ success, msg: "Email Already Exists!" });
       }
@@ -48,10 +54,11 @@ router.post(
         userId: req.user.id,
       });
 
+      // Upload photo to Cloudinary
       const uploadResult = await cloudinary.uploader.upload(photo, {
         upload_preset: "employee_data",
         allowed_formats: ["png", "jpg", "jpeg", "svg", "webp"],
-        public_id: `Admin_img${admin.id}`,
+        public_id: `Admin_img${admin._id}`,
       });
 
       if (uploadResult) {
@@ -63,11 +70,9 @@ router.post(
         return res.status(201).json({ success, adminDetails });
       }
 
-      return res
-        .status(404)
-        .json({ success, error: "Error Occurred, Photo Not Uploaded" });
+      return res.status(404).json({ success, error: "Photo Not Uploaded" });
     } catch (error) {
-      console.error(error);
+      console.error("Error during upload:", error);
       return res
         .status(500)
         .json({ success: false, msg: `Error Occurred: ${error.message}` });

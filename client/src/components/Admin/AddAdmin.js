@@ -1,6 +1,41 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import DataContext from "../../context/DataContext";
+
 const AddAdmin = () => {
+  const { addAdmin } = useContext(DataContext);
+  const [add_admin, setAdd_admin] = useState({ name: "", email: "" });
+  const [file, setFile] = useState(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (file && add_admin.name && add_admin.email) {
+      
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async () => {
+        const photoURL = reader.result;
+      
+        await addAdmin(add_admin.name,add_admin.email,photoURL);
+
+        setAdd_admin({ name: "", email: "" });
+        setFile(" ");
+      };
+    } else {
+      console.error("All fields are required, including a valid photo file.");
+    }
+  };
+
+  const handleChange = (e) => {
+    setAdd_admin({ ...add_admin, [e.target.name]: e.target.value });
+  };
+
+  const photoChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
   let boxstyle = {
     background: "white",
     padding: "21px",
@@ -8,12 +43,10 @@ const AddAdmin = () => {
     borderRadius: "5px",
   };
 
-  const handleSubmit=(e)=>{
-    e.preventDefault()
-  }
-
   return (
     <>
+      {/* Your navigation and form UI code */}
+      <>
       <nav
         className="navbar navbar-expand-lg "
         style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
@@ -30,14 +63,13 @@ const AddAdmin = () => {
           >
             Admin
           </NavLink>
-
-          <div className=" mt-2 pt-2">
+          <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
                   <NavLink
                     to="/"
-                    className=" text-dark fw-semibold text-decoration-none"
+                    className="text-dark fw-semibold text-decoration-none"
                   >
                     Home
                   </NavLink>
@@ -51,7 +83,7 @@ const AddAdmin = () => {
                 <li className="breadcrumb-item">
                   <NavLink
                     to="/manageAdmin"
-                    className=" text-dark fw-semibold text-decoration-none"
+                    className="text-dark fw-semibold text-decoration-none"
                   >
                     ManageAdmin
                   </NavLink>
@@ -64,72 +96,75 @@ const AddAdmin = () => {
       <div className="container my-2 pt-3">
         <h2>Admin Management</h2>
       </div>
-      <div className=" mb-4 pt-3  extra-special">
-        <div className="row d-flex justify-content-evenly  " style={boxstyle}>
+      <div className="mb-4 pt-3 extra-special">
+        <div className="row d-flex justify-content-evenly" style={boxstyle}>
           <h5 style={{ fontSize: "20px" }} className="px-2">
             Add Admin
           </h5>
           <hr />
-          <form action="" onSubmit={handleSubmit}>
-          <div className="col-12">
-            <div className="mb-3">
-              <b>Admin Name</b>
-              <span style={{ color: "red" }}>*</span>
-              <input
-                type="text"
-                className="form-control"
-                id="user_id"
-                name="user_id"
-                
-                style={{ border: "1px solid" }}
-                required
-              />
+          <form onSubmit={handleSubmit}>
+            <div className="col-12">
+              <div className="mb-3">
+                <b>Admin Name</b>
+                <span style={{ color: "red" }}>*</span>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="name"
+                  value={add_admin.name}
+                  onChange={handleChange}
+                  style={{ border: "1px solid" }}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <b>Admin Photo</b>
+                <span style={{ color: "red" }}>*</span>
+                <input
+                  type="file"
+                  className="form-control"
+                  name="photo"
+                  accept=".jpg, .png, .svg, .webp, .jpeg"
+                  onChange={photoChange}
+                  required
+                  style={{ border: "1px solid" }}
+                />
+              </div>
+              <div className="mb-3">
+                <b>Admin Email </b>
+                <span style={{ color: "red" }}>*</span>
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email"
+                  value={add_admin.email}
+                  onChange={handleChange}
+                  required
+                  style={{ border: "1px solid" }}
+                />
+              </div>
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger float-end mx-1"
+                  id="cancel"
+                  onClick={() => navigate('/manageAdmin')}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary float-end mx-1"
+                  id="submit"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
-            <div className="mb-3">
-              <b>Admin Photo</b>
-              <span style={{ color: "red" }}>*</span>
-              <input
-                type="file"
-                className="form-control"
-                
-                required
-                
-                style={{ border: "1px solid" }}
-              />
-            </div>
-            <div className="mb-3">
-              <b>Admin Email </b>
-              <span style={{ color: "red" }}>*</span>
-              <input
-                type="email"
-                className="form-control"
-                id="reason"
-                name="reason"
-                
-                required
-                style={{ border: "1px solid" }}
-              />
-            </div>
-            <div className="">
-              <button
-                type="submit"
-                className="btn btn-outline-danger float-end mx-1"
-                id="applyleave"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary float-end mx-1"
-                id="applyleave"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
           </form>
         </div>
       </div>
+    </>
     </>
   );
 };
