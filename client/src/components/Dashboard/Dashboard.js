@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "./Card";
 import './Dashboard.css'
+import DataContext from "../../context/DataContext";
 
 
 const Dashboard = () => {
-  
+
+  const {dept,staff,salary}=useContext(DataContext)  
 
   return (
     <div className=" special mt-5 ms-2">
@@ -22,7 +24,7 @@ const Dashboard = () => {
         <div className="row" style={{ transform: "translateY(-19px)" }}>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number="10"
+              number={dept.length}
               category="Department"
               cardbgcolor="blue"
               pageLink="/manageDepartment"
@@ -30,7 +32,7 @@ const Dashboard = () => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number="24"
+              number={staff.length}
               category="Staff"
               cardbgcolor="rgb(88 13 51)"
               pageLink="/manageStaff"
@@ -46,7 +48,7 @@ const Dashboard = () => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number="$39640" 
+              number={`${salary.length}`}
               category="Salary Paid"
               cardbgcolor="green"
               pageLink="/manageSalary"

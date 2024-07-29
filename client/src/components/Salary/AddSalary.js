@@ -108,9 +108,9 @@ export default function AddSalary() {
                   <thead className="tablestyle">
                     <tr>
                       <th className="px-4 py-2 text-start">Staff</th>
-                      <th className="px-4 py-2 text-start">Basic Salary($)</th>
-                      <th className="px-4 py-2 text-start">Allowance($)</th>
-                      <th className="px-4 py-2 text-start">Total($)</th>
+                      <th className="px-4 py-2 text-start">Basic Salary(₹)</th>
+                      <th className="px-4 py-2 text-start">Allowance(₹)</th>
+                      <th className="px-4 py-2 text-start">Total(₹)</th>
                     </tr>
                   </thead>
                   <tbody>
