@@ -21,6 +21,7 @@ import ManageAdmin from "./components/Admin/ManageAdmin";
 import Profile from "./components/Profile/Profile";
 import DataState from "./context/DataState";
 import EditDepartment from "./components/Department/EditDepartment";
+import EditAdmin from "./components/Admin/EditAdmin";
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -71,6 +72,16 @@ function App() {
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
           <AddAdmin />
+        </>
+      ),
+    },
+    {
+      path: "/editAdmin/:id",
+      element: (
+        <>
+          {isLargeDevice && <SlideNavbar />}
+          <NavBar />
+          <EditAdmin/>
         </>
       ),
     },

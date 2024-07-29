@@ -22,7 +22,7 @@ const AddAdmin = () => {
 
         setAdd_admin({ name: "", email: "" });
         setFile(" ");
-        navigate('/manageAdmin')
+        
       };
     } else {
       console.error("All fields are required, including a valid photo file.");

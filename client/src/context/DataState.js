@@ -130,14 +130,14 @@ const DataState = (props) => {
     try {
       const response = await fetch(url, {
         headers: {
-          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`, // Replace with your actual token
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`,
         },
         method: "GET",
       });
 
       const data = await response.json();
-      console.log(data)
-      setAdmin(data)
+      console.log(data);
+      setAdmin(data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -150,7 +150,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`, // Replace with your actual token
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`,
         },
         method: "POST",
         body: JSON.stringify({
@@ -167,9 +167,80 @@ const DataState = (props) => {
     }
   };
 
+  // Delete admin
+  const deleteAdmin = async (id) => {
+    const url = `http://localhost:8800/delete-admin/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete admin: ${response.statusText}`);
+      }
+
+      await response.json();
+      const updatedAdminList = admin.filter((k) => k._id !== id);
+      setAdmin(updatedAdminList);
+    } catch (error) {
+      console.error("Error deleting admin:", error);
+    }
+  };
+
+  //edit Admin
+  const editAdmin = async (id, name, email, photo) => {
+    const url = `http://localhost:8800/edit-admin/${id}`;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`,
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          name: String(name),
+          email: String(email),
+          photo: String(photo),
+        }),
+      });
+
+      const data = await response.json();
+      const strData = JSON.parse(JSON.stringify(admin));
+      for (let i = 0; i < strData.length; i++) {
+        let element = strData[i];
+        if (element._id === id) {
+          element.name = name;
+          element.email = email;
+          element.photo = photo;
+          break;
+        }
+      }
+
+      setAdmin(strData);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <DataContext.Provider
-      value={{ addDept, getDept, dept, deleteDept, editDept, addAdmin, upload,getAdmin,admin }}
+      value={{
+        addDept,
+        getDept,
+        dept,
+        deleteDept,
+        editDept,
+        addAdmin,
+        upload,
+        getAdmin,
+        admin,
+        deleteAdmin,
+        editAdmin
+      }}
     >
       {props.children}
     </DataContext.Provider>

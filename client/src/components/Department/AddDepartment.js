@@ -13,13 +13,13 @@ const AddDepartment = () => {
     borderRadius: "5px",
   };
 
-  let navigate=useNavigate()
+  
 
   const handleSubmit=(e)=>{
     e.preventDefault()
     addDept(add_dept.deptName,add_dept.employeeId)
     setAdd_dept({"employeeId":" ","deptName":" "})
-    navigate('/manageDepartment')
+    
   }
 
   const handleChange=(e)=>{
