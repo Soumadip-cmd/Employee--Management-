@@ -111,9 +111,9 @@ const EditDepartment = () => {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary float-end mx-1"
+                  className="btn btn-success float-end mx-1"
                 >
-                  Submit
+                  update
                 </button>
               </div>
             </form>

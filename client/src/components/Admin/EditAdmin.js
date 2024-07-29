@@ -142,7 +142,7 @@ const EditAdmin = () => {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary float-end mx-1"
+                  className="btn btn-success float-end mx-1"
                   id="submit"
                 >
                   Update

@@ -215,8 +215,8 @@ export default function EditSalary() {
                 </table>
               </div>
               <div className="mt-4 d-flex justify-content-end">
-                <button className="btn btn-primary text-primary-foreground hover:bg-primary/80 px-4 py-2 rounded-lg">
-                  Submit
+                <button className="btn btn-success text-primary-foreground hover:bg-primary/80 px-4 py-2 rounded-lg">
+                  update
                 </button>
               </div>
             </form>
