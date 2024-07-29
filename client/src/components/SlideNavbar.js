@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./SlideNavBar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 
 export default function SlideNavbar() {
@@ -34,6 +34,13 @@ export default function SlideNavbar() {
       document.removeEventListener("click", handleCloseSidebar);
     };
   }, []);
+  const navigate=useNavigate()
+
+  const logOut=()=>{
+    localStorage.removeItem('authToken')
+    alert("logout Successfull")
+    navigate('/')
+  }
 
   return (
     <>
@@ -227,7 +234,7 @@ export default function SlideNavbar() {
           </ul>
           <hr className=" border-1 text-white m-0" style={{ background: "#586682b0" }}/>
           <div className="sidebar-footer">
-            <NavLink to="/" className="NavBody sidebar-link">
+            <NavLink  className="NavBody sidebar-link" onClick={logOut}>
               <i className="lni lni-exit"></i>
               <span>Logout</span>
             </NavLink>

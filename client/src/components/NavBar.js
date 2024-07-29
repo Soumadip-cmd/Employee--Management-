@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate=useNavigate()
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -13,6 +14,13 @@ const NavBar = () => {
     setDropdownOpen(false);
   };
 
+
+  const logOut=()=>{
+    setDropdownOpen(false);
+    localStorage.removeItem('authToken')
+    alert("logout Successfull")
+    navigate('/')
+  }
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -33,7 +41,7 @@ const NavBar = () => {
         style={{ background: "#112a47", height: "50px", position: 'fixed', zIndex: '20', width: '100%' }}
       >
         <NavLink
-          to='/'
+          to='/dashboard'
           className="float-start fw-bold text-decoration-none"
           style={{ fontFamily: '"Playwrite US Modern", cursive' }}
         >
@@ -72,7 +80,7 @@ const NavBar = () => {
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <NavLink className="dropdown-item" to="/" onClick={closeDropdown}>
+              <NavLink className="dropdown-item" to="/" onClick={logOut}>
                 Sign out
               </NavLink>
             </li>
