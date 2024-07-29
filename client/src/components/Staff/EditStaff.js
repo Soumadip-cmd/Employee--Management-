@@ -1,11 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "../Leave/ApplyLeave.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 
-export default function AddStaff() {
-  const { addStaff } = useContext(DataContext);
-  const [add_staff, setAdd_staff] = useState({
+export default function EditStaff() {
+  const { id } = useParams();
+  const { editStaff, staff } = useContext(DataContext);
+  const [edit_staff, setEdit_staff] = useState({
+    id: id,
     name: "",
     gender: "",
     phone: "",
@@ -18,43 +20,59 @@ export default function AddStaff() {
     state: "",
     address: "",
   });
-  const [file,setFile]=useState(null)
+  const [file, setFile] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState("");
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const staffData = staff.find((data) => data._id === id);
+    if (staffData) {
+      setEdit_staff({
+        id: staffData._id,
+        name: staffData.name,
+        gender: staffData.gender,
+        phone: staffData.phone,
+        dob: staffData.dob,
+        city: staffData.city,
+        country: staffData.country,
+        department: staffData.department,
+        email: staffData.email,
+        date_of_join: staffData.date_of_join,
+        state: staffData.state,
+        address: staffData.address,
+      });
+      setPhotoUrl(staffData.photo.url);
+    }
+  }, [id, staff]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let photoUrlToUse = photoUrl;
 
-    if (file &&  add_staff.name &&
-      add_staff.gender &&
-      add_staff.phone &&
-      add_staff.dob &&
-      add_staff.city &&
-      add_staff.country &&
-      add_staff.department &&
-      add_staff.email &&
-      add_staff.date_of_join &&
-      add_staff.state &&
-      add_staff.address) {
-      
+    if (file) {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = async () => {
-        const photoURL = reader.result;
-      
-        await addStaff(add_staff.name,
-          add_staff.gender,
-          add_staff.phone,
-          add_staff.dob,
-          add_staff.city,
-          add_staff.country,
-          add_staff.department,
-          add_staff.email,
-          photoURL,
-          add_staff.date_of_join,
-          add_staff.state,
-          add_staff.address,);
 
-        setAdd_staff({
+      reader.onloadend = async () => {
+        photoUrlToUse = reader.result;
+
+        await editStaff(
+          edit_staff.id,
+          edit_staff.name,
+          edit_staff.gender,
+          edit_staff.phone,
+          edit_staff.dob,
+          edit_staff.city,
+          edit_staff.country,
+          edit_staff.department,
+          edit_staff.email,
+          photoUrlToUse,
+          edit_staff.date_of_join,
+          edit_staff.state,
+          edit_staff.address
+        );
+
+        setEdit_staff({
+          id: id,
           name: "",
           gender: "",
           phone: "",
@@ -67,16 +85,48 @@ export default function AddStaff() {
           state: "",
           address: "",
         });
-        setFile(" ");
-        
+        setFile(null);
+        navigate("/manageStaff");
       };
+      reader.readAsDataURL(file);
     } else {
-      console.error("All fields are required, including a valid photo file.");
+      // Use the existing photo URL if no new file is selected
+      await editStaff(
+        edit_staff.id,
+        edit_staff.name,
+        edit_staff.gender,
+        edit_staff.phone,
+        edit_staff.dob,
+        edit_staff.city,
+        edit_staff.country,
+        edit_staff.department,
+        edit_staff.email,
+        photoUrlToUse,
+        edit_staff.date_of_join,
+        edit_staff.state,
+        edit_staff.address
+      );
+
+      setEdit_staff({
+        id: id,
+        name: "",
+        gender: "",
+        phone: "",
+        dob: "",
+        city: "",
+        country: "",
+        department: "",
+        email: "",
+        date_of_join: "",
+        state: "",
+        address: "",
+      });
+      navigate("/manageStaff");
     }
   };
 
   const handleChange = (e) => {
-    setAdd_staff({ ...add_staff, [e.target.name]:[ e.target.value] });
+    setEdit_staff({ ...edit_staff, [e.target.name]: e.target.value });
   };
 
   const photoChange = (e) => {
@@ -90,7 +140,6 @@ export default function AddStaff() {
     borderRadius: "5px",
   };
 
- 
   return (
     <>
       <nav
@@ -159,7 +208,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="name"
-                  value={add_staff.name}
+                  value={edit_staff.name}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -172,7 +221,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="gender"
-                  value={add_staff.gender}
+                  value={edit_staff.gender}
                   style={{ border: "1px solid" }}
                   defaultValue=""
                   required
@@ -195,7 +244,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="phone"
-                  value={add_staff.phone}
+                  value={edit_staff.phone}
                   style={{ border: "1px solid" }}
                 />
               </div>
@@ -208,7 +257,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="dob"
-                  value={add_staff.dob}
+                  value={edit_staff.dob}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -222,7 +271,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="city"
-                  value={add_staff.city}
+                  value={edit_staff.city}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -236,7 +285,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="country"
-                  value={add_staff.country}
+                  value={edit_staff.country}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -250,14 +299,12 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="department"
-                  value={add_staff.department}
+                  value={edit_staff.department}
                   style={{ border: "1px solid" }}
                   defaultValue=""
                   required
                 >
-                  <option
-                   value="" disabled
-                  >
+                  <option value="" disabled>
                     --Department Name--
                   </option>
                   <option>Backend developement</option>
@@ -275,7 +322,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="email"
-                  value={add_staff.email}
+                  value={edit_staff.email}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -288,9 +335,15 @@ export default function AddStaff() {
                   accept=".jpg, .png, .svg, .webp, .jpeg"
                   className="form-control"
                   onChange={photoChange}
-                  
                   required
                   style={{ border: "1px solid" }}
+                />
+              </div>
+              <div className="mt-2">
+                <img
+                  src={file ? URL.createObjectURL(file) : photoUrl}
+                  alt="Admin"
+                  style={{ maxWidth: "100px", maxHeight: "100px" }}
                 />
               </div>
               <div className="mb-3">
@@ -301,7 +354,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="date_of_join"
-                  value={add_staff.date_of_join}
+                  value={edit_staff.date_of_join}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -314,7 +367,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="state"
-                  value={add_staff.state}
+                  value={edit_staff.state}
                   required
                   style={{ border: "1px solid" }}
                 />
@@ -326,7 +379,7 @@ export default function AddStaff() {
                   className="form-control"
                   onChange={handleChange}
                   name="address"
-                  value={add_staff.address}
+                  value={edit_staff.address}
                   placeholder="Description"
                   style={{ border: "1px solid" }}
                   required
@@ -335,10 +388,10 @@ export default function AddStaff() {
 
               <button
                 type="submit"
-                className="btn btn-primary float-end"
+                className="btn btn-success float-end"
                 id="applyleave"
               >
-                Submit
+                Update
               </button>
             </div>
           </div>

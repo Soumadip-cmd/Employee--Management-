@@ -226,6 +226,144 @@ const DataState = (props) => {
     }
   };
 
+  // ------Staff ----------------------
+
+  const [staff, setStaff] = useState([]);
+
+
+  //get staff
+  const getStaff=async()=>{
+    const url = `http://localhost:8800/get-staffs`;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`,
+        },
+        method: "GET",
+      });
+
+      const data = await response.json();
+      // console.log(data);
+      setStaff(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  //add Staff
+  const addStaff = async (name, gender, phone, dob, city, country, department, email, photo, date_of_join, state, address ) => {
+    const url = `http://localhost:8800/add-Staff`;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          name: String(name),
+          gender: String(gender),
+          phone: String(phone),
+          dob: String(dob),
+          city: String(city),
+          country: String(country),
+          department: String(department),
+          email: String(email),
+          photo: String(photo),
+          date_of_join: String(date_of_join),
+          state: String(state),
+          address: String(address),
+        }),
+      });
+
+      const data = await response.json();
+      setStaff(staff.concat());
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
+  //delete Staff
+  const deleteStaff = async (id) => {
+    const url = `http://localhost:8800/delete-Staff/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete staff: ${response.statusText}`);
+      }
+
+      await response.json();
+      const updateStaffList = staff.filter((k) => k._id !== id);
+      setStaff(updateStaffList);
+    } catch (error) {
+      console.error("Error deleting admin:", error);
+    }
+  };
+
+
+  //edit Staff
+  const editStaff = async (id,name, gender, phone, dob, city, country, department, email, photo, date_of_join, state, address ) => {
+    const url = `http://localhost:8800/edit-Staff/${id}`;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4`,
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          name: String(name),
+          gender: String(gender),
+          phone: String(phone),
+          dob: String(dob),
+          city: String(city),
+          country: String(country),
+          department: String(department),
+          email: String(email),
+          photo: String(photo),
+          date_of_join: String(date_of_join),
+          state: String(state),
+          address: String(address),
+        }),
+      });
+
+      const data = await response.json();
+      const strData = JSON.parse(JSON.stringify(admin));
+      for (let i = 0; i < strData.length; i++) {
+        let element = strData[i];
+        if (element._id === id) {
+          element.name=name
+          element.gender=gender
+          element.phone=phone
+          element.dob=dob
+          element.city=city
+          element.country=country
+          element.department=department
+          element.email=email
+          element.photo=photo
+          element.date_of_join=date_of_join
+          element.state=state
+          element.address=address
+          break;
+        }
+      }
+
+      setStaff(strData);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
+
   return (
     <DataContext.Provider
       value={{
@@ -239,7 +377,12 @@ const DataState = (props) => {
         getAdmin,
         admin,
         deleteAdmin,
-        editAdmin
+        editAdmin,
+        addStaff,
+        getStaff,
+        staff,
+        deleteStaff,
+        editStaff
       }}
     >
       {props.children}

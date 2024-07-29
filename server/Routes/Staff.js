@@ -48,7 +48,7 @@ router.post(
         country,
         department,
         email,
-        photo, // This should be a URL or base64 data
+        photo, 
         date_of_join,
         state,
         address,

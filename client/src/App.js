@@ -22,6 +22,7 @@ import Profile from "./components/Profile/Profile";
 import DataState from "./context/DataState";
 import EditDepartment from "./components/Department/EditDepartment";
 import EditAdmin from "./components/Admin/EditAdmin";
+import EditStaff from "./components/Staff/EditStaff";
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -142,6 +143,16 @@ function App() {
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
           <AddStaff />
+        </>
+      ),
+    },
+    {
+      path: "/editStaff/:id",
+      element: (
+        <>
+          {isLargeDevice && <SlideNavbar />}
+          <NavBar />
+          <EditStaff/>
         </>
       ),
     },

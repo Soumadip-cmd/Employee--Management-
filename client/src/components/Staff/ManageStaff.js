@@ -1,24 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../Leave/ApplyLeave.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import DataContext from "../../context/DataContext";
+import Img from "../Admin/Img";
 
 export default function ManageStaff() {
   const [search, setSearch] = useState("");
+  const { getStaff, staff,deleteStaff } = useContext(DataContext);
+  const navigate=useNavigate()
 
-
-  let boxstyle = {
-    background: "white",
-    padding: "21px",
-    borderTop: "5px solid #004dffe8",
-    borderRadius: "5px",
-    height: "auto",
-  };
+  useEffect(() => {
+    getStaff();
+  }, []);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
     // Filter department logic here
   };
 
+  const delStaff=(id)=>{
+    deleteStaff(id)
+  }
+
+  const editSTAFF=(id)=>{
+    navigate(`/editStaff/${id}`)
+  }
 
   return (
     <>
@@ -39,13 +45,13 @@ export default function ManageStaff() {
             Staff
           </NavLink>
 
-          <div className=" mt-2 pt-2">
+          <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
                   <NavLink
                     to="/"
-                    className=" text-dark fw-semibold text-decoration-none"
+                    className="text-dark fw-semibold text-decoration-none"
                   >
                     Home
                   </NavLink>
@@ -59,9 +65,9 @@ export default function ManageStaff() {
                 <li className="breadcrumb-item">
                   <NavLink
                     to="/addStaff"
-                    className=" text-dark fw-semibold text-decoration-none"
+                    className="text-dark fw-semibold text-decoration-none"
                   >
-                    AddStaff
+                    Add Staff
                   </NavLink>
                 </li>
               </ol>
@@ -69,10 +75,10 @@ export default function ManageStaff() {
           </div>
         </div>
       </nav>
-      <div className=" pt-3  extra-special3  text-dark ">
+      <div className="pt-3 extra-special3 text-dark">
         <h1 className="fs-2 mb-4">Staff Management</h1>
         <div
-          className="bg-white     text-dark p-3 py-4 rounded-top rounded-bottom-1 shadow"
+          className="bg-white text-dark p-3 py-4 rounded-top rounded-bottom-1 shadow"
           style={{ borderTop: "5px solid #004dffe8" }}
         >
           <h2 className="fs-4 fw-semibold mb-4 border-bottom pb-2">
@@ -80,7 +86,7 @@ export default function ManageStaff() {
           </h2>
           <div className="d-flex justify-content-between align-items-center gap-4 mb-4">
             <div className="d-flex align-items-center gap-2">
-              <label htmlFor="entries" className="  fs-6">
+              <label htmlFor="entries" className="fs-6">
                 Show
               </label>
               <select
@@ -108,7 +114,7 @@ export default function ManageStaff() {
               <input
                 type="text"
                 placeholder="Search"
-                className=" form-control d-none d-md-flex"
+                className="form-control d-none d-md-flex"
                 value={search}
                 onChange={handleSearch}
               />
@@ -126,7 +132,6 @@ export default function ManageStaff() {
                   <th>Photo</th>
                   <th>Department</th>
                   <th>Gender</th>
-
                   <th>Mobile</th>
                   <th>Email</th>
                   <th>DOB</th>
@@ -139,39 +144,54 @@ export default function ManageStaff() {
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Soumadip santra</td>
-                  <td className="text-center">
-                    <img
-                      className=" rounded-2 "
-                      src="https://placehold.co/64x64"
-                      alt="img-Profile"
-                    />
-                  </td>
-                  <td>Web Developement</td>
-                  <td>Male</td>
-                  <td>8965321459</td>
-                  <td>souma@mail.com</td>
-                  <td>05-02-2004</td>
-                  <td>05-07-2024</td>
-                  <td>G.T. Road (278/B/4)</td>
-                  <td>Kolkata</td>
-                  <td>WB</td>
-                  <td>India</td>
-
-                  <td>20-12-23</td>
-                  <td className="py-2 px-4 ">
-                    <span className="badge text-bg-success mx-1 px-2">Edit</span>
-                    <span className="badge text-bg-danger mx-1 px-2">Delete</span>
-                  </td>
-                </tr>
-              </tbody>
+              {staff.length > 0 ? (
+                staff.map((item, index) => (
+                  <tbody key={index}>
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>{item.name}</td>
+                      <td className="text-center">
+                        <Img upload_id={item.photo.public_id} />
+                      </td>
+                      <td>{item.department}</td>
+                      <td>{item.gender}</td>
+                      <td>{item.phone}</td>
+                      <td>{item.email}</td>
+                      <td>{item.dob}</td>
+                      <td>{item.date_of_join}</td>
+                      <td>{item.address}</td>
+                      <td>{item.city}</td>
+                      <td>{item.state}</td>
+                      <td>{item.country}</td>
+                      <td>{new Date(item.created_at).toLocaleDateString()}</td>
+                      <td className="py-2 px-4">
+                        <span className="badge text-bg-success mx-1 px-2"   onClick={() => editSTAFF(item._id)}
+                          style={{ cursor: 'pointer' }}>
+                          Edit
+                        </span>
+                        <span className="badge text-bg-danger mx-1 px-2"    onClick={() => delStaff(item._id)}
+                          style={{ cursor: 'pointer' }}>
+                          Delete
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                ))
+              ) : (
+                <tbody>
+                  <tr>
+                    <td colSpan="15" className="text-center py-4">
+                      You Don't add any Staff..!
+                    </td>
+                  </tr>
+                </tbody>
+              )}
             </table>
           </div>
           <div className="d-flex justify-content-between align-items-center mt-4">
-            <span className="fs-6">Showing 1 to 2 of 2 entries</span>
+            <span className="fs-6">
+              Showing 1 to {staff.length} of {staff.length} entries
+            </span>
             <div className="d-flex gap-2">
               <button className="btn btn-primary btn-sm">&lt;</button>
               <button className="btn btn-primary btn-sm">1</button>
