@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../Leave/ApplyLeave.css";
 import { NavLink } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 
 export default function AddStaff() {
-  const { addStaff } = useContext(DataContext);
+  const { addStaff, getDept, dept } = useContext(DataContext);
   const [add_staff, setAdd_staff] = useState({
     name: "",
     gender: "",
@@ -18,13 +18,19 @@ export default function AddStaff() {
     state: "",
     address: "",
   });
-  const [file,setFile]=useState(null)
+  const [file, setFile] = useState(null);
 
+  useEffect(() => {
+    getDept();
+    // eslint-disable-next-line
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (file &&  add_staff.name &&
+    if (
+      file &&
+      add_staff.name &&
       add_staff.gender &&
       add_staff.phone &&
       add_staff.dob &&
@@ -34,14 +40,15 @@ export default function AddStaff() {
       add_staff.email &&
       add_staff.date_of_join &&
       add_staff.state &&
-      add_staff.address) {
-      
+      add_staff.address
+    ) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = async () => {
         const photoURL = reader.result;
-      
-        await addStaff(add_staff.name,
+
+        await addStaff(
+          add_staff.name,
           add_staff.gender,
           add_staff.phone,
           add_staff.dob,
@@ -52,7 +59,8 @@ export default function AddStaff() {
           photoURL,
           add_staff.date_of_join,
           add_staff.state,
-          add_staff.address,);
+          add_staff.address
+        );
 
         setAdd_staff({
           name: "",
@@ -67,8 +75,7 @@ export default function AddStaff() {
           state: "",
           address: "",
         });
-        setFile(" ");
-        
+        setFile(null);
       };
     } else {
       console.error("All fields are required, including a valid photo file.");
@@ -76,7 +83,7 @@ export default function AddStaff() {
   };
 
   const handleChange = (e) => {
-    setAdd_staff({ ...add_staff, [e.target.name]:[ e.target.value] });
+    setAdd_staff({ ...add_staff, [e.target.name]: e.target.value });
   };
 
   const photoChange = (e) => {
@@ -90,7 +97,6 @@ export default function AddStaff() {
     borderRadius: "5px",
   };
 
- 
   return (
     <>
       <nav
@@ -174,7 +180,6 @@ export default function AddStaff() {
                   name="gender"
                   value={add_staff.gender}
                   style={{ border: "1px solid" }}
-                  defaultValue=""
                   required
                 >
                   <option value="" disabled>
@@ -190,7 +195,7 @@ export default function AddStaff() {
                 <span style={{ color: "red" }}>*</span>
                 <input
                   type="tel"
-                  max={10}
+                  maxLength={10}
                   required
                   className="form-control"
                   onChange={handleChange}
@@ -252,19 +257,16 @@ export default function AddStaff() {
                   name="department"
                   value={add_staff.department}
                   style={{ border: "1px solid" }}
-                  defaultValue=""
                   required
                 >
-                  <option
-                   value="" disabled
-                  >
+                  <option value="" disabled>
                     --Department Name--
                   </option>
-                  <option>Backend developement</option>
-                  <option>Designing</option>
-                  <option>Front-end developement</option>
-                  <option>Marketing</option>
-                  <option>Finance</option>
+                  {dept.map((item, index) => (
+                    <option key={index} value={item.deptName}>
+                      {item.deptName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3">
@@ -288,7 +290,6 @@ export default function AddStaff() {
                   accept=".jpg, .png, .svg, .webp, .jpeg"
                   className="form-control"
                   onChange={photoChange}
-                  
                   required
                   style={{ border: "1px solid" }}
                 />

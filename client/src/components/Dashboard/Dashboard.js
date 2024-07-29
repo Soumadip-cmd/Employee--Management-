@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Card from "./Card";
 import './Dashboard.css'
 import DataContext from "../../context/DataContext";
@@ -6,7 +6,14 @@ import DataContext from "../../context/DataContext";
 
 const Dashboard = () => {
 
-  const {dept,staff,salary}=useContext(DataContext)  
+  const {getDept,getStaff,getSal,dept,staff,salary}=useContext(DataContext)  
+
+  useEffect(()=>{
+    getDept()
+    getSal()
+    getStaff()
+    // eslint-disable-next-line
+  },[])
 
   return (
     <div className=" special mt-5 ms-2">
