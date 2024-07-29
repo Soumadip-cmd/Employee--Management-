@@ -1,5 +1,4 @@
 const express = require("express");
-const FetchUser = require("../middleware/FetchUser");
 const { body, validationResult } = require("express-validator");
 const Admin = require("../models/AdminSchema");
 const cloudinary = require("../Cloudnary");
@@ -7,18 +6,17 @@ const cloudinary = require("../Cloudnary");
 const router = express.Router();
 
 // Get all admins
-router.get("/get-admins", FetchUser, async (req, res) => {
+router.get("/get-admins", async (req, res) => {
   try {
-    const admins = await Admin.find({ userId: req.user.id });
+    const admins = await Admin.find();
     res.status(200).json(admins);
   } catch (error) {
     console.error(error);
     res
       .status(500)
-      .json({ Success: false, msg: `Error Occurred: ${error.message}` });
+      .json({ success: false, msg: `Error Occurred: ${error.message}` });
   }
 });
-
 
 router.post(
   "/add-admin",
@@ -26,7 +24,6 @@ router.post(
     body("name", "Enter Full name").isLength({ min: 3 }),
     body("email", "Enter a valid email").isEmail(),
   ],
-  FetchUser,
   async (req, res) => {
     let success = false;
     const errors = validationResult(req);
@@ -51,7 +48,6 @@ router.post(
         name,
         photo: { public_id: "", url: "" },
         email,
-        userId: req.user.id,
       });
 
       // Upload photo to Cloudinary
@@ -81,43 +77,36 @@ router.post(
 );
 
 // Edit admin
-router.put("/edit-admin/:id", FetchUser, async (req, res) => {
+router.put("/edit-admin/:id", async (req, res) => {
   let success = false;
   try {
     const { name, email, photo } = req.body;
-    const userId = req.user.id;
     const admin = await Admin.findById(req.params.id);
 
     if (!admin) {
       return res
         .status(404)
-        .json({ Success: success, msg: "Admin does not exist" });
-    }
-
-    if (admin.userId.toString() !== userId) {
-      return res.status(403).json({ Success: success, msg: "Not allowed" });
+        .json({ success: false, msg: "Admin does not exist" });
     }
 
     const newAdmin = {};
     if (name) newAdmin.name = name;
     if (email) newAdmin.email = email;
     if (photo) {
-      if (photo.public_id) {
-        await cloudinary.uploader.destroy(photo.public_id);
+      if (admin.photo.public_id) {
+        await cloudinary.uploader.destroy(admin.photo.public_id);
       }
 
-      const uploadResult = await cloudinary.uploader
-        .upload(photo, {
-          upload_preset: "employee_data",
-          allowed_formats: ["png", "jpg", "jpeg", "svg", "webp"],
-          public_id: `Admin_img${admin.id}`,
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      const uploadResult = await cloudinary.uploader.upload(photo, {
+        upload_preset: "employee_data",
+        allowed_formats: ["png", "jpg", "jpeg", "svg", "webp"],
+        public_id: `Admin_img${admin.id}`,
+      });
 
-      photo.public_id = uploadResult.public_id;
-      photo.url = uploadResult.secure_url;
+      newAdmin.photo = {
+        public_id: uploadResult.public_id,
+        url: uploadResult.secure_url,
+      };
     }
 
     const updatedAdmin = await Admin.findByIdAndUpdate(
@@ -127,39 +116,7 @@ router.put("/edit-admin/:id", FetchUser, async (req, res) => {
     );
 
     success = true;
-    res.status(200).json({ Success: success, updatedAdmin });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ Success: false, msg: `Error Occurred: ${error.message}` });
-  }
-});
-
-// Delete admin
-router.delete("/delete-admin/:id", FetchUser, async (req, res) => {
-  let success = false;
-  try {
-    const user = req.params.id;
-    const userId = req.user.id;
-    const adminExist = await Admin.findById(user);
-
-    if (!adminExist) {
-      return res
-        .status(404)
-        .json({ success: false, msg: "Admin does not exist" });
-    }
-
-    if (adminExist.userId.toString() !== userId) {
-      return res.status(403).json({ success: false, msg: "Not allowed" });
-    }
-
-    await cloudinary.uploader.destroy(adminExist.photo.public_id);
-
-    const delAdmin = await Admin.findByIdAndDelete(req.params.id);
-    success = true;
-    res.status(200).json({ success, delAdmin });
-    
+    res.status(200).json({ success, updatedAdmin });
   } catch (error) {
     console.error(error);
     res
@@ -168,5 +125,29 @@ router.delete("/delete-admin/:id", FetchUser, async (req, res) => {
   }
 });
 
+// Delete admin
+router.delete("/delete-admin/:id", async (req, res) => {
+  let success = false;
+  try {
+    const admin = await Admin.findById(req.params.id);
+
+    if (!admin) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "Admin does not exist" });
+    }
+
+    await cloudinary.uploader.destroy(admin.photo.public_id);
+
+    const delAdmin = await Admin.findByIdAndDelete(req.params.id);
+    success = true;
+    res.status(200).json({ success, delAdmin });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, msg: `Error Occurred: ${error.message}` });
+  }
+});
 
 module.exports = router;

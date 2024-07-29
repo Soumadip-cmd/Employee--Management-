@@ -1,37 +1,30 @@
 import React, { useContext, useEffect } from "react";
 import Card from "./Card";
-import './Dashboard.css'
+import './Dashboard.css';
 import DataContext from "../../context/DataContext";
 
-
 const Dashboard = () => {
+  const { getDept, getStaff, getSal, dept, staff, salary } = useContext(DataContext);
 
-  const {getDept,getStaff,getSal,dept,staff,salary}=useContext(DataContext)  
-
-  useEffect(()=>{
-    getDept()
-    getSal()
-    getStaff()
-    // eslint-disable-next-line
-  },[])
+  useEffect(() => {
+    getDept();
+    getSal();
+    getStaff();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className=" special mt-5 ms-2">
-      <div className="container p-3 ">
+    <div className="special mt-5 ms-2">
+      <div className="container p-3">
         <span style={{ fontSize: "2em", fontWeight: "600" }}>Dashboard </span>
         <span style={{ fontSize: "1em" }}> Control panel</span>
       </div>
-      <hr
-        style={{
-          position: "relative",
-          bottom: "29px",
-        }}
-      />
-      <div className="container my-2 ">
+      <hr style={{ position: "relative", bottom: "29px" }} />
+      <div className="container my-2">
         <div className="row" style={{ transform: "translateY(-19px)" }}>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number={dept.length}
+              number={dept?.length ?? 0}
               category="Department"
               cardbgcolor="blue"
               pageLink="/manageDepartment"
@@ -39,7 +32,7 @@ const Dashboard = () => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number={staff.length}
+              number={staff?.length ?? 0}
               category="Staff"
               cardbgcolor="rgb(88 13 51)"
               pageLink="/manageStaff"
@@ -55,7 +48,7 @@ const Dashboard = () => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number={`${salary.length}`}
+              number={`${salary?.length ?? 0}`}
               category="Salary Paid"
               cardbgcolor="green"
               pageLink="/manageSalary"
@@ -63,7 +56,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };
