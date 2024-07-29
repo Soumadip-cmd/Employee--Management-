@@ -1,21 +1,69 @@
-import React from 'react'
-import { NavLink } from "react-router-dom";
+import React, { useState } from 'react'
+import { NavLink, useNavigate } from "react-router-dom";
 import './login.css'
 const Login = () => {
+  const navigate=useNavigate()
+  
+  const [login,setLogin]=useState({name:"",email:"",password:"",adminId:""})
+
+  const handlelogin = async (e) => {
+    e.preventDefault()
+    let {email,password}=login
+    const url = "http://localhost:8800/login";
+
+    if (Array.isArray(email)) {
+      email = email[0];
+    }
+    if (Array.isArray(password)) {
+      password = password[0];
+    }
+    
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        
+      },
+      method: "POST",
+      body: JSON.stringify({
+        email: String(email),
+        password: String(password),
+      }),
+    });
+
+    const data = await response.json();
+    // console.log(data);
+    if(data.Success)
+    {
+      localStorage.setItem('authToken',data.token)
+      navigate('/dashboard')
+    }
+    else {
+      alert('warning','Invalid Credentials!..Check Again..')
+    }
+    
+    // setLogin(login.concat());
+
+  };
+
+  const handleChange=(e)=>{
+    setLogin({...login,[e.target.name]:[e.target.value]})
+  }
+
   return (
     <div className='stylishBG d-flex justify-content-center align-items-center flex-column ' style={{height:'100vh'}}>
       <div className="form-container">
       <p className="title">Welcome back</p>
-      <form className="form">
-        <input type="email" className="input" placeholder="Email"/>
-        <input type="password" className="input" placeholder="Password"/>
+      <form className="form" onSubmit={handlelogin}>
+        <input type="email" className="input" placeholder="Email" name='email' value={login.email} onChange={handleChange} required/>
+        <input type="password" className="input" placeholder="Password" name='password' value={login.password} onChange={handleChange} required/>
         <p className="page-link">
           <span className="page-link-label">Forgot Password?</span>
         </p>
         <button className="form-btn">Log in</button>
       </form>
       <p className="sign-up-label">
-        Don't have an account?<NavLink to='/signup' className="sign-up-link">Sign up</NavLink>
+        Don't have an account?<NavLink to='/login' className="sign-up-link">Sign up</NavLink>
       </p>
       <div className="buttons-container">
         <div className="apple-login-button">

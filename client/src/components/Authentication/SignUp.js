@@ -44,7 +44,10 @@ const SignUp = () => {
     if(data.Success)
     {
       localStorage.setItem('authToken',data.token)
-      navigate('/')
+      navigate('/dashboard')
+    }
+    else {
+      alert('warning','Invalid Credentials!..Check Again..')
     }
     
     // setSignup(signup.concat());
@@ -73,7 +76,7 @@ const SignUp = () => {
         <button className="form-btn">Sign Up</button>
       </form>
       <p className="sign-up-label">
-        Don't have an account?<NavLink to='/login' className="sign-up-link">Log In</NavLink>
+        Don't have an account?<NavLink to='/' className="sign-up-link">Log In</NavLink>
       </p>
       <div className="buttons-container">
         <div className="apple-login-button">

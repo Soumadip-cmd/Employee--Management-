@@ -140,8 +140,9 @@ export default function ManageSalary() {
                     <th>Action</th>
                   </tr>
                 </thead>
+                {filteredSalary.length > 0 ? (
+                  filteredSalary.map((item, index) => (
                 <tbody>
-                  {filteredSalary.map((item, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{item.StaffName}</td>
@@ -164,8 +165,18 @@ export default function ManageSalary() {
                         </span>
                       </td>
                     </tr>
-                  ))}
+                  
                 </tbody>
+              ))
+            ) : (
+                <tbody>
+                  <tr>
+                    <td colSpan="5" className="text-center py-2">
+                      You Don't add any Staff's Paid Salary...
+                    </td>
+                  </tr>
+                </tbody>
+              )}
               </table>
             </div>
             <div className="d-flex justify-content-between align-items-center mt-4">
