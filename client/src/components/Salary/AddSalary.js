@@ -6,26 +6,34 @@ import DataContext from "../../context/DataContext";
 export default function AddSalary() {
   const [isFocused, setIsFocused] = useState(false);
   const { addSal, getStaff, getDept, staff, dept } = useContext(DataContext);
-  const [addSalData, setAddSalData] = useState({ StaffName: "", department: "", Paid_Salary: 0 });
-  const [basicSalary, setBasicSalary] = useState(0);
-  const [allowance, setAllowance] = useState(0);
+  const [addSalData, setAddSalData] = useState({ StaffName: "", department: "", Paid_Salary: null });
+  const [basicSalary, setBasicSalary] = useState(null);
+  const [allowance, setAllowance] = useState(null);
 
   const calculate = () => {
-    const sum = basicSalary + allowance;
+    const sum = (basicSalary || 0) + (allowance || 0);
     setAddSalData({ ...addSalData, Paid_Salary: sum });
   };
 
   useEffect(() => {
     getDept();
     getStaff();
-  }, []);
+  }, [getDept, getStaff]);
+
+  useEffect(() => {
+    calculate();
+  }, [basicSalary, allowance]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
-    setAddSalData({ StaffName: "", department: "", Paid_Salary: 0 });
-    setBasicSalary(0);
-    setAllowance(0);
+    if (addSalData.StaffName && addSalData.department) {
+      addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
+      setAddSalData({ StaffName: "", department: "", Paid_Salary: null });
+      setBasicSalary(null);
+      setAllowance(null);
+    } else {
+      alert("Please select a staff member and department.");
+    }
   };
 
   const handleInputChange = (e) => {
@@ -154,9 +162,8 @@ export default function AddSalary() {
                           id="num1"
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
-                          value={basicSalary}
-                          onChange={(e) => { setBasicSalary(parseInt(e.target.value) || 0); calculate(); }}
-                          required
+                          value={basicSalary || ""}
+                          onChange={(e) => { setBasicSalary(parseFloat(e.target.value) || 0); }}
                         />
                       </td>
                       <td className="p-1 px-2 tablestyle">
@@ -165,9 +172,8 @@ export default function AddSalary() {
                           id="num2"
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
-                          value={allowance}
-                          onChange={(e) => { setAllowance(parseInt(e.target.value) || 0); calculate(); }}
-                          required
+                          value={allowance || ""}
+                          onChange={(e) => { setAllowance(parseFloat(e.target.value) || 0); }}
                         />
                       </td>
                       <td className="p-1 px-2 tablestyle">
@@ -178,8 +184,7 @@ export default function AddSalary() {
                           style={{ border: "1px solid black" }}
                           readOnly
                           name="Paid_Salary"
-                          value={addSalData.Paid_Salary}
-                          onChange={handleInputChange}
+                          value={addSalData.Paid_Salary !== null ? addSalData.Paid_Salary : ""}
                         />
                       </td>
                     </tr>
