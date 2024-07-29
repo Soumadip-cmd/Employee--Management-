@@ -11,7 +11,6 @@
   }
   .card-body{
     color: white;
-    /* background-color: none; */
     border-radius: 5px;
   }
 
@@ -20,6 +19,6 @@
   }
   @media (min-width: 1279px) {
     .card {
-      width: 17rem; /* Adjust this value as needed */
+      width: 17rem;
     }
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./ApplyLeave.css";
 import { NavLink } from "react-router-dom";
 

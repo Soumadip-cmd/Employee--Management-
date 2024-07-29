@@ -10,6 +10,7 @@ export default function ManageSalary() {
 
   useEffect(() => {
     getSal();
+    // eslint-disable-next-line
   }, []);
 
   const handleSearch = (e) => {

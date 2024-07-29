@@ -21,6 +21,7 @@ export default function EditSalary() {
   useEffect(() => {
     getDept();
     getStaff();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

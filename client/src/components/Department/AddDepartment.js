@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 const AddDepartment = () => {
 
@@ -23,7 +23,6 @@ const AddDepartment = () => {
   }
 
   const handleChange=(e)=>{
-    // console.log("change")
     setAdd_dept({...add_dept,[e.target.name]:[e.target.value]})
 
   }

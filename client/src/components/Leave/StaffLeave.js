@@ -3,13 +3,7 @@ import "./ApplyLeave.css";
 import { NavLink } from "react-router-dom";
 
 export default function StaffLeave() {
-  let boxstyle = {
-    background: "white",
-    padding: "21px",
-    borderTop: "5px solid #004dffe8",
-    borderRadius: "5px",
-    height: "auto",
-  };
+
   const [entries, setEntries] = useState(1);
   const [search, setSearch] = useState("");
 

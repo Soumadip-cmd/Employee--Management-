@@ -32,7 +32,6 @@ const Login = () => {
     });
 
     const data = await response.json();
-    // console.log(data);
     if(data.Success)
     {
       localStorage.setItem('authToken',data.token)
@@ -41,8 +40,6 @@ const Login = () => {
     else {
       alert('warning','Invalid Credentials!..Check Again..')
     }
-    
-    // setLogin(login.concat());
 
   };
 
@@ -63,7 +60,7 @@ const Login = () => {
         <button className="form-btn">Log in</button>
       </form>
       <p className="sign-up-label">
-        Don't have an account?<NavLink to='/login' className="sign-up-link">Sign up</NavLink>
+        Don't have an account?<NavLink to='/signup' className="sign-up-link">Sign up</NavLink>
       </p>
       <div className="buttons-container">
         <div className="apple-login-button">

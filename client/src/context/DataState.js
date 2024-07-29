@@ -12,14 +12,12 @@ const DataState = (props) => {
 
     const response = await fetch(url, {
       headers: {
-        token:
-          localStorage.getItem('authToken'),
+        token: localStorage.getItem("authToken"),
       },
       method: "GET",
     });
 
     const responseData = await response.json();
-    // console.log(responseData);
     setDept(responseData);
   };
 
@@ -37,8 +35,7 @@ const DataState = (props) => {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        token:
-          localStorage.getItem('authToken'),
+        token: localStorage.getItem("authToken"),
       },
       method: "POST",
       body: JSON.stringify({
@@ -47,8 +44,7 @@ const DataState = (props) => {
       }),
     });
 
-    const responseData = await response.json();
-    // console.log(responseData);
+    await response.json();
     setDept(dept.concat());
   };
 
@@ -60,8 +56,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token:
-            localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "DELETE",
       });
@@ -73,10 +68,7 @@ const DataState = (props) => {
       const responseData = await response.json();
       const delDept = dept.filter((depts) => depts._id !== id);
 
-      // Assuming setDept is the function to update the state
       setDept(delDept);
-      // console.log(delDept)
-      console.log("Department deleted successfully:", responseData);
     } catch (error) {
       console.error("Failed to delete department:", error);
     }
@@ -96,8 +88,7 @@ const DataState = (props) => {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        token:
-          localStorage.getItem('authToken'),
+        token: localStorage.getItem("authToken"),
       },
       method: "PUT",
       body: JSON.stringify({
@@ -106,7 +97,7 @@ const DataState = (props) => {
       }),
     });
 
-    const responseData = await response.json();
+    await response.json();
     const data = JSON.parse(JSON.stringify(dept));
     for (let i = 0; i < data.length; i++) {
       const element = data[i];
@@ -122,7 +113,6 @@ const DataState = (props) => {
   // ---------------Admin--------------------
 
   const [admin, setAdmin] = useState([]);
-  const [upload, setUpload] = useState();
 
   //get Admin
   const getAdmin = async () => {
@@ -130,13 +120,12 @@ const DataState = (props) => {
     try {
       const response = await fetch(url, {
         headers: {
-          token: localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "GET",
       });
 
       const data = await response.json();
-      console.log(data);
       setAdmin(data);
     } catch (error) {
       console.error("Error:", error);
@@ -150,7 +139,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "POST",
         body: JSON.stringify({
@@ -160,7 +149,7 @@ const DataState = (props) => {
         }),
       });
 
-      const data = await response.json();
+      await response.json();
       setAdmin(admin.concat());
     } catch (error) {
       console.error("Error:", error);
@@ -174,8 +163,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
-          token:
-            localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
       });
 
@@ -198,7 +186,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "PUT",
         body: JSON.stringify({
@@ -208,7 +196,7 @@ const DataState = (props) => {
         }),
       });
 
-      const data = await response.json();
+      await response.json();
       const strData = JSON.parse(JSON.stringify(admin));
       for (let i = 0; i < strData.length; i++) {
         let element = strData[i];
@@ -236,13 +224,13 @@ const DataState = (props) => {
     try {
       const response = await fetch(url, {
         headers: {
-          token: localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "GET",
       });
 
       const data = await response.json();
-      // console.log(data);
+
       setStaff(data);
     } catch (error) {
       console.error("Error:", error);
@@ -269,7 +257,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "POST",
         body: JSON.stringify({
@@ -288,7 +276,7 @@ const DataState = (props) => {
         }),
       });
 
-      const data = await response.json();
+      await response.json();
       setStaff(staff.concat());
     } catch (error) {
       console.error("Error:", error);
@@ -302,8 +290,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
-          token:
-            localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
       });
 
@@ -340,7 +327,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "PUT",
         body: JSON.stringify({
@@ -359,7 +346,7 @@ const DataState = (props) => {
         }),
       });
 
-      const data = await response.json();
+      await response.json();
       const strData = JSON.parse(JSON.stringify(admin));
       for (let i = 0; i < strData.length; i++) {
         let element = strData[i];
@@ -386,10 +373,6 @@ const DataState = (props) => {
     }
   };
 
-
-
-
-
   // -----------Salary-----------
 
   const [salary, setSalary] = useState([]);
@@ -400,19 +383,17 @@ const DataState = (props) => {
 
     const response = await fetch(url, {
       headers: {
-        token:
-          localStorage.getItem('authToken'),
+        token: localStorage.getItem("authToken"),
       },
       method: "GET",
     });
 
     const responseData = await response.json();
-    console.log(responseData);
     setSalary(responseData);
   };
 
   //add salary
-  const addSal = async (StaffName,department, Paid_Salary) => {
+  const addSal = async (StaffName, department, Paid_Salary) => {
     const url = "http://localhost:8800/add-Salary";
 
     if (Array.isArray(StaffName)) {
@@ -428,8 +409,7 @@ const DataState = (props) => {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        token:
-          localStorage.getItem('authToken'),
+        token: localStorage.getItem("authToken"),
       },
       method: "POST",
       body: JSON.stringify({
@@ -439,8 +419,7 @@ const DataState = (props) => {
       }),
     });
 
-    const responseData = await response.json();
-    // console.log(responseData);
+    await response.json();
     setSalary(salary.concat());
   };
 
@@ -452,8 +431,7 @@ const DataState = (props) => {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token:
-            localStorage.getItem('authToken'),
+          token: localStorage.getItem("authToken"),
         },
         method: "DELETE",
       });
@@ -462,20 +440,18 @@ const DataState = (props) => {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      const responseData = await response.json();
+      await response.json();
       const delSalary = salary.filter((s) => s._id !== id);
 
       // Assuming setDept is the function to update the state
       setSalary(delSalary);
-      // console.log(delDept)
-      console.log("Department deleted successfully:", responseData);
     } catch (error) {
       console.error("Failed to delete department:", error);
     }
   };
 
   //edit Salary
-  const editSal = async (id, StaffName,department, Paid_Salary) => {
+  const editSal = async (id, StaffName, department, Paid_Salary) => {
     const url = `http://localhost:8800/edit-Salary/${id}`;
 
     if (Array.isArray(StaffName)) {
@@ -491,8 +467,7 @@ const DataState = (props) => {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        token:
-          localStorage.getItem('authToken'),
+        token: localStorage.getItem("authToken"),
       },
       method: "PUT",
       body: JSON.stringify({
@@ -502,7 +477,7 @@ const DataState = (props) => {
       }),
     });
 
-    const responseData = await response.json();
+    await response.json();
     const data = JSON.parse(JSON.stringify(salary));
     for (let i = 0; i < data.length; i++) {
       const element = data[i];
@@ -516,9 +491,6 @@ const DataState = (props) => {
     setSalary(data);
   };
 
-
-
-
   return (
     <DataContext.Provider
       value={{
@@ -528,7 +500,6 @@ const DataState = (props) => {
         deleteDept,
         editDept,
         addAdmin,
-        upload,
         getAdmin,
         admin,
         deleteAdmin,

@@ -10,11 +10,12 @@ const ManageDepartment = () => {
 
   useEffect(() => {
     getDept();
+    // eslint-disable-next-line
   }, []);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    // Filter department logic here
+    
   };
 
   const delDept = (id) => {
@@ -98,7 +99,7 @@ const ManageDepartment = () => {
                 id="entries"
                 className="border-1 border-black rounded-2"
                 onChange={(e) => {
-                  // Handle entries change
+                  
                 }}
               >
                 <option value="5">5</option>

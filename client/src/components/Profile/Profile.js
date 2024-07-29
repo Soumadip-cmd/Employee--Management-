@@ -1,5 +1,4 @@
 import React,{useRef} from "react";
-import { NavLink } from "react-router-dom";
 
 const Profile = () => {
 

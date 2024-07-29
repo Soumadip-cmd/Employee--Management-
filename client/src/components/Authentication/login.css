@@ -11,18 +11,17 @@
     background-image: radial-gradient(circle at center center, transparent,rgba(86,79,79, 0.61)),repeating-linear-gradient(223deg, rgba(86,79,79, 0.61) 0px, rgba(86,79,79, 0.61) 2px,transparent 2px, transparent 10px,rgba(86,79,79, 0.61) 10px, rgba(86,79,79, 0.61) 11px,transparent 11px, transparent 21px),repeating-linear-gradient(133deg, rgba(86,79,79, 0.61) 0px, rgba(86,79,79, 0.61) 4px,transparent 4px, transparent 8px),linear-gradient(178deg, rgba(86,79,79, 0.61),rgba(86,79,79, 0.61));
   }
   
-  /* Media query for medium screens */
+  
   @media screen and (min-width: 766px)  {
     .form-container {
-        width: 500px;/* Adjust height for medium screens */
+        width: 500px;
     }
   }
   
-  /* Media query for larger screens */
- 
+   
   @media screen and (min-width: 1300px) {
     .form-container {
-        width: 600px; /* Adjust height for larger screens */
+        width: 600px;
     }
   }
   

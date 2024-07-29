@@ -11,6 +11,7 @@ export default function ManageStaff() {
 
   useEffect(() => {
     getStaff();
+    // eslint-disable-next-line
   }, []);
 
   const handleSearch = (e) => {

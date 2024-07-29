@@ -6,18 +6,10 @@ export default function LeaveHistory() {
   const [search, setSearch] = useState("");
 
 
-  let boxstyle = {
-    background: "white",
-    padding: "21px",
-    borderTop: "5px solid #004dffe8",
-    borderRadius: "5px",
-    height: "auto",
-  };
-
   
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    // Filter department logic here
+    
   };
   
   return (
@@ -68,7 +60,7 @@ export default function LeaveHistory() {
                 id="entries"
                 className="border-1 border-black rounded-2"
                 onChange={(e) => {
-                  // Handle entries change
+                  
                 }}
               >
                 <option value="5">5</option>

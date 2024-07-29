@@ -22,6 +22,7 @@ export default function AddSalary() {
 
   useEffect(() => {
     calculate();
+    // eslint-disable-next-line
   }, [basicSalary, allowance]);
 
   const handleSubmit = (e) => {

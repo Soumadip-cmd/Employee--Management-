@@ -3,7 +3,7 @@ import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 import { quality, format } from "@cloudinary/url-gen/actions/delivery";
-import { enhance } from "@cloudinary/url-gen/actions/effect"; // Correct import for enhance effect
+import { enhance } from "@cloudinary/url-gen/actions/effect"; 
 import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { face } from "@cloudinary/url-gen/qualifiers/focusOn";
 import { lazyload, responsive, placeholder } from '@cloudinary/react';
@@ -11,14 +11,14 @@ import { lazyload, responsive, placeholder } from '@cloudinary/react';
 const Img = ({ upload_id }) => {
   const cld = new Cloudinary({
     cloud: {
-      cloudName: "deg0l45uc", // Replace with your Cloudinary cloud name
+      cloudName: "deg0l45uc", 
     },
   });
 
-  // Assuming upload_id is a string containing the public_id of the image
+  
   const myImage = cld.image(upload_id);
 
-  // Apply transformations for quality and enhancement
+  
   myImage
     .resize(
       thumbnail()
@@ -26,9 +26,9 @@ const Img = ({ upload_id }) => {
         .height(150)
         .gravity(focusOn(face()))
     )
-    .delivery(quality("auto")) // Automatically adjust the quality
-    .delivery(format("auto")) // Automatically select the best format
-    .effect(enhance()); // Enhance the image
+    .delivery(quality("auto"))
+    .delivery(format("auto"))
+    .effect(enhance()); 
 
   return (
     <div>

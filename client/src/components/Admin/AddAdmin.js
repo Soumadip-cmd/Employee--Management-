@@ -46,7 +46,6 @@ const AddAdmin = () => {
 
   return (
     <>
-      {/* Your navigation and form UI code */}
       <>
       <nav
         className="navbar navbar-expand-lg "

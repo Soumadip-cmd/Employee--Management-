@@ -10,11 +10,13 @@ const ManageAdmin = () => {
   const navigate=useNavigate()
   useEffect(() => {
     getAdmin();
+    // eslint-disable-next-line
   }, []);
+
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    // Implement filtering logic here
+    
   };
 
   const delAdmin = (id) => {
@@ -96,7 +98,7 @@ const ManageAdmin = () => {
                 id="entries"
                 className="border-1 border-black rounded-2"
                 onChange={(e) => {
-                  /* Handle entries change */
+                  
                 }}
               >
                 <option value="5">5</option>

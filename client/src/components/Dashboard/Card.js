@@ -1,9 +1,6 @@
 import React from "react";
 import './Card.css'
 export default function Card(props) {
-    // let myStyl={
-    //     `background:`
-    // }
     const {cardbgcolor,number,category,pageLink}=props
   return (
     <>

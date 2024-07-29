@@ -40,7 +40,6 @@ const SignUp = () => {
     });
 
     const data = await response.json();
-    // console.log(data);
     if(data.Success)
     {
       localStorage.setItem('authToken',data.token)
@@ -49,8 +48,6 @@ const SignUp = () => {
     else {
       alert('warning','Invalid Credentials!..Check Again..')
     }
-    
-    // setSignup(signup.concat());
 
   };
 
