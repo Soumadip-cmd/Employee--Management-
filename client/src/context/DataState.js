@@ -65,7 +65,7 @@ const DataState = (props) => {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
-      const responseData = await response.json();
+      await response.json();
       const delDept = dept.filter((depts) => depts._id !== id);
 
       setDept(delDept);
