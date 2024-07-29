@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Select, { components } from "react-select";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 
 export default function AddSalary() {
@@ -24,6 +24,16 @@ export default function AddSalary() {
     calculate();
     // eslint-disable-next-line
   }, [basicSalary, allowance]);
+
+  
+  const navigate=useNavigate()
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 const AddDepartment = () => {
 
@@ -12,7 +12,15 @@ const AddDepartment = () => {
     borderTop: "5px solid #004dffe8",
     borderRadius: "5px",
   };
-
+  
+  const navigate=useNavigate()
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
   
 
   const handleSubmit=(e)=>{

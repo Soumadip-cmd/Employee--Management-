@@ -14,6 +14,14 @@ export default function ManageStaff() {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
+  
   const handleSearch = (e) => {
     setSearch(e.target.value);
     // Filter department logic here

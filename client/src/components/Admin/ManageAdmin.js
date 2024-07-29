@@ -30,6 +30,14 @@ const ManageAdmin = () => {
     navigate(`/editAdmin/${id}`)
   }
 
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
       <nav

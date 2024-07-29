@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 
@@ -43,6 +43,15 @@ const AddAdmin = () => {
     borderTop: "5px solid #004dffe8",
     borderRadius: "5px",
   };
+
+  
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>

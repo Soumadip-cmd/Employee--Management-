@@ -1,4 +1,5 @@
-import React,{useRef} from "react";
+import React,{useEffect, useRef} from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
 
@@ -7,6 +8,15 @@ const Profile = () => {
   const handleCamera=()=>{
     camera.current.click()
   }
+
+  const navigate=useNavigate()
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
   return (
     <>
       <div

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import Card from "./Card";
 import './Dashboard.css';
 import DataContext from "../../context/DataContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { getDept, getStaff, getSal, dept, staff, salary } = useContext(DataContext);
@@ -11,6 +12,15 @@ const Dashboard = () => {
     getSal();
     getStaff();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const navigate=useNavigate()
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
   }, []);
 
   return (

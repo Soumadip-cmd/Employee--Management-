@@ -29,6 +29,14 @@ const ManageDepartment = () => {
 
   }
   
+  
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      history('/')
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>

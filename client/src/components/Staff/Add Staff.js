@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../Leave/ApplyLeave.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 
 export default function AddStaff() {
@@ -20,6 +20,15 @@ export default function AddStaff() {
   });
   const [file, setFile] = useState(null);
 
+  const navigate=useNavigate()
+  useEffect(() => {
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
+    }
+    // eslint-disable-next-line
+  }, []);
+  
   useEffect(() => {
     getDept();
     // eslint-disable-next-line
