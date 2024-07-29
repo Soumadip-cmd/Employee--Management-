@@ -23,6 +23,7 @@ import DataState from "./context/DataState";
 import EditDepartment from "./components/Department/EditDepartment";
 import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
+import EditSalary from "./components/Salary/EditSalary";
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -173,6 +174,16 @@ function App() {
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
           <AddSalary />
+        </>
+      ),
+    },
+    {
+      path: "/editSalary/:id",
+      element: (
+        <>
+          {isLargeDevice && <SlideNavbar />}
+          <NavBar />
+          <EditSalary/>
         </>
       ),
     },

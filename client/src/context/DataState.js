@@ -407,7 +407,7 @@ const DataState = (props) => {
     });
 
     const responseData = await response.json();
-    // console.log(responseData);
+    console.log(responseData);
     setSalary(responseData);
   };
 
@@ -517,7 +517,7 @@ const DataState = (props) => {
   };
 
 
-  
+
 
   return (
     <DataContext.Provider
