@@ -1,30 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select, { components } from "react-select";
 import { NavLink } from "react-router-dom";
+import DataContext from "../../context/DataContext";
 
 export default function AddSalary() {
   const [isFocused, setIsFocused] = useState(false);
+  const { addSal, getStaff, getDept, staff, dept } = useContext(DataContext);
+  const [addSalData, setAddSalData] = useState({ StaffName: "", department: "", Paid_Salary: 0 });
+  const [basicSalary, setBasicSalary] = useState(0);
+  const [allowance, setAllowance] = useState(0);
 
-  function calculate() {
-    let n1 = parseInt(document.getElementById("num1").value);
-    let n2 = parseInt(document.getElementById("num2").value);
-    let sum = n1 + n2;
-    document.getElementById("total").value = sum;
-  }
+  const calculate = () => {
+    const sum = basicSalary + allowance;
+    setAddSalData({ ...addSalData, Paid_Salary: sum });
+  };
+
+  useEffect(() => {
+    getDept();
+    getStaff();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
+    setAddSalData({ StaffName: "", department: "", Paid_Salary: 0 });
+    setBasicSalary(0);
+    setAllowance(0);
   };
 
-  const options = [
-    { value: "1", label: "Soumadip Stark" },
-    { value: "2", label: "Ram Swal" },
-    { value: "3", label: "Sam Well" },
-    { value: "4", label: "Jon Snow" },
-  ];
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAddSalData({ ...addSalData, [name]: value });
+  };
 
-  const handleChange = (selectedOption) => {
-    console.log(selectedOption);
+  const handleSelectChange = (selectedOption) => {
+    setAddSalData({ ...addSalData, StaffName: selectedOption });
   };
 
   const handleFocus = () => {
@@ -35,82 +45,27 @@ export default function AddSalary() {
     setIsFocused(false);
   };
 
-  // Custom styles
-  const customStyles = {
-    container: (provided) => ({
-      ...provided,
-      width: "100%",
-    }),
-    control: (provided) => ({
-      ...provided,
-      borderColor: "#ced4da",
-      boxShadow: "none",
-      "&:hover": {
-        borderColor: "#ced4da",
-      },
-    }),
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-    option: (provided) => ({
-      ...provided,
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-    }),
-    clearIndicator: (base) => ({
-      ...base,
-      display: isFocused ? "block" : "none",
-    }),
-  };
-
-  // Custom DropdownIndicator (always hidden)
-  const DropdownIndicator = () => null;
-
-  // Custom ClearIndicator (conditionally shown on focus)
-  const ClearIndicator = (props) => {
-    return isFocused ? <components.ClearIndicator {...props} /> : null;
-  };
-
   return (
     <>
-      <nav
-        className="navbar navbar-expand-lg"
-        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
-      >
+      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
         <div className="container mt-5">
-          <NavLink
-            className="navbar-brand"
-            style={{
-              fontSize: "25px",
-              color: "white",
-              letterSpacing: ".05125em",
-            }}
-            to="/"
-          >
+          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/">
             Salary
           </NavLink>
           <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink
-                    to="/"
-                    className="text-dark fw-semibold text-decoration-none"
-                  >
+                  <NavLink to="/" className="text-dark fw-semibold text-decoration-none">
                     Home
                   </NavLink>
                 </li>
-                <li
-                  className="breadcrumb-item active fw-semibold text-decoration-underline"
-                  aria-current="page"
-                >
+                <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
                   Add
                 </li>
                 <li className="breadcrumb-item">
-                  <NavLink
-                    to="/manageSalary"
-                    className="text-dark fw-semibold text-decoration-none"
-                  >
-                    ManageSalary
+                  <NavLink to="/manageSalary" className="text-dark fw-semibold text-decoration-none">
+                    Manage Salary
                   </NavLink>
                 </li>
               </ol>
@@ -121,40 +76,23 @@ export default function AddSalary() {
       <div className="bg-muted pt-2 extra-special2 min-h-screen d-flex justify-content-center align-items-center">
         <div className="bg-card p-6 w-100 max-w-4xl">
           <h1 className="text-2xl font-bold text-foreground mb-4">Salary</h1>
-          <div
-            className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1"
-            style={{ borderTop: "5px solid #004dffe8" }}
-          >
-            <form action="" onSubmit={handleSubmit}>
-              <h2 className="text-xl font-semibold text-foreground mb-4">
-                Add Salary
-              </h2>
+          <div className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1" style={{ borderTop: "5px solid #004dffe8" }}>
+            <form onSubmit={handleSubmit}>
+              <h2 className="text-xl font-semibold text-foreground mb-4">Add Salary</h2>
               <div className="mb-4">
-                <label
-                  htmlFor="department"
-                  className="form-label text-muted-foreground mb-2"
-                >
-                  <b>Department Name</b>
-                </label>
-
+                <label className="form-label text-muted-foreground mb-2"><b>Department Name</b></label>
                 <select
                   className="form-control"
                   style={{ border: "1px solid" }}
                   required
-                  defaultValue=""
+                  name="department"
+                  value={addSalData.department}
+                  onChange={handleInputChange}
                 >
-                  <option value="" disabled>
-                    --Department Name--
-                  </option>
-                  <option value="Backend development">
-                    Backend development
-                  </option>
-                  <option value="Designing">Designing</option>
-                  <option value="Front-end development">
-                    Front-end development
-                  </option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Finance">Finance</option>
+                  <option value="" disabled>--Department Name--</option>
+                  {dept.map((item, index) => (
+                    <option key={index} value={item.deptName}>{item.deptName}</option>
+                  ))}
                 </select>
               </div>
               <div className="table-responsive">
@@ -171,16 +109,42 @@ export default function AddSalary() {
                     <tr>
                       <td className="p-1 px-2 tablestyle">
                         <Select
-                          options={options}
-                          onChange={handleChange}
-                          placeholder="Select an option..."
+                          name="StaffName"
+                          value={addSalData.StaffName}
+                          onChange={handleSelectChange}
+                          placeholder="Select Staff Name.."
                           isClearable
                           menuPortalTarget={document.body}
-                          styles={customStyles}
+                          styles={{
+                            container: (provided) => ({
+                              ...provided,
+                              width: "100%",
+                            }),
+                            control: (provided) => ({
+                              ...provided,
+                              borderColor: "#ced4da",
+                              boxShadow: "none",
+                              "&:hover": {
+                                borderColor: "#ced4da",
+                              },
+                            }),
+                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            option: (provided) => ({
+                              ...provided,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }),
+                            clearIndicator: (base) => ({
+                              ...base,
+                              display: isFocused ? "block" : "none",
+                            }),
+                          }}
                           menuPosition="fixed"
-                          components={{ DropdownIndicator, ClearIndicator }}
+                          components={{ DropdownIndicator: () => null, ClearIndicator: (props) => isFocused ? <components.ClearIndicator {...props} /> : null }}
                           onFocus={handleFocus}
                           onBlur={handleBlur}
+                          options={staff.map(s => ({ value: s.name, label: s.name }))}
                           required
                         />
                       </td>
@@ -190,7 +154,8 @@ export default function AddSalary() {
                           id="num1"
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
-                          onChange={calculate}
+                          value={basicSalary}
+                          onChange={(e) => { setBasicSalary(parseInt(e.target.value) || 0); calculate(); }}
                           required
                         />
                       </td>
@@ -200,7 +165,8 @@ export default function AddSalary() {
                           id="num2"
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
-                          onChange={calculate}
+                          value={allowance}
+                          onChange={(e) => { setAllowance(parseInt(e.target.value) || 0); calculate(); }}
                           required
                         />
                       </td>
@@ -211,6 +177,9 @@ export default function AddSalary() {
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
                           readOnly
+                          name="Paid_Salary"
+                          value={addSalData.Paid_Salary}
+                          onChange={handleInputChange}
                         />
                       </td>
                     </tr>

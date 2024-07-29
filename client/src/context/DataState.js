@@ -230,9 +230,8 @@ const DataState = (props) => {
 
   const [staff, setStaff] = useState([]);
 
-
   //get staff
-  const getStaff=async()=>{
+  const getStaff = async () => {
     const url = `http://localhost:8800/get-staffs`;
     try {
       const response = await fetch(url, {
@@ -248,10 +247,23 @@ const DataState = (props) => {
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  };
 
   //add Staff
-  const addStaff = async (name, gender, phone, dob, city, country, department, email, photo, date_of_join, state, address ) => {
+  const addStaff = async (
+    name,
+    gender,
+    phone,
+    dob,
+    city,
+    country,
+    department,
+    email,
+    photo,
+    date_of_join,
+    state,
+    address
+  ) => {
     const url = `http://localhost:8800/add-Staff`;
     try {
       const response = await fetch(url, {
@@ -283,7 +295,6 @@ const DataState = (props) => {
     }
   };
 
-
   //delete Staff
   const deleteStaff = async (id) => {
     const url = `http://localhost:8800/delete-Staff/${id}`;
@@ -308,9 +319,22 @@ const DataState = (props) => {
     }
   };
 
-
   //edit Staff
-  const editStaff = async (id,name, gender, phone, dob, city, country, department, email, photo, date_of_join, state, address ) => {
+  const editStaff = async (
+    id,
+    name,
+    gender,
+    phone,
+    dob,
+    city,
+    country,
+    department,
+    email,
+    photo,
+    date_of_join,
+    state,
+    address
+  ) => {
     const url = `http://localhost:8800/edit-Staff/${id}`;
     try {
       const response = await fetch(url, {
@@ -340,18 +364,18 @@ const DataState = (props) => {
       for (let i = 0; i < strData.length; i++) {
         let element = strData[i];
         if (element._id === id) {
-          element.name=name
-          element.gender=gender
-          element.phone=phone
-          element.dob=dob
-          element.city=city
-          element.country=country
-          element.department=department
-          element.email=email
-          element.photo=photo
-          element.date_of_join=date_of_join
-          element.state=state
-          element.address=address
+          element.name = name;
+          element.gender = gender;
+          element.phone = phone;
+          element.dob = dob;
+          element.city = city;
+          element.country = country;
+          element.department = department;
+          element.email = email;
+          element.photo = photo;
+          element.date_of_join = date_of_join;
+          element.state = state;
+          element.address = address;
           break;
         }
       }
@@ -363,6 +387,137 @@ const DataState = (props) => {
   };
 
 
+
+
+
+  // -----------Salary-----------
+
+  const [salary, setSalary] = useState([]);
+
+  //get all salary
+  const getSal = async () => {
+    const url = "http://localhost:8800/get-all-Salary";
+
+    const response = await fetch(url, {
+      headers: {
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4",
+      },
+      method: "GET",
+    });
+
+    const responseData = await response.json();
+    // console.log(responseData);
+    setSalary(responseData);
+  };
+
+  //add salary
+  const addSal = async (StaffName,department, Paid_Salary) => {
+    const url = "http://localhost:8800/add-Salary";
+
+    if (Array.isArray(StaffName)) {
+      StaffName = StaffName[0];
+    }
+    if (Array.isArray(department)) {
+      department = department[0];
+    }
+    if (Array.isArray(Paid_Salary)) {
+      Paid_Salary = Paid_Salary[0];
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        StaffName: String(StaffName),
+        department: String(department),
+        Paid_Salary: String(Paid_Salary),
+      }),
+    });
+
+    const responseData = await response.json();
+    // console.log(responseData);
+    setSalary(salary.concat());
+  };
+
+  //delete salary
+  const deleteSal = async (id) => {
+    const url = `http://localhost:8800/delete-Salary/${id}`;
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4",
+        },
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      const delSalary = salary.filter((s) => s._id !== id);
+
+      // Assuming setDept is the function to update the state
+      setSalary(delSalary);
+      // console.log(delDept)
+      console.log("Department deleted successfully:", responseData);
+    } catch (error) {
+      console.error("Failed to delete department:", error);
+    }
+  };
+
+  //edit Salary
+  const editSal = async (id, StaffName,department, Paid_Salary) => {
+    const url = `http://localhost:8800/edit-Salary/${id}`;
+
+    if (Array.isArray(StaffName)) {
+      StaffName = StaffName[0];
+    }
+    if (Array.isArray(department)) {
+      department = department[0];
+    }
+    if (Array.isArray(Paid_Salary)) {
+      Paid_Salary = Paid_Salary[0];
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY5ZDJmZmI3ZmFiYzdjODQwNjFkNzVlIn0sImlhdCI6MTcyMTYyOTUwNX0.H03vCO4Gp98YeNyzW0ZnVRAA5HovvbiLj5cxl3sSeW4",
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        StaffName: String(StaffName),
+        department: String(department),
+        Paid_Salary: String(Paid_Salary),
+      }),
+    });
+
+    const responseData = await response.json();
+    const data = JSON.parse(JSON.stringify(salary));
+    for (let i = 0; i < data.length; i++) {
+      const element = data[i];
+      if (element._id === id) {
+        element.StaffName = StaffName;
+        element.department = department;
+        element.Paid_Salary = Paid_Salary;
+        break;
+      }
+    }
+    setSalary(data);
+  };
+
+
+  
 
   return (
     <DataContext.Provider
@@ -382,7 +537,12 @@ const DataState = (props) => {
         getStaff,
         staff,
         deleteStaff,
-        editStaff
+        editStaff,
+        editSal,
+        deleteSal,
+        addSal,
+        getSal,
+        salary,
       }}
     >
       {props.children}
