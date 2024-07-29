@@ -53,14 +53,14 @@ const EditAdmin = () => {
     <>
       <nav className="navbar navbar-expand-lg " style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
         <div className="container mt-5">
-          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/">
+          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/dashboard">
             Admin
           </NavLink>
           <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink to="/" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink to="/dashboard" className="text-dark fw-semibold text-decoration-none">
                     Home
                   </NavLink>
                 </li>

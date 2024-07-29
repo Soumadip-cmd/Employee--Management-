@@ -43,7 +43,7 @@ const NavBar = () => {
 
         <div className="flex-shrink-0 dropdown mx-2 mx-lg-3" ref={dropdownRef}>
           <NavLink
-            to="/"
+            to="/dashboard"
             className="d-block link-body-emphasis text-decoration-none dropdown-toggle dropdown-toggle-no-caret"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -59,7 +59,7 @@ const NavBar = () => {
           </NavLink>
           <ul className={`dropdown-menu text-small shadow ${dropdownOpen ? 'show' : ''}`}>
             <li>
-              <NavLink className="dropdown-item" to="/" onClick={closeDropdown}>
+              <NavLink className="dropdown-item" to="/dashboard" onClick={closeDropdown}>
                 Home
               </NavLink>
             </li>
@@ -72,7 +72,7 @@ const NavBar = () => {
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <NavLink className="dropdown-item" to="/login" onClick={closeDropdown}>
+              <NavLink className="dropdown-item" to="/" onClick={closeDropdown}>
                 Sign out
               </NavLink>
             </li>

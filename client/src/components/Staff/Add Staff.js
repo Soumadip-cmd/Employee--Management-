@@ -105,7 +105,7 @@ export default function AddStaff() {
               color: "white",
               letterSpacing: ".05125em",
             }}
-            to="/"
+            to="/dashboard"
           >
             Staff
           </NavLink>
@@ -115,7 +115,7 @@ export default function AddStaff() {
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
                   <NavLink
-                    to="/"
+                    to="/dashboard"
                     className=" text-dark fw-semibold text-decoration-none"
                   >
                     Home

@@ -24,7 +24,7 @@ export default function ApplyLeave() {
               color: "white",
               letterSpacing: ".05125em",
             }}
-            to="/"
+            to="/dashboard"
           >
             Leave
           </NavLink>
@@ -33,7 +33,7 @@ export default function ApplyLeave() {
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink to="/" className=" text-dark fw-semibold text-decoration-none">Home</NavLink>
+                  <NavLink to="/dashboard" className=" text-dark fw-semibold text-decoration-none">Home</NavLink>
                 </li>
                 <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
                   Leave

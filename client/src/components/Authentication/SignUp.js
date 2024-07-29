@@ -1,18 +1,72 @@
-import React from 'react'
-import { NavLink } from "react-router-dom";
+import React, { useState } from 'react'
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+
+  const navigate=useNavigate()
+  
+  const [signup,setSignup]=useState({name:"",email:"",password:"",adminId:""})
+
+  const handleSignUp = async (e) => {
+    e.preventDefault()
+    let {name,email,password,adminId}=signup
+    const url = "http://localhost:8800/create-user";
+
+    if (Array.isArray(name)) {
+      name = name[0];
+    }
+    if (Array.isArray(email)) {
+      email = email[0];
+    }
+    if (Array.isArray(password)) {
+      password = password[0];
+    }
+    if (Array.isArray(adminId)) {
+      adminId = adminId[0];
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        
+      },
+      method: "POST",
+      body: JSON.stringify({
+        name: String(name),
+        email: String(email),
+        password: String(password),
+        adminId: String(adminId),
+      }),
+    });
+
+    const data = await response.json();
+    // console.log(data);
+    if(data.Success)
+    {
+      localStorage.setItem('authToken',data.token)
+      navigate('/')
+    }
+    
+    // setSignup(signup.concat());
+
+  };
+
+  const handleChange=(e)=>{
+    setSignup({...signup,[e.target.name]:[e.target.value]})
+  }
+
+
   return (
     <>
      <div className=' stylishBG d-flex justify-content-center align-items-center flex-column ' style={{height:'100vh'}}>
       <div className="form-container">
       <p className="title">Sign Up</p>
-      <form className="form">
-        <input type="text" className="input" placeholder="First Name"/>
-        <input type="text" className="input" placeholder="Last Name"/>
-        <input type="email" className="input" placeholder="Email"/>
-        <input type="password" className="input" placeholder="Password"/>
-        <input type="text" className="input" placeholder="Admin-Id"/>
+      <form className="form" onSubmit={handleSignUp}>
+        
+        <input type="text" className="input" placeholder="Full Name"  name='name' value={signup.name} onChange={handleChange} required/>
+        <input type="email" className="input" placeholder="Email"  name='email' value={signup.email} onChange={handleChange} required/>
+        <input type="password" className="input" placeholder="Password"  name='password' value={signup.password} onChange={handleChange} required/>
+        <input type="text" className="input" placeholder="Admin-Id"  name='adminId' value={signup.adminId} onChange={handleChange} required/>
         <p className="page-link">
           <span className="page-link-label">Forgot Password?</span>
         </p>

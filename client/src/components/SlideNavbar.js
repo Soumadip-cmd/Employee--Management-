@@ -46,7 +46,7 @@ export default function SlideNavbar() {
               <i className="fa-solid fa-compact-disc"></i>
             </button>
             <div className="sidebar-logo">
-              <NavLink to="/" className="NavBody">
+              <NavLink to="/dashboard" className="NavBody">
                 Administrator
               </NavLink>
             </div>
@@ -74,7 +74,7 @@ export default function SlideNavbar() {
           </div>
           <ul className="sidebar-nav">
             <li className="sidebar-item">
-              <NavLink to="/" className="NavBody pt-2 sidebar-link">
+              <NavLink to="/dashboard" className="NavBody pt-2 sidebar-link">
                 <i className="fa-solid fa-shop"></i>
                 <span>Dashboard</span>
               </NavLink>
@@ -188,16 +188,6 @@ export default function SlideNavbar() {
                 className="sidebar-dropdown list-unstyled collapse"
                 data-bs-parent="#sidebar"
               >
-                {/* <li className="sidebar-item">
-                  <NavLink to="/applyLeave" className="NavBody sidebar-link">
-                    Apply Leave
-                  </NavLink>
-                </li> */}
-                {/* <li className="sidebar-item">
-                  <NavLink to="/leaveHistory" className="NavBody sidebar-link">
-                    Leave History
-                  </NavLink>
-                </li> */}
                 <li className="sidebar-item">
                   <NavLink to="/Staffleave" className="NavBody sidebar-link">
                     Staff's Leave
@@ -237,7 +227,7 @@ export default function SlideNavbar() {
           </ul>
           <hr className=" border-1 text-white m-0" style={{ background: "#586682b0" }}/>
           <div className="sidebar-footer">
-            <NavLink to="/login" className="NavBody sidebar-link">
+            <NavLink to="/" className="NavBody sidebar-link">
               <i className="lni lni-exit"></i>
               <span>Logout</span>
             </NavLink>

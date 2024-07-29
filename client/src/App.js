@@ -40,7 +40,7 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "/dashboard",
       element: (
         <>
           {<SlideNavbar />}
@@ -50,7 +50,7 @@ function App() {
       ),
     },
     {
-      path: "/login",
+      path: "/",
       element: <Login />,
     },
     {

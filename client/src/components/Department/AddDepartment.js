@@ -42,7 +42,7 @@ const AddDepartment = () => {
               color: "white",
               letterSpacing: ".05125em",
             }}
-            to="/"
+            to="/dashboard"
           >
             Dept.
           </NavLink>
@@ -52,7 +52,7 @@ const AddDepartment = () => {
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
                   <NavLink
-                    to="/"
+                    to="/dashboard"
                     className=" text-dark fw-semibold text-decoration-none"
                   >
                     Home
