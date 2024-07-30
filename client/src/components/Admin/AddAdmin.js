@@ -1,28 +1,27 @@
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const AddAdmin = () => {
   const { addAdmin } = useContext(DataContext);
   const [add_admin, setAdd_admin] = useState({ name: "", email: "" });
   const [file, setFile] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (file && add_admin.name && add_admin.email) {
-      
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = async () => {
         const photoURL = reader.result;
-      
-        await addAdmin(add_admin.name,add_admin.email,photoURL);
-
+        await addAdmin(add_admin.name, add_admin.email, photoURL);
         setAdd_admin({ name: "", email: "" });
-        setFile(" ");
-        
+        setFile(null);
       };
     } else {
       console.error("All fields are required, including a valid photo file.");
@@ -37,6 +36,10 @@ const AddAdmin = () => {
     setFile(e.target.files[0]);
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   let boxstyle = {
     background: "white",
     padding: "21px",
@@ -44,22 +47,16 @@ const AddAdmin = () => {
     borderRadius: "5px",
   };
 
-  
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!localStorage.getItem('authToken')) {
+      navigate('/');
     }
     // eslint-disable-next-line
   }, []);
 
   return (
     <>
-      <>
-      <nav
-        className="navbar navbar-expand-lg "
-        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
-      >
+      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
         <div className="container mt-5">
           <NavLink
             className="navbar-brand"
@@ -139,6 +136,25 @@ const AddAdmin = () => {
                   style={{ border: "1px solid" }}
                 />
               </div>
+              <div className="mb-3 position-relative">
+                <b>Admin Password </b>
+                <span style={{ color: "red" }}>*</span>
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  className="form-control"
+                  // name="password"
+                  // value={add_admin.password}
+                  // onChange={handleChange}
+                  required
+                  style={{ border: "1px solid" }}
+                />
+                <FontAwesomeIcon
+                  icon={passwordVisible ? faEyeSlash : faEye}
+                  onClick={togglePasswordVisibility}
+                  className="position-absolute"
+                  style={{ top: '50%', right: '10px', cursor: 'pointer', transform: 'translateY(15%)' }}
+                />
+              </div>
               <div className="mb-3">
                 <b>Admin Email </b>
                 <span style={{ color: "red" }}>*</span>
@@ -173,7 +189,6 @@ const AddAdmin = () => {
           </form>
         </div>
       </div>
-    </>
     </>
   );
 };
