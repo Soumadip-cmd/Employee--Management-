@@ -1,0 +1,9 @@
+admin can't edit the password for action (edit ) but at the time of delete whole admin deleted...
+
+
+and fetch time manageadmin portal only 
+#	Admin Name	Admin Photo	Admin Email	      Actions
+ those visible....
+
+ admin can update the password or profile form there portal (navbar topcorner)/profile...
+ this required for login time (password)
