@@ -55,13 +55,12 @@ const Login = () => {
         <input type="email" className="input" placeholder="Email" name='email' value={login.email} onChange={handleChange} required/>
         <input type="password" className="input" placeholder="Password" name='password' value={login.password} onChange={handleChange} required/>
         <p className="page-link">
-          <span className="page-link-label">Forgot Password?</span>
+        <span className=' float-start'><input type="checkbox" className=' me-1' name="" id="" value="Remember Me" />Remember Me</span>
+          <span className="page-link-label float-end">Forgot Password?</span>
         </p>
         <button className="form-btn">Log in</button>
       </form>
-      <p className="sign-up-label">
-        Don't have an account?<NavLink to='/signup' className="sign-up-link">Sign up</NavLink>
-      </p>
+      
       <div className="buttons-container">
         <div className="apple-login-button">
           <svg stroke="currentColor" fill="currentColor" strokeWidth="0" className="apple-icon" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">

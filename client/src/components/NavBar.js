@@ -6,6 +6,7 @@ const NavBar = () => {
   const dropdownRef = useRef(null);
   const navigate=useNavigate()
 
+  
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };

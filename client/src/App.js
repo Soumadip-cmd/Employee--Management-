@@ -14,7 +14,6 @@ import ManageDepartment from "./components/Department/ManageDepartment";
 import AddStaff from "./components/Staff/Add Staff";
 import ManageStaff from "./components/Staff/ManageStaff";
 import Login from "./components/Authentication/Login";
-import SignUp from "./components/Authentication/SignUp";
 import StaffLeave from "./components/Leave/StaffLeave";
 import AddAdmin from "./components/Admin/AddAdmin";
 import ManageAdmin from "./components/Admin/ManageAdmin";
@@ -53,10 +52,7 @@ function App() {
       path: "/",
       element: <Login />,
     },
-    {
-      path: "/signup",
-      element: <SignUp />,
-    },
+    
     {
       path: "/addDepartment",
       element: (
