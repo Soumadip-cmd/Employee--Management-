@@ -18,10 +18,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  adminId: {
-    type: String,
-    required: true,
-  },
   avatar:{
     public_id:{
       type:String,
