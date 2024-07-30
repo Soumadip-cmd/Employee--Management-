@@ -114,7 +114,6 @@ const DataState = (props) => {
 
   const [admin, setAdmin] = useState([]);
 
-
   //getAdmin
   const getAdmin = async () => {
     const url = "http://localhost:8800/get-all-admin";
@@ -131,11 +130,10 @@ const DataState = (props) => {
     }
   };
 
-
   // Add admin
   const addAdmin = async (name, email, password, avatar) => {
     const url = "http://localhost:8800/create-user";
-  
+
     try {
       const response = await fetch(url, {
         headers: {
@@ -149,39 +147,35 @@ const DataState = (props) => {
           avatar: String(avatar),
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
-        console.error('Response error:', response.status, response.statusText);
-        alert(`Error: ${data.msg || 'Invalid Credentials!'}`);
+        console.error("Response error:", response.status, response.statusText);
+        alert(`Error: ${data.msg || "Invalid Credentials!"}`);
         return;
       }
-  
+
       if (!data.success) {
-        console.error('Backend error:', data.errors);
-        alert(`Error: ${data.msg || 'Check your inputs.'}`);
+        console.error("Backend error:", data.errors);
+        alert(`Error: ${data.msg || "Check your inputs."}`);
         return;
       }
-  
+
       // alert('Admin created successfully!');
-      
     } catch (error) {
-      console.error('Fetch error:', error);
-      alert('An error occurred. Please try again.');
+      console.error("Fetch error:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
-
   //delete Admin
-  const deleteAdmin=async(id)=>{
+  const deleteAdmin = async (id) => {
     const url = `http://localhost:8800/deleteAdmin/${id}`;
 
     try {
       const response = await fetch(url, {
-        headers: {
-         
-        },
+        headers: {},
         method: "DELETE",
       });
 
@@ -196,8 +190,7 @@ const DataState = (props) => {
     } catch (error) {
       console.error("Failed to delete department:", error);
     }
-  }
-
+  };
 
   //edit Admin
   const editAdmin = async (id, name, email) => {
@@ -213,7 +206,6 @@ const DataState = (props) => {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        
       },
       method: "PUT",
       body: JSON.stringify({
@@ -234,9 +226,6 @@ const DataState = (props) => {
     }
     setAdmin(data);
   };
-  
-  
-  
 
   // ------Staff ----------------------
 
@@ -534,7 +523,10 @@ const DataState = (props) => {
         addSal,
         getSal,
         salary,
-        addAdmin,getAdmin,deleteAdmin,editAdmin
+        addAdmin,
+        getAdmin,
+        deleteAdmin,
+        editAdmin,
       }}
     >
       {props.children}
