@@ -189,7 +189,7 @@ export default function ManageStaff() {
               ) : (
                 <tbody>
                   <tr>
-                    <td colSpan="15" className="text-center py-4">
+                    <td colSpan="15" className="text-center py-3">
                       You Don't add any Staff..!
                     </td>
                   </tr>
