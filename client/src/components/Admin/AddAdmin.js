@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState ,useEffect} from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const AddAdmin = () => {
   const { addAdmin } = useContext(DataContext);
-  const [add_admin, setAdd_admin] = useState({ name: "", email: "" });
+  const [add_admin, setAdd_admin] = useState({ name: "", email: "", password: "" });
   const [file, setFile] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
@@ -14,13 +14,13 @@ const AddAdmin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (file && add_admin.name && add_admin.email) {
+    if (file && add_admin.name && add_admin.email && add_admin.password) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = async () => {
         const photoURL = reader.result;
-        await addAdmin(add_admin.name, add_admin.email, photoURL);
-        setAdd_admin({ name: "", email: "" });
+        await addAdmin(add_admin.name, add_admin.email, add_admin.password, photoURL);
+        setAdd_admin({ name: "", email: "", password: "" });
         setFile(null);
       };
     } else {
@@ -48,8 +48,9 @@ const AddAdmin = () => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem('authToken')) {
-      navigate('/');
+    if(!(localStorage.getItem('authToken')))
+    {
+      navigate('/')
     }
     // eslint-disable-next-line
   }, []);
@@ -142,9 +143,9 @@ const AddAdmin = () => {
                 <input
                   type={passwordVisible ? "text" : "password"}
                   className="form-control"
-                  // name="password"
-                  // value={add_admin.password}
-                  // onChange={handleChange}
+                  name="password"
+                  value={add_admin.password}
+                  onChange={handleChange}
                   required
                   style={{ border: "1px solid" }}
                 />

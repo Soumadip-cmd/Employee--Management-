@@ -174,7 +174,7 @@ export default function EditStaff() {
                   className="breadcrumb-item active fw-semibold text-decoration-underline"
                   aria-current="page"
                 >
-                  Add
+                  Edit
                 </li>
                 <li className="breadcrumb-item">
                   <NavLink

@@ -2,13 +2,28 @@ const express = require("express");
 const User = require("../../models/User");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const FetchUser = require("../../middleware/FetchUser");
 const cloudinary = require("../../Cloudnary");
 const router = express.Router();
 const jwt_Secret = process.env.JWT_SECRET;
 
-//create admin
+//get-all-admin
+router.get("/get-all-admin", async (req, res) => {
+  let success = false;
+  try {
+    const allAdmin = await User.find();
+    success = true;
+    res.json({ Success: success, allAdmin });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success, msg: `Internal Server Error: ${error.message}` });
+  }
+});
+
+// Create user
 router.post(
   "/create-user",
   [
@@ -44,14 +59,7 @@ router.post(
         avatar: { public_id: "", url: "" },
       });
 
-      // Set default avatar if none is provided
-      if (!avatar) {
-        user.avatar = {
-          public_id: "default_placeholder",
-          url: "https://via.placeholder.com/150",
-        };
-      } else {
-        // Upload avatar to Cloudinary
+      if (avatar) {
         try {
           const uploadResult = await cloudinary.uploader.upload(avatar, {
             upload_preset: "employee_data",
@@ -66,8 +74,16 @@ router.post(
         } catch (uploadError) {
           return res
             .status(500)
-            .json({ success, msg: "Error uploading image to Cloudinary" });
+            .json({
+              success,
+              msg: `Error uploading image to Cloudinary: ${uploadError.message}`,
+            });
         }
+      } else {
+        user.avatar = {
+          public_id: "default_placeholder",
+          url: "https://via.placeholder.com/150",
+        };
       }
 
       await user.save();
@@ -78,21 +94,19 @@ router.post(
       res.json({ success, token });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
-        success,
-        msg: `Internal Server Error: ${error.message}`,
-      });
+      res
+        .status(500)
+        .json({ success, msg: `Internal Server Error: ${error.message}` });
     }
   }
 );
 
-
-//login admin
+// Login user
 router.post(
   "/login",
   [
     body("email", "Enter Valid Email").isEmail(),
-    body("password", "Password Length must be atleast 5 chars").isLength({
+    body("password", "Password Length must be at least 5 chars").isLength({
       min: 5,
     }),
   ],
@@ -107,41 +121,37 @@ router.post(
       }
 
       const { email, password } = req.body;
-      let user = await User.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) {
-        res
+        return res
           .status(404)
           .json({ Success: success, errors: "Invalid Authentication..!" });
       }
 
       const compare = await bcrypt.compare(password, user.password);
       if (!compare) {
-        res
+        return res
           .status(404)
           .json({ Success: success, errors: "Invalid Authentication..!" });
       }
 
       success = true;
-      data = {
-        user: {
-          id: user.id,
-        },
-      };
+      const data = { user: { id: user.id } };
       const token = jwt.sign(data, jwt_Secret);
-      res.json({ Success: success, token: token });
-
-      //
+      res.json({ Success: success, token });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
-        Success: success,
-        msg: `Internal Server Error: ${error.message}`,
-      });
+      res
+        .status(500)
+        .json({
+          Success: success,
+          msg: `Internal Server Error: ${error.message}`,
+        });
     }
   }
 );
 
-//get admin
+// Get user
 router.get("/get-user", FetchUser, async (req, res) => {
   let success = false;
   try {
@@ -151,15 +161,16 @@ router.get("/get-user", FetchUser, async (req, res) => {
     res.json({ Success: success, Details: data });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      Success: success,
-      msg: `Internal Server Error: ${error.message}`,
-    });
+    res
+      .status(500)
+      .json({
+        Success: success,
+        msg: `Internal Server Error: ${error.message}`,
+      });
   }
 });
 
-
-// Edit admin
+// Edit user
 router.put(
   "/editAdmin/:id",
   [
@@ -182,15 +193,14 @@ router.put(
       const { name, email } = req.body;
       const newAdmin = {};
 
-      if (name) {
-        newAdmin.name = name;
-      }
+      if (name) newAdmin.name = name;
 
       if (email) {
-        // Check if the email already exists but exclude the current user's email
         const emailCheck = await User.findOne({ email });
         if (emailCheck && emailCheck.id !== req.params.id) {
-          return res.status(400).json({ success, msg: "Email already exists." });
+          return res
+            .status(400)
+            .json({ success, msg: "Email already exists." });
         }
         newAdmin.email = email;
       }
@@ -205,17 +215,15 @@ router.put(
       res.json({ success, updatedAdmin });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
-        success,
-        msg: `Internal Server Error: ${error.message}`,
-      });
+      res
+        .status(500)
+        .json({ success, msg: `Internal Server Error: ${error.message}` });
     }
   }
 );
 
-
-// Delete admin
-router.delete('/deleteAdmin/:id', async (req, res) => {
+// Delete user
+router.delete("/deleteAdmin/:id", async (req, res) => {
   let success = false;
   try {
     const user = await User.findById(req.params.id);
@@ -223,30 +231,37 @@ router.delete('/deleteAdmin/:id', async (req, res) => {
       return res.status(404).json({ success, msg: "User not found." });
     }
 
-    
-    await User.findByIdAndDelete(req.params.id);
-    success = true;
-    res.json({ success, msg: "User deleted successfully." });
+    // Extract the public_id from the user
+    const public_id = user.avatar.public_id;
+
+    // Delete the image from Cloudinary
+    cloudinary.uploader.destroy(public_id, async (error, result) => {
+      if (error) {
+        console.error("Error deleting image from Cloudinary:", error);
+        return res.status(500).json({
+          success: success,
+          errors: `Unexpected Error Occurred: ${error.message}`,
+        });
+      }
+      await User.findByIdAndDelete(req.params.id);
+      success = true;
+      res.json({ success, msg: "User deleted successfully." });
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success,
-      msg: `Internal Server Error: ${error.message}`,
-    });
+    res
+      .status(500)
+      .json({ success, msg: `Internal Server Error: ${error.message}` });
   }
 });
 
-
-//update avatar
-
+// Update user details
 router.put(
   "/updateDetails/:id",
   FetchUser,
   [
-    body("name", "Enter Valid UserName").isLength({
-      min: 3,
-    }),
-    body("password", "Password Length must be atleast 5 chars").isLength({
+    body("name", "Enter Valid UserName").isLength({ min: 3 }),
+    body("password", "Password Length must be at least 5 chars").isLength({
       min: 5,
     }),
   ],
@@ -269,54 +284,57 @@ router.put(
           .status(404)
           .json({ Success: success, Error: "User Not Exists.." });
       }
-      if (name) {
-        newUserDetails.name = name;
-      }
-      const hashPass = await bcrypt.genSalt(10);
-      const secret_pass = await bcrypt.hash(password, hashPass);
+
+      if (name) newUserDetails.name = name;
 
       if (password) {
-        newUserDetails.password = secret_pass;
+        const hashPass = await bcrypt.genSalt(10);
+        newUserDetails.password = await bcrypt.hash(password, hashPass);
       }
+
       if (avatar) {
         if (userExists.avatar.public_id) {
           await cloudinary.uploader.destroy(userExists.avatar.public_id);
         }
-        const uploadResult = await cloudinary.uploader
-          .upload(avatar, {
+        try {
+          const uploadResult = await cloudinary.uploader.upload(avatar, {
             upload_preset: "employee_data",
             public_id: `user_img${userExists.id}`,
             allowed_formats: ["png", "jpg", "jpeg", "svg", "webp"],
-          })
-          .catch((error) => {
-            console.log(error);
-            res.status(500).json({
-              Success: success,
-              msg: `Avatar Error: ${error.message}`,
-            });
           });
 
-        // console.log(uploadResult);
-        newUserDetails.avatar = {
-          public_id: uploadResult.public_id,
-          url: uploadResult.secure_url,
-        };
+          newUserDetails.avatar = {
+            public_id: uploadResult.public_id,
+            url: uploadResult.secure_url,
+          };
+        } catch (uploadError) {
+          return res
+            .status(500)
+            .json({
+              Success: success,
+              msg: `Avatar Error: ${uploadError.message}`,
+            });
+        }
       }
-      success = true;
-      const updateUser = await User.findByIdAndUpdate(
+
+      const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         { $set: newUserDetails },
         { new: true }
       );
 
-      res.json({ Success: success, updateUser });
+      success = true;
+      res.json({ Success: success, updatedUser });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
-        Success: success,
-        msg: `Internal Server Error: ${error.message}`,
-      });
+      res
+        .status(500)
+        .json({
+          Success: success,
+          msg: `Internal Server Error: ${error.message}`,
+        });
     }
   }
 );
+
 module.exports = router;

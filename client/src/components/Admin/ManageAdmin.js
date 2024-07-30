@@ -7,16 +7,14 @@ const ManageAdmin = () => {
   const [search, setSearch] = useState("");
   const { getAdmin, admin, deleteAdmin } = useContext(DataContext);
 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     getAdmin();
     // eslint-disable-next-line
   }, []);
 
-
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    
   };
 
   const delAdmin = (id) => {
@@ -25,15 +23,13 @@ const ManageAdmin = () => {
     }
   };
 
-
-  const editAdMIN=(id)=>{
-    navigate(`/editAdmin/${id}`)
-  }
+  const editAdMIN = (id) => {
+    navigate(`/editAdmin/${id}`);
+  };
 
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!localStorage.getItem("authToken")) {
+      navigate("/");
     }
     // eslint-disable-next-line
   }, []);
@@ -105,9 +101,7 @@ const ManageAdmin = () => {
               <select
                 id="entries"
                 className="border-1 border-black rounded-2"
-                onChange={(e) => {
-                  
-                }}
+                onChange={(e) => {}}
               >
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -148,34 +142,34 @@ const ManageAdmin = () => {
                 </tr>
               </thead>
               {admin.length > 0 ? (
-                admin.map((item, index) => (
-                  <tbody key={item._id}>
-                    <tr>
-                      <td className="py-2 px-4">{index + 1}</td>
+                <tbody>
+                  {admin.map((item) => (
+                    <tr key={item._id}>
+                      <td className="py-2 px-4">{admin.indexOf(item) + 1}</td>
                       <td className="py-2 px-4">{item.name}</td>
                       <td className="text-center">
-                        <Img upload_id={item.photo.public_id} />
+                        <Img upload_id={item.avatar.public_id} />
                       </td>
                       <td className="py-2 px-4">{item.email}</td>
                       <td className="py-2 px-4">
                         <span
                           className="badge text-bg-success mx-1 px-2"
-                          onClick={()=>editAdMIN(item._id)}
-                          style={{ cursor: 'pointer' }}
+                          onClick={() => editAdMIN(item._id)}
+                          style={{ cursor: "pointer" }}
                         >
                           Edit
                         </span>
                         <span
                           className="badge text-bg-danger mx-1 px-2"
                           onClick={() => delAdmin(item._id)}
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: "pointer" }}
                         >
                           Delete
                         </span>
                       </td>
                     </tr>
-                  </tbody>
-                ))
+                  ))}
+                </tbody>
               ) : (
                 <tbody>
                   <tr>

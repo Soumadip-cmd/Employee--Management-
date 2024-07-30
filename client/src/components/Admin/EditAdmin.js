@@ -6,15 +6,17 @@ const EditAdmin = () => {
   const { id } = useParams();
   const { editAdmin, admin } = useContext(DataContext);
   const [edit_admin, setEdit_admin] = useState({ id: id, name: "", email: "" });
-  const [file, setFile] = useState(null);
-  const [photoUrl, setPhotoUrl] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const adminData = admin.find((data) => data._id === id);
     if (adminData) {
-      setEdit_admin({ id: adminData._id, name: adminData.name, email: adminData.email });
-      setPhotoUrl(adminData.photo.url); // Store the current photo URL
+      setEdit_admin({
+        id: adminData._id,
+        name: adminData.name,
+        email: adminData.email,
+      });
     }
   }, [id, admin]);
 
@@ -22,53 +24,54 @@ const EditAdmin = () => {
     setEdit_admin({ ...edit_admin, [e.target.name]: e.target.value });
   };
 
-  const photoChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let photoUrlToUse = photoUrl; // Default to existing photo URL
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        photoUrlToUse = reader.result;
-        await editAdmin(edit_admin.id, edit_admin.name, edit_admin.email, photoUrlToUse);
-        setEdit_admin({ id: id, name: "", email: "" });
-        setFile(null);
-        navigate('/manageAdmin');
-      };
-      reader.readAsDataURL(file);
-    } else {
-      // Use the existing photo URL if no new file is selected
-      await editAdmin(edit_admin.id, edit_admin.name, edit_admin.email, photoUrlToUse);
-      setEdit_admin({ id: id, name: "", email: "" });
-      navigate('/manageAdmin');
-    }
+    editAdmin(edit_admin.id, edit_admin.name, edit_admin.email);
+    setEdit_admin({ id: id, name: "", email: "" });
+    navigate("/manageAdmin");
   };
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg " style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
+      <nav
+        className="navbar navbar-expand-lg "
+        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
+      >
         <div className="container mt-5">
-          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/dashboard">
+          <NavLink
+            className="navbar-brand"
+            style={{
+              fontSize: "25px",
+              color: "white",
+              letterSpacing: ".05125em",
+            }}
+            to="/dashboard"
+          >
             Admin
           </NavLink>
           <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink to="/dashboard" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/dashboard"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Home
                   </NavLink>
                 </li>
-                <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
+                <li
+                  className="breadcrumb-item active fw-semibold text-decoration-underline"
+                  aria-current="page"
+                >
                   Add
                 </li>
                 <li className="breadcrumb-item">
-                  <NavLink to="/manageAdmin" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/manageAdmin"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     ManageAdmin
                   </NavLink>
                 </li>
@@ -81,9 +84,17 @@ const EditAdmin = () => {
         <h2>Admin Management</h2>
       </div>
       <div className="mb-4 pt-3 extra-special">
-        <div className="row d-flex justify-content-evenly" style={{ background: "white", padding: "21px", borderTop: "5px solid #004dffe8", borderRadius: "5px" }}>
+        <div
+          className="row d-flex justify-content-evenly"
+          style={{
+            background: "white",
+            padding: "21px",
+            borderTop: "5px solid #004dffe8",
+            borderRadius: "5px",
+          }}
+        >
           <h5 style={{ fontSize: "20px" }} className="px-2">
-            Add Admin
+            Edit Admin
           </h5>
           <hr />
           <form onSubmit={handleSubmit}>
@@ -100,25 +111,7 @@ const EditAdmin = () => {
                   style={{ border: "1px solid" }}
                 />
               </div>
-              <div className="mb-3">
-                <b>Admin Photo</b>
-                <span style={{ color: "red" }}>*</span>
-                <input
-                  type="file"
-                  className="form-control"
-                  name="photo"
-                  accept=".jpg, .png, .svg, .webp, .jpeg"
-                  onChange={photoChange}
-                  style={{ border: "1px solid" }}
-                />
-                {/* <div className="mt-2">
-                  <img
-                    src={file ? URL.createObjectURL(file) : photoUrl}
-                    alt="Admin"
-                    style={{ maxWidth: "100px", maxHeight: "100px" }}
-                  />
-                </div> */}
-              </div>
+
               <div className="mb-3">
                 <b>Admin Email </b>
                 <span style={{ color: "red" }}>*</span>
@@ -136,7 +129,7 @@ const EditAdmin = () => {
                   type="button"
                   className="btn btn-outline-danger float-end mx-1"
                   id="cancel"
-                  onClick={() => navigate('/manageAdmin')}
+                  onClick={() => navigate("/manageAdmin")}
                 >
                   Cancel
                 </button>

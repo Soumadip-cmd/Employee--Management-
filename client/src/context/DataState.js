@@ -22,14 +22,14 @@ const DataState = (props) => {
   };
 
   //add departments
-  const addDept = async (deptName, employeeId) => {
+  const addDept = async (name, email) => {
     const url = "http://localhost:8800/add-department";
 
-    if (Array.isArray(deptName)) {
-      deptName = deptName[0];
+    if (Array.isArray(name)) {
+      name = name[0];
     }
-    if (Array.isArray(employeeId)) {
-      employeeId = employeeId[0];
+    if (Array.isArray(email)) {
+      email = email[0];
     }
 
     const response = await fetch(url, {
@@ -39,8 +39,8 @@ const DataState = (props) => {
       },
       method: "POST",
       body: JSON.stringify({
-        deptName: String(deptName),
-        employeeId: String(employeeId),
+        name: String(name),
+        email: String(email),
       }),
     });
 
@@ -75,14 +75,14 @@ const DataState = (props) => {
   };
 
   //edit department
-  const editDept = async (id, deptName, employeeId) => {
+  const editDept = async (id, name, email) => {
     const url = `http://localhost:8800/edit-department/${id}`;
 
-    if (Array.isArray(deptName)) {
-      deptName = deptName[0];
+    if (Array.isArray(name)) {
+      name = name[0];
     }
-    if (Array.isArray(employeeId)) {
-      employeeId = employeeId[0];
+    if (Array.isArray(email)) {
+      email = email[0];
     }
 
     const response = await fetch(url, {
@@ -92,8 +92,8 @@ const DataState = (props) => {
       },
       method: "PUT",
       body: JSON.stringify({
-        deptName: String(deptName),
-        employeeId: String(employeeId),
+        name: String(name),
+        email: String(email),
       }),
     });
 
@@ -102,8 +102,8 @@ const DataState = (props) => {
     for (let i = 0; i < data.length; i++) {
       const element = data[i];
       if (element._id === id) {
-        element.employeeId = employeeId;
-        element.deptName = deptName;
+        element.email = email;
+        element.name = name;
         break;
       }
     }
@@ -114,105 +114,129 @@ const DataState = (props) => {
 
   const [admin, setAdmin] = useState([]);
 
-  //get Admin
-  const getAdmin = async () => {
-    const url = `http://localhost:8800/get-admins`;
-    try {
-      const response = await fetch(url, {
-        headers: {
-          token: localStorage.getItem("authToken"),
-        },
-        method: "GET",
-      });
 
-      const data = await response.json();
-      setAdmin(data);
+  //getAdmin
+  const getAdmin = async () => {
+    const url = "http://localhost:8800/get-all-admin";
+    try {
+      const response = await fetch(url);
+      const responseData = await response.json();
+      if (responseData.Success) {
+        setAdmin(responseData.allAdmin);
+      } else {
+        console.error("Failed to fetch admins");
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error fetching admins:", error);
     }
   };
 
-  //addAdmin
-  const addAdmin = async (name, email, photo) => {
-    const url = `http://localhost:8800/add-admin`;
+
+  // Add admin
+  const addAdmin = async (name, email, password, avatar) => {
+    const url = "http://localhost:8800/create-user";
+  
     try {
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          token: localStorage.getItem("authToken"),
         },
         method: "POST",
         body: JSON.stringify({
           name: String(name),
           email: String(email),
-          photo: String(photo),
+          password: String(password),
+          avatar: String(avatar),
         }),
       });
-
-      await response.json();
-      setAdmin(admin.concat());
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        console.error('Response error:', response.status, response.statusText);
+        alert(`Error: ${data.msg || 'Invalid Credentials!'}`);
+        return;
+      }
+  
+      if (!data.success) {
+        console.error('Backend error:', data.errors);
+        alert(`Error: ${data.msg || 'Check your inputs.'}`);
+        return;
+      }
+  
+      // alert('Admin created successfully!');
+      
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Fetch error:', error);
+      alert('An error occurred. Please try again.');
     }
   };
 
-  // Delete admin
-  const deleteAdmin = async (id) => {
-    const url = `http://localhost:8800/delete-admin/${id}`;
+
+  //delete Admin
+  const deleteAdmin=async(id)=>{
+    const url = `http://localhost:8800/deleteAdmin/${id}`;
+
     try {
       const response = await fetch(url, {
-        method: "DELETE",
         headers: {
-          token: localStorage.getItem("authToken"),
+         
         },
+        method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to delete admin: ${response.statusText}`);
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
       await response.json();
-      const updatedAdminList = admin.filter((k) => k._id !== id);
-      setAdmin(updatedAdminList);
+      const delAdmin = admin.filter((k) => k._id !== id);
+
+      setAdmin(delAdmin);
     } catch (error) {
-      console.error("Error deleting admin:", error);
+      console.error("Failed to delete department:", error);
     }
-  };
+  }
+
 
   //edit Admin
-  const editAdmin = async (id, name, email, photo) => {
-    const url = `http://localhost:8800/edit-admin/${id}`;
-    try {
-      const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          token: localStorage.getItem("authToken"),
-        },
-        method: "PUT",
-        body: JSON.stringify({
-          name: String(name),
-          email: String(email),
-          photo: String(photo),
-        }),
-      });
+  const editAdmin = async (id, name, email) => {
+    const url = `http://localhost:8800/editAdmin/${id}`;
 
-      await response.json();
-      const strData = JSON.parse(JSON.stringify(admin));
-      for (let i = 0; i < strData.length; i++) {
-        let element = strData[i];
-        if (element._id === id) {
-          element.name = name;
-          element.email = email;
-          element.photo = photo;
-          break;
-        }
-      }
-
-      setAdmin(strData);
-    } catch (error) {
-      console.error("Error:", error);
+    if (Array.isArray(name)) {
+      name = name[0];
     }
+    if (Array.isArray(email)) {
+      email = email[0];
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        name: String(name),
+        email: String(email),
+      }),
+    });
+
+    await response.json();
+    const data = JSON.parse(JSON.stringify(dept));
+    for (let i = 0; i < data.length; i++) {
+      const element = data[i];
+      if (element._id === id) {
+        element.email = email;
+        element.name = name;
+        break;
+      }
+    }
+    setAdmin(data);
   };
+  
+  
+  
 
   // ------Staff ----------------------
 
@@ -499,11 +523,7 @@ const DataState = (props) => {
         dept,
         deleteDept,
         editDept,
-        addAdmin,
-        getAdmin,
         admin,
-        deleteAdmin,
-        editAdmin,
         addStaff,
         getStaff,
         staff,
@@ -514,6 +534,7 @@ const DataState = (props) => {
         addSal,
         getSal,
         salary,
+        addAdmin,getAdmin,deleteAdmin,editAdmin
       }}
     >
       {props.children}
