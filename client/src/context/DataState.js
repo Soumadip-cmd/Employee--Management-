@@ -22,14 +22,14 @@ const DataState = (props) => {
   };
 
   //add departments
-  const addDept = async (name, email) => {
+  const addDept = async (deptName, employeeId) => {
     const url = "http://localhost:8800/add-department";
 
-    if (Array.isArray(name)) {
-      name = name[0];
+    if (Array.isArray(deptName)) {
+      deptName = deptName[0];
     }
-    if (Array.isArray(email)) {
-      email = email[0];
+    if (Array.isArray(employeeId)) {
+      employeeId = employeeId[0];
     }
 
     const response = await fetch(url, {
@@ -39,8 +39,8 @@ const DataState = (props) => {
       },
       method: "POST",
       body: JSON.stringify({
-        name: String(name),
-        email: String(email),
+        deptName: String(deptName),
+        employeeId: String(employeeId),
       }),
     });
 
@@ -75,14 +75,14 @@ const DataState = (props) => {
   };
 
   //edit department
-  const editDept = async (id, name, email) => {
+  const editDept = async (id, deptName, employeeId) => {
     const url = `http://localhost:8800/edit-department/${id}`;
 
-    if (Array.isArray(name)) {
-      name = name[0];
+    if (Array.isArray(deptName)) {
+      deptName = deptName[0];
     }
-    if (Array.isArray(email)) {
-      email = email[0];
+    if (Array.isArray(employeeId)) {
+      employeeId = employeeId[0];
     }
 
     const response = await fetch(url, {
@@ -92,8 +92,8 @@ const DataState = (props) => {
       },
       method: "PUT",
       body: JSON.stringify({
-        name: String(name),
-        email: String(email),
+        deptName: String(deptName),
+        employeeId: String(employeeId),
       }),
     });
 
@@ -102,8 +102,8 @@ const DataState = (props) => {
     for (let i = 0; i < data.length; i++) {
       const element = data[i];
       if (element._id === id) {
-        element.email = email;
-        element.name = name;
+        element.employeeId = employeeId;
+        element.deptName = deptName;
         break;
       }
     }
@@ -226,6 +226,43 @@ const DataState = (props) => {
     }
     setAdmin(data);
   };
+
+
+  //updateAdmin
+  // const updateAdmin=async(id,name,password,avatar)=>{
+  //   const url = `http://localhost:8800/updateDetails/${id}`;
+
+  //   if (Array.isArray(name)) {
+  //     name = name[0];
+  //   }
+  //   if (Array.isArray(email)) {
+  //     email = email[0];
+  //   }
+
+  //   const response = await fetch(url, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     method: "PUT",
+  //     body: JSON.stringify({
+  //       name: String(name),
+  //       email: String(email),
+  //     }),
+  //   });
+
+  //   await response.json();
+  //   const data = JSON.parse(JSON.stringify(dept));
+  //   for (let i = 0; i < data.length; i++) {
+  //     const element = data[i];
+  //     if (element._id === id) {
+  //       element.email = email;
+  //       element.name = name;
+  //       break;
+  //     }
+  //   }
+  //   setAdmin(data);
+  // }
+
 
   // ------Staff ----------------------
 
@@ -512,7 +549,11 @@ const DataState = (props) => {
         dept,
         deleteDept,
         editDept,
+        addAdmin,
+        getAdmin,
         admin,
+        deleteAdmin,
+        editAdmin,
         addStaff,
         getStaff,
         staff,
@@ -523,10 +564,6 @@ const DataState = (props) => {
         addSal,
         getSal,
         salary,
-        addAdmin,
-        getAdmin,
-        deleteAdmin,
-        editAdmin,
       }}
     >
       {props.children}
