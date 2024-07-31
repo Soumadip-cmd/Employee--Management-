@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../context/DataContext";
+import Img from "./Admin/Img";
 
 const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -72,17 +73,10 @@ const NavBar = () => {
             aria-expanded="false"
             onClick={toggleDropdown}
           >
-           <img
-              // Use conditional rendering to set image source
-              src={
-                Adminlogin && Adminlogin.avatar && Adminlogin.avatar.url
-                  ? Adminlogin.avatar.url // Use avatar URL if available
-                  : "https://via.placeholder.com/32" // Placeholder image URL
-              }
-              alt="profile" // Alt text for accessibility
-              width="32"
-              height="32"
-              className="rounded-circle" // Rounded corners for the image
+            <Img
+              upload_id={Adminlogin.avatar.public_id}
+              classN="rounded-circle"
+              width="32px"
             />
           </NavLink>
           <ul

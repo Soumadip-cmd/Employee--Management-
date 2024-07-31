@@ -6,8 +6,8 @@ import Img from "../Admin/Img";
 
 export default function ManageStaff() {
   const [search, setSearch] = useState("");
-  const { getStaff, staff,deleteStaff } = useContext(DataContext);
-  const navigate=useNavigate()
+  const { getStaff, staff, deleteStaff } = useContext(DataContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getStaff();
@@ -15,25 +15,24 @@ export default function ManageStaff() {
   }, []);
 
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!localStorage.getItem("authToken")) {
+      navigate("/");
     }
     // eslint-disable-next-line
   }, []);
-  
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
     // Filter department logic here
   };
 
-  const delStaff=(id)=>{
-    deleteStaff(id)
-  }
+  const delStaff = (id) => {
+    deleteStaff(id);
+  };
 
-  const editSTAFF=(id)=>{
-    navigate(`/editStaff/${id}`)
-  }
+  const editSTAFF = (id) => {
+    navigate(`/editStaff/${id}`);
+  };
 
   return (
     <>
@@ -160,7 +159,11 @@ export default function ManageStaff() {
                       <td>{index + 1}</td>
                       <td>{item.name}</td>
                       <td className="text-center">
-                        <Img upload_id={item.photo.public_id} />
+                        <Img
+                          upload_id={item.photo.public_id}
+                          classN="rounded-2"
+                          width="130px"
+                        />
                       </td>
                       <td>{item.department}</td>
                       <td>{item.gender}</td>
@@ -174,12 +177,18 @@ export default function ManageStaff() {
                       <td>{item.country}</td>
                       <td>{new Date(item.created_at).toLocaleDateString()}</td>
                       <td className="py-2 px-4">
-                        <span className="badge text-bg-success mx-1 px-2"   onClick={() => editSTAFF(item._id)}
-                          style={{ cursor: 'pointer' }}>
+                        <span
+                          className="badge text-bg-success mx-1 px-2"
+                          onClick={() => editSTAFF(item._id)}
+                          style={{ cursor: "pointer" }}
+                        >
                           Edit
                         </span>
-                        <span className="badge text-bg-danger mx-1 px-2"    onClick={() => delStaff(item._id)}
-                          style={{ cursor: 'pointer' }}>
+                        <span
+                          className="badge text-bg-danger mx-1 px-2"
+                          onClick={() => delStaff(item._id)}
+                          style={{ cursor: "pointer" }}
+                        >
                           Delete
                         </span>
                       </td>

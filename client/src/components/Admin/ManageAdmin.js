@@ -148,7 +148,11 @@ const ManageAdmin = () => {
                       <td className="py-2 px-4">{admin.indexOf(item) + 1}</td>
                       <td className="py-2 px-4">{item.name}</td>
                       <td className="text-center">
-                        <Img upload_id={item.avatar.public_id} />
+                        <Img
+                          upload_id={item.avatar.public_id}
+                          classN="rounded-2"
+                          width="130px"
+                        />
                       </td>
                       <td className="py-2 px-4">{item.email}</td>
                       <td className="py-2 px-4">

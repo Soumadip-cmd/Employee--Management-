@@ -8,7 +8,7 @@ import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { face } from "@cloudinary/url-gen/qualifiers/focusOn";
 import { lazyload, responsive, placeholder } from '@cloudinary/react';
 
-const Img = ({ upload_id }) => {
+const Img = ({ upload_id,width,classN }) => {
   const cld = new Cloudinary({
     cloud: {
       cloudName: "deg0l45uc", 
@@ -32,7 +32,7 @@ const Img = ({ upload_id }) => {
 
   return (
     <div>
-      <AdvancedImage cldImg={myImage} plugins={[responsive(), lazyload(), placeholder()]} className="rounded-2"  style={{width:'130px'}}/>
+      <AdvancedImage cldImg={myImage} plugins={[responsive(), lazyload(), placeholder()]} className={classN}  style={{width:width}}/>
     </div>
   );
 };
