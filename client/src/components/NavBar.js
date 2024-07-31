@@ -24,9 +24,10 @@ const NavBar = () => {
   const logOut = () => {
     setDropdownOpen(false);
     localStorage.removeItem("authToken");
-    alert("logout Successfull");
+    alert("Logout Successful");
     navigate("/");
   };
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -71,12 +72,17 @@ const NavBar = () => {
             aria-expanded="false"
             onClick={toggleDropdown}
           >
-            <img
-              src={Adminlogin.avatar.url}
-              alt="profile"
+           <img
+              // Use conditional rendering to set image source
+              src={
+                Adminlogin && Adminlogin.avatar && Adminlogin.avatar.url
+                  ? Adminlogin.avatar.url // Use avatar URL if available
+                  : "https://via.placeholder.com/32" // Placeholder image URL
+              }
+              alt="profile" // Alt text for accessibility
               width="32"
               height="32"
-              className="rounded-circle"
+              className="rounded-circle" // Rounded corners for the image
             />
           </NavLink>
           <ul

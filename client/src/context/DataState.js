@@ -545,24 +545,41 @@ const DataState = (props) => {
 
 
   
-  const [Adminlogin,setAdminlogin]=useState([])
+  const [Adminlogin, setAdminlogin] = useState({ avatar: { url: '' } });
+
 
   //get Admin
   const getAdminProfile = async () => {
-    const url = "http://localhost:8800/get-user";
+    try {
+      const url = "http://localhost:8800/get-user";
   
-    const response = await fetch(url, {
-      headers: {
-        token: localStorage.getItem("authToken"),
-      },
-      method: "GET",
-    });
+      const response = await fetch(url, {
+        headers: {
+          token: localStorage.getItem("authToken"),
+        },
+        method: "GET",
+      });
   
-    const result = await response.json();
-
-    setAdminlogin(result.data);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      const result = await response.json();
+  
+      // Check if the data is structured as expected
+      if (result.data && result.data.avatar) {
+        setAdminlogin(result.data);
+      } else {
+        console.error("Unexpected response structure:", result);
+        setAdminlogin({ avatar: { url: 'path/to/default/image.jpg' } });
+      }
+    } catch (error) {
+      console.error("Error fetching admin profile:", error);
+      // Set a default state if there is an error
+      setAdminlogin({ avatar: { url: 'path/to/default/image.jpg' } });
+    }
   };
-
+  
   
 
 
