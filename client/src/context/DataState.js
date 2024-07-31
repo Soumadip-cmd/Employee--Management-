@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import DataContext from "./DataContext";
 
+
+
 const DataState = (props) => {
   const [dept, setDept] = useState([]);
 
@@ -541,6 +543,107 @@ const DataState = (props) => {
     setSalary(data);
   };
 
+
+  
+  const [Adminlogin,setAdminlogin]=useState([])
+
+  //get Admin
+  const getAdminProfile = async () => {
+    const url = "http://localhost:8800/get-user";
+  
+    const response = await fetch(url, {
+      headers: {
+        token: localStorage.getItem("authToken"),
+      },
+      method: "GET",
+    });
+  
+    const result = await response.json();
+
+    setAdminlogin(result.data);
+  };
+
+  
+
+
+  // Inside your context or wherever loginProfile is defined
+const loginProfile = async (email, password, navigate) => {
+  const url = "http://localhost:8800/login";
+
+  if (Array.isArray(email)) {
+    email = email[0];
+  }
+  if (Array.isArray(password)) {
+    password = password[0];
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      email: String(email),
+      password: String(password),
+    }),
+  });
+
+  const data = await response.json();
+  if (data.Success) {
+    localStorage.setItem('authToken', data.token);
+    setAdminlogin(data.adminData);
+    console.log(data.adminData);
+    // Navigate to dashboard after successful login
+    navigate('/dashboard');
+  } else {
+    alert('Invalid Credentials!..Check Again..');
+  }
+};
+
+
+  // //update Profile
+  // const updateProfile=async()=>{
+  //   const url = `http://localhost:8800/edit-Salary/${id}`;
+
+  //   if (Array.isArray(StaffName)) {
+  //     StaffName = StaffName[0];
+  //   }
+  //   if (Array.isArray(department)) {
+  //     department = department[0];
+  //   }
+  //   if (Array.isArray(Paid_Salary)) {
+  //     Paid_Salary = Paid_Salary[0];
+  //   }
+
+  //   const response = await fetch(url, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       token: localStorage.getItem("authToken"),
+  //     },
+  //     method: "PUT",
+  //     body: JSON.stringify({
+  //       StaffName: String(StaffName),
+  //       department: String(department),
+  //       Paid_Salary: String(Paid_Salary),
+  //     }),
+  //   });
+
+  //   await response.json();
+  //   const data = JSON.parse(JSON.stringify(salary));
+  //   for (let i = 0; i < data.length; i++) {
+  //     const element = data[i];
+  //     if (element._id === id) {
+  //       element.StaffName = StaffName;
+  //       element.department = department;
+  //       element.Paid_Salary = Paid_Salary;
+  //       break;
+  //     }
+  //   }
+  //   setSalary(data);
+  // }
+
+
+
   return (
     <DataContext.Provider
       value={{
@@ -563,7 +666,7 @@ const DataState = (props) => {
         deleteSal,
         addSal,
         getSal,
-        salary,
+        salary,loginProfile,Adminlogin,getAdminProfile
       }}
     >
       {props.children}

@@ -1,12 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import DataContext from "../context/DataContext";
 
 const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
-  
+  const { getAdminProfile, Adminlogin } = useContext(DataContext);
+
+  useEffect(() => {
+    getAdminProfile();
+  }, []);
+
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -15,13 +21,12 @@ const NavBar = () => {
     setDropdownOpen(false);
   };
 
-
-  const logOut=()=>{
+  const logOut = () => {
     setDropdownOpen(false);
-    localStorage.removeItem('authToken')
-    alert("logout Successfull")
-    navigate('/')
-  }
+    localStorage.removeItem("authToken");
+    alert("logout Successfull");
+    navigate("/");
+  };
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -39,14 +44,22 @@ const NavBar = () => {
     <>
       <nav
         className="d-flex justify-content-between ps-4 pe-2 align-items-center"
-        style={{ background: "#112a47", height: "50px", position: 'fixed', zIndex: '20', width: '100%' }}
+        style={{
+          background: "#112a47",
+          height: "50px",
+          position: "fixed",
+          zIndex: "20",
+          width: "100%",
+        }}
       >
         <NavLink
-          to='/dashboard'
+          to="/dashboard"
           className="float-start fw-bold text-decoration-none"
           style={{ fontFamily: '"Playwrite US Modern", cursive' }}
         >
-          <span className="opacity-80" style={{ color: '#f55757' }}>Employee</span>{" "}
+          <span className="opacity-80" style={{ color: "#f55757" }}>
+            Employee
+          </span>{" "}
           <span className="text-info">Management</span>
         </NavLink>
 
@@ -59,21 +72,33 @@ const NavBar = () => {
             onClick={toggleDropdown}
           >
             <img
-              src="https://placehold.co/32x32"
+              src={Adminlogin.avatar.url}
               alt="profile"
               width="32"
               height="32"
               className="rounded-circle"
             />
           </NavLink>
-          <ul className={`dropdown-menu text-small shadow ${dropdownOpen ? 'show' : ''}`}>
+          <ul
+            className={`dropdown-menu text-small shadow ${
+              dropdownOpen ? "show" : ""
+            }`}
+          >
             <li>
-              <NavLink className="dropdown-item" to="/dashboard" onClick={closeDropdown}>
+              <NavLink
+                className="dropdown-item"
+                to="/dashboard"
+                onClick={closeDropdown}
+              >
                 Home
               </NavLink>
             </li>
             <li>
-              <NavLink className="dropdown-item" to="/profile" onClick={closeDropdown}>
+              <NavLink
+                className="dropdown-item"
+                to="/profile"
+                onClick={closeDropdown}
+              >
                 Profile
               </NavLink>
             </li>

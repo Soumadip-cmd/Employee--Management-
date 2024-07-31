@@ -1,8 +1,10 @@
-import React,{useEffect, useRef} from "react";
+import React,{useContext, useEffect, useRef} from "react";
 import { useNavigate } from "react-router-dom";
+import DataContext from "../../context/DataContext";
 
 const Profile = () => {
 
+  const {Adminlogin}=useContext(DataContext)
   const camera=useRef(null)
 
   const handleCamera=()=>{

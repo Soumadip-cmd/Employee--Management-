@@ -138,7 +138,9 @@ router.post(
       success = true;
       const data = { user: { id: user.id } };
       const token = jwt.sign(data, jwt_Secret);
-      res.json({ Success: success, token });
+      const adminData = await User.findOne({ email }).select('-_id -password');
+
+      res.json({ Success: success,adminData, token });
     } catch (error) {
       console.error(error);
       res
@@ -158,7 +160,7 @@ router.get("/get-user", FetchUser, async (req, res) => {
     const userId = req.user.id;
     const data = await User.findById(userId).select("-password");
     success = true;
-    res.json({ Success: success, Details: data });
+    res.json({ Success: success, data });
   } catch (error) {
     console.error(error);
     res

@@ -1,46 +1,17 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
 import './login.css'
+import DataContext from '../../context/DataContext';
 const Login = () => {
-  const navigate=useNavigate()
   
-  const [login,setLogin]=useState({name:"",email:"",password:"",adminId:""})
+  const {loginProfile}=useContext(DataContext)
+  const [login,setLogin]=useState({email:"",password:""})
+
+  const navigate = useNavigate(); // Initialize useNavigate here
 
   const handlelogin = async (e) => {
-    e.preventDefault()
-    let {email,password}=login
-    const url = "http://localhost:8800/login";
-
-    if (Array.isArray(email)) {
-      email = email[0];
-    }
-    if (Array.isArray(password)) {
-      password = password[0];
-    }
-    
-
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-      method: "POST",
-      body: JSON.stringify({
-        email: String(email),
-        password: String(password),
-      }),
-    });
-
-    const data = await response.json();
-    if(data.Success)
-    {
-      localStorage.setItem('authToken',data.token)
-      navigate('/dashboard')
-    }
-    else {
-      alert('warning','Invalid Credentials!..Check Again..')
-    }
-
+    e.preventDefault();
+    await loginProfile(login.email, login.password, navigate); // Pass navigate as an argument
   };
 
   const handleChange=(e)=>{
