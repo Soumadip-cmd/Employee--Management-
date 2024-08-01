@@ -7,3 +7,6 @@ and fetch time manageadmin portal only
 
  admin can update the password or profile form there portal (navbar topcorner)/profile...
  this required for login time (password)
+
+
+ npm i express axios express-validator @cloudinary/react @cloudinary/url-gen bcrypt cloudinary cors dotenv jsonwebtoken mongoose nodemon
