@@ -335,7 +335,7 @@ export default function EditStaff() {
                   accept=".jpg, .png, .svg, .webp, .jpeg"
                   className="form-control"
                   onChange={photoChange}
-                 
+                 required
                   style={{ border: "1px solid" }}
                 />
               </div>

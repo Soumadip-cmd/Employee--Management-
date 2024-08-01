@@ -6,11 +6,13 @@ import DataContext from "./DataContext";
 const DataState = (props) => {
   const [dept, setDept] = useState([]);
 
+  const link="http://localhost:8800"
+
   // -------------DEpartment-------------------
 
   //get all departments
   const getDept = async () => {
-    const url = "http://localhost:8800/get-departments";
+    const url = `${link}/get-departments`
 
     const response = await fetch(url, {
       headers: {
@@ -25,7 +27,7 @@ const DataState = (props) => {
 
   //add departments
   const addDept = async (deptName, employeeId) => {
-    const url = "http://localhost:8800/add-department";
+    const url = `${link}/add-department`
 
     if (Array.isArray(deptName)) {
       deptName = deptName[0];
@@ -52,7 +54,7 @@ const DataState = (props) => {
 
   //delete department
   const deleteDept = async (id) => {
-    const url = `http://localhost:8800/delete-department/${id}`;
+    const url = `${link}/delete-department/${id}`
 
     try {
       const response = await fetch(url, {
@@ -78,7 +80,7 @@ const DataState = (props) => {
 
   //edit department
   const editDept = async (id, deptName, employeeId) => {
-    const url = `http://localhost:8800/edit-department/${id}`;
+    const url = `${link}/edit-department/${id}`
 
     if (Array.isArray(deptName)) {
       deptName = deptName[0];
@@ -118,7 +120,7 @@ const DataState = (props) => {
 
   //getAdmin
   const getAdmin = async () => {
-    const url = "http://localhost:8800/get-all-admin";
+    const url = `${link}/get-all-admin`
     try {
       const response = await fetch(url);
       const responseData = await response.json();
@@ -135,7 +137,7 @@ const DataState = (props) => {
 
   // Add admin
   const addAdmin = async (name, email, password, avatar) => {
-    const url = "http://localhost:8800/create-user";
+    const url = `${link}/create-user`
 
     try {
       const response = await fetch(url, {
@@ -174,7 +176,7 @@ const DataState = (props) => {
 
   //delete Admin
   const deleteAdmin = async (id) => {
-    const url = `http://localhost:8800/deleteAdmin/${id}`;
+    const url = `${link}/deleteAdmin/${id}`
 
     try {
       const response = await fetch(url, {
@@ -197,7 +199,7 @@ const DataState = (props) => {
 
   //edit Admin
   const editAdmin = async (id, name, email) => {
-    const url = `http://localhost:8800/editAdmin/${id}`;
+    const url = `${link}/editAdmin/${id}`
 
     if (Array.isArray(name)) {
       name = name[0];
@@ -231,40 +233,7 @@ const DataState = (props) => {
   };
 
 
-  //updateAdmin
-  // const updateAdmin=async(id,name,password,avatar)=>{
-  //   const url = `http://localhost:8800/updateDetails/${id}`;
-
-  //   if (Array.isArray(name)) {
-  //     name = name[0];
-  //   }
-  //   if (Array.isArray(email)) {
-  //     email = email[0];
-  //   }
-
-  //   const response = await fetch(url, {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     method: "PUT",
-  //     body: JSON.stringify({
-  //       name: String(name),
-  //       email: String(email),
-  //     }),
-  //   });
-
-  //   await response.json();
-  //   const data = JSON.parse(JSON.stringify(dept));
-  //   for (let i = 0; i < data.length; i++) {
-  //     const element = data[i];
-  //     if (element._id === id) {
-  //       element.email = email;
-  //       element.name = name;
-  //       break;
-  //     }
-  //   }
-  //   setAdmin(data);
-  // }
+  
 
 
   // ------Staff ----------------------
@@ -273,7 +242,7 @@ const DataState = (props) => {
 
   //get staff
   const getStaff = async () => {
-    const url = `http://localhost:8800/get-staffs`;
+    const url = `${link}/get-staffs`
     try {
       const response = await fetch(url, {
         headers: {
@@ -305,7 +274,7 @@ const DataState = (props) => {
     state,
     address
   ) => {
-    const url = `http://localhost:8800/add-Staff`;
+    const url = `${link}/add-Staff`
     try {
       const response = await fetch(url, {
         headers: {
@@ -338,7 +307,7 @@ const DataState = (props) => {
 
   //delete Staff
   const deleteStaff = async (id) => {
-    const url = `http://localhost:8800/delete-Staff/${id}`;
+    const url = `${link}/delete-Staff/${id}`
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -375,7 +344,7 @@ const DataState = (props) => {
     state,
     address
   ) => {
-    const url = `http://localhost:8800/edit-Staff/${id}`;
+    const url = `${link}/edit-Staff/${id}`
     try {
       const response = await fetch(url, {
         headers: {
@@ -432,7 +401,7 @@ const DataState = (props) => {
 
   //get all salary
   const getSal = async () => {
-    const url = "http://localhost:8800/get-all-Salary";
+    const url = `${link}/get-all-Salary`
 
     const response = await fetch(url, {
       headers: {
@@ -447,7 +416,7 @@ const DataState = (props) => {
 
   //add salary
   const addSal = async (StaffName, department, Paid_Salary) => {
-    const url = "http://localhost:8800/add-Salary";
+    const url = `${link}/add-Salary`
 
     if (Array.isArray(StaffName)) {
       StaffName = StaffName[0];
@@ -478,7 +447,7 @@ const DataState = (props) => {
 
   //delete salary
   const deleteSal = async (id) => {
-    const url = `http://localhost:8800/delete-Salary/${id}`;
+    const url = `${link}/delete-Salary/${id}`
 
     try {
       const response = await fetch(url, {
@@ -505,7 +474,7 @@ const DataState = (props) => {
 
   //edit Salary
   const editSal = async (id, StaffName, department, Paid_Salary) => {
-    const url = `http://localhost:8800/edit-Salary/${id}`;
+    const url = `${link}/edit-Salary/${id}`
 
     if (Array.isArray(StaffName)) {
       StaffName = StaffName[0];
@@ -552,7 +521,7 @@ const DataState = (props) => {
   //get Admin
   const getAdminProfile = async () => {
     try {
-      const url = "http://localhost:8800/get-user";
+      const url = `${link}/get-user`
   
       const response = await fetch(url, {
         headers: {
@@ -586,7 +555,7 @@ const DataState = (props) => {
 
   // Inside your context or wherever loginProfile is defined
 const loginProfile = async (email, password, navigate) => {
-  const url = "http://localhost:8800/login";
+  const url = `${link}/login`
 
   if (Array.isArray(email)) {
     email = email[0];
@@ -621,7 +590,7 @@ const loginProfile = async (email, password, navigate) => {
 
 
 const updateProfile = async (id, name, password, avatar) => {
-  const url = `http://localhost:8800/updateDetails/${id}`;
+  const url = `${link}/updateDetails/${id}`
 
   if (Array.isArray(name)) {
     name = name[0];
