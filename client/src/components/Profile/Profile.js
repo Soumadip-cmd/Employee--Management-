@@ -15,6 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     getAdmin();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

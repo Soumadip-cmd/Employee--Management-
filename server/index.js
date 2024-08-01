@@ -1,42 +1,47 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
-const connectTomongo = require("./Db");
-const cors = require('cors');
+const connectToMongo = require("./Db");
+const cors = require("cors");
 
 const app = express();
 
-connectTomongo();
-const port = process.env.PORT || "8000";
+connectToMongo(); // Connect to MongoDB
+const port = process.env.PORT || 8000; // Default port 8000
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.CLIENT_URL, // Replace with your front-end URL or use '*' to allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
+  origin: "http://localhost:3000" || process.env.CLIENT_URL,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // Allow credentials (cookies, headers)
 };
 
 app.use(cors(corsOptions));
 
-// Image or video max size is required for JSON file
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// Parse incoming requests with JSON payloads
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+// Routes
 app.use(require(path.join(__dirname, "Routes/Department.js")));
 app.use(require(path.join(__dirname, "Routes/Leave.js")));
 app.use(require(path.join(__dirname, "Routes/Salary.js")));
 app.use(require(path.join(__dirname, "Routes/Staff.js")));
 app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
 
-app.get('/test', (req, res) => {
+// Test Route
+app.get("/test", (req, res) => {
   try {
-    res.json({ Success: true, msg: 'Api is Working Properly..' });
+    res.json({ Success: true, msg: "API is Working Properly.." });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ Success: false, msg: 'API is not Working Properly..' });
+    res
+      .status(500)
+      .json({ Success: false, msg: "API is not Working Properly.." });
   }
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server is Running on http://localhost:${port}`);
 });

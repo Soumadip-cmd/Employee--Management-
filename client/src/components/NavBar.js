@@ -8,10 +8,11 @@ const NavBar = () => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  const { getAdminProfile, Adminlogin } = useContext(DataContext);
+  const { getAdmin, Adminlogin } = useContext(DataContext);
 
   useEffect(() => {
-    getAdminProfile();
+    getAdmin();
+    // eslint-disable-next-line
   }, []);
 
   const toggleDropdown = () => {

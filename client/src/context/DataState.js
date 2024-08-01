@@ -6,7 +6,7 @@ import DataContext from "./DataContext";
 const DataState = (props) => {
   const [dept, setDept] = useState([]);
 
-  const link=process.env.REACT_APP_BACKEND_URL
+  const link = process.env.REACT_APP_BACKEND_URL || "http://localhost:8800";
   // -------------DEpartment-------------------
 
   //get all departments
@@ -578,7 +578,7 @@ const loginProfile = async (email, password, navigate) => {
   if (data.Success) {
     localStorage.setItem('authToken', data.token);
     setAdminlogin(data.adminData);
-    console.log(data.adminData);
+    // console.log(data.adminData);
     // Navigate to dashboard after successful login
     navigate('/dashboard');
   } else {
@@ -621,7 +621,7 @@ const updateProfile = async (id, name, password, avatar) => {
       console.error("Failed to update profile:", responseData);
       return false;
     }
-console.log(responseData)
+// console.log(responseData)
     const data = JSON.parse(JSON.stringify(admin)); // Replace `salary` with `admin` or the appropriate state
     for (let i = 0; i < data.length; i++) {
       const element = data[i];
