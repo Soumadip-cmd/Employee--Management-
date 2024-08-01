@@ -28,7 +28,7 @@ app.use(require(path.join(__dirname, "Routes/Salary.js")));
 app.use(require(path.join(__dirname, "Routes/Staff.js")));
 app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
 
-app.post('/test', (req, res) => {
+app.get('/test', (req, res) => {
   try {
     res.json({ Success: true, msg: 'API is Working Properly..' });
   } catch (error) {
