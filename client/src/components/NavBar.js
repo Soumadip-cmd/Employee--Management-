@@ -18,6 +18,11 @@ const NavBar = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const moveRoute=(id)=>{
+    setDropdownOpen(false);
+    navigate(`/profile/${id}`)
+  }
+
   const closeDropdown = () => {
     setDropdownOpen(false);
   };
@@ -96,8 +101,8 @@ const NavBar = () => {
             <li>
               <NavLink
                 className="dropdown-item"
-                to="/profile"
-                onClick={closeDropdown}
+                to={`/profile/${Adminlogin._id}`}
+                onClick={()=>moveRoute(Adminlogin._id)}
               >
                 Profile
               </NavLink>
