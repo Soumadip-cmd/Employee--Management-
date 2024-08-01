@@ -1,16 +1,18 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 import Img from "../Admin/Img";
 
 const Profile = () => {
   const { getAdminProfile, Adminlogin } = useContext(DataContext);
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(Adminlogin.avatar.url); // State for image preview URL
+
+  const camera = useRef(null);
 
   useEffect(() => {
     getAdminProfile();
   }, []);
-
-  const camera = useRef(null);
 
   const handleCamera = () => {
     camera.current.click();
@@ -23,6 +25,25 @@ const Profile = () => {
     }
     // eslint-disable-next-line
   }, []);
+
+  // Function to preview image
+  const previewImg = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result); // Set preview URL
+    };
+  };
+
+  // Handle photo change
+  const photoChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    if (selectedFile) {
+      previewImg(selectedFile); // Preview the selected image
+    }
+  };
+
   return (
     <>
       <div
@@ -36,14 +57,14 @@ const Profile = () => {
             <hr className=" border-1 border-black" />
             <div className="text-center mb-4 position-relative">
               <img
-                src={Adminlogin.avatar.url}
+                src={previewUrl || Adminlogin.avatar.url} // Use previewUrl state for image source
                 width={100}
                 height={100}
                 alt="User Profile"
                 className="rounded-circle mb-3 "
               />
               <span
-                className="rounded-circle p-2 d-flex justify-content-center align-items-center bg-opacity-80 border-2   bg-light position-absolute"
+                className="rounded-circle p-2 d-flex justify-content-center align-items-center bg-opacity-80 border-2 bg-light position-absolute"
                 style={{
                   width: "fit-content",
                   bottom: "18px",
@@ -70,6 +91,7 @@ const Profile = () => {
                 type="file"
                 ref={camera}
                 className=" d-none"
+                onChange={photoChange}
                 accept="image/jpeg, image/png, image/webp, image/svg+xml"
               />
             </div>
@@ -82,7 +104,7 @@ const Profile = () => {
                   id="floatingInput"
                   placeholder="Soumadip Santra"
                 />
-                <label for="floatingInput">Full Name</label>
+                <label htmlFor="floatingInput">Full Name</label>
               </div>
 
               <div className="form-floating">
@@ -92,7 +114,7 @@ const Profile = () => {
                   id="floatingPassword"
                   placeholder="Password"
                 />
-                <label for="floatingPassword">Password</label>
+                <label htmlFor="floatingPassword">Password</label>
               </div>
             </form>
 

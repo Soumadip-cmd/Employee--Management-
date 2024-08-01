@@ -618,46 +618,46 @@ const loginProfile = async (email, password, navigate) => {
 };
 
 
-  // //update Profile
-  // const updateProfile=async()=>{
-  //   const url = `http://localhost:8800/edit-Salary/${id}`;
+  //update Profile
+  const updateProfile=async(id,name,password,avatar)=>{
+    const url = `http://localhost:8800/updateDetails/${id}`;
 
-  //   if (Array.isArray(StaffName)) {
-  //     StaffName = StaffName[0];
-  //   }
-  //   if (Array.isArray(department)) {
-  //     department = department[0];
-  //   }
-  //   if (Array.isArray(Paid_Salary)) {
-  //     Paid_Salary = Paid_Salary[0];
-  //   }
+    if (Array.isArray(name)) {
+      name = name[0];
+    }
+    if (Array.isArray(password)) {
+      password = password[0];
+    }
+    if (Array.isArray(avatar)) {
+      avatar = avatar[0];
+    }
 
-  //   const response = await fetch(url, {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       token: localStorage.getItem("authToken"),
-  //     },
-  //     method: "PUT",
-  //     body: JSON.stringify({
-  //       StaffName: String(StaffName),
-  //       department: String(department),
-  //       Paid_Salary: String(Paid_Salary),
-  //     }),
-  //   });
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("authToken"),
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        name: String(name),
+        password: String(password),
+        avatar: String(avatar),
+      }),
+    });
 
-  //   await response.json();
-  //   const data = JSON.parse(JSON.stringify(salary));
-  //   for (let i = 0; i < data.length; i++) {
-  //     const element = data[i];
-  //     if (element._id === id) {
-  //       element.StaffName = StaffName;
-  //       element.department = department;
-  //       element.Paid_Salary = Paid_Salary;
-  //       break;
-  //     }
-  //   }
-  //   setSalary(data);
-  // }
+    await response.json();
+    const data = JSON.parse(JSON.stringify(salary));
+    for (let i = 0; i < data.length; i++) {
+      const element = data[i];
+      if (element._id === id) {
+        element.name = name;
+        element.password = password;
+        element.avatar = avatar;
+        break;
+      }
+    }
+    setAdmin(data);
+  }
 
 
 
@@ -683,7 +683,7 @@ const loginProfile = async (email, password, navigate) => {
         deleteSal,
         addSal,
         getSal,
-        salary,loginProfile,Adminlogin,getAdminProfile
+        salary,loginProfile,Adminlogin,getAdminProfile,updateProfile
       }}
     >
       {props.children}
