@@ -30,7 +30,7 @@ app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
 
 app.get('/test', (req, res) => {
   try {
-    res.json({ Success: true, msg: process.env.MSG });
+    res.json({ Success: false, msg: process.env.MSG });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ Success: false, msg: 'API is not Working Properly..' });
