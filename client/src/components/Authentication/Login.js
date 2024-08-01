@@ -28,7 +28,7 @@ const Login = () => {
         <p className="page-link">
           <span className="page-link-label">Forgot Password?</span>
         </p>
-        <button className="form-btn">Log in</button>
+        <button className="form-btn ">Log in</button>
       </form>
       <p className="sign-up-label">
         Don't have an account?<NavLink to='/' className="sign-up-link">Send Request to Admin</NavLink>

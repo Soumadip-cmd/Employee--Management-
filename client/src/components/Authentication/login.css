@@ -82,6 +82,10 @@
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
+  .form-btn:hover{
+    background: #214c7d;
+
+  }
   
   .form-btn:active {
     box-shadow: none;
