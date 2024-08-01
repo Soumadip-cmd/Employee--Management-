@@ -1,12 +1,7 @@
-admin can't edit the password for action (edit ) but at the time of delete whole admin deleted...
+---For cors----
+if i want to access localhost3000, then 1st do this "origin:  "http://localhost:3000" || process.env.CLIENT_URL," and active local host push this and again closde restart every thing
 
-
-and fetch time manageadmin portal only 
-#	Admin Name	Admin Photo	Admin Email	      Actions
- those visible....
-
- admin can update the password or profile form there portal (navbar topcorner)/profile...
- this required for login time (password)
+if want the render then again set "origin: process.env.CLIENT_URL || "http://localhost:3000"," and active server via thunder client api endpoint. and push
 
 
  npm i express axios express-validator @cloudinary/react @cloudinary/url-gen bcrypt cloudinary cors dotenv jsonwebtoken mongoose nodemon
