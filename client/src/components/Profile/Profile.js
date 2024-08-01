@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DataContext from "../../context/DataContext";
-import Img from "../Admin/Img";
 
 const Profile = () => {
   const { id } = useParams();
@@ -16,7 +15,7 @@ const Profile = () => {
 
   useEffect(() => {
     getAdmin();
-  }, []); // Add getAdmin as a dependency to ensure it's correctly referenced
+  }, []);
 
   useEffect(() => {
     const adminDetails = admin.find((k) => k._id === id);
@@ -35,11 +34,15 @@ const Profile = () => {
     if (!localStorage.getItem("authToken")) {
       navigate("/");
     }
-    // eslint-disable-next-line
-  }, [navigate]); // Add navigate as a dependency
+  }, [navigate]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    if (!file) {
+      alert("Image should be updated.");
+      return; // Exit the function if no file is provided
+    }
 
     let photoUrlToUse = photoUrl;
 
@@ -165,7 +168,6 @@ const Profile = () => {
                   type="file"
                   ref={camera}
                   className="d-none"
-                  required
                   onChange={photoChange}
                   accept="image/jpeg, image/png, image/webp, image/svg+xml"
                 />
@@ -202,6 +204,15 @@ const Profile = () => {
               <p className="mt-4 text-center text-muted d-grid">
                 <button type="submit" className="btn btn-success">
                   Update Details
+                </button>
+              </p>
+              <p className="mt-2 text-center text-muted d-grid">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  Cancel
                 </button>
               </p>
             </form>
