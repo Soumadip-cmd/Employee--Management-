@@ -28,7 +28,7 @@ app.use(require(path.join(__dirname, "Routes/Salary.js")));
 app.use(require(path.join(__dirname, "Routes/Staff.js")));
 app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
 
-app.get('/test', (req, res) => {
+app.get('/', (req, res) => {
   try {
     res.json({ Success: false, msg: process.env.MSG });
   } catch (error) {
