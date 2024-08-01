@@ -30,7 +30,7 @@ router.post(
     body("name", "Enter a valid name").isLength({ min: 3 }),
     body("email", "Enter a valid email").isEmail(),
     body("password", "Password length must be at least 5 characters").isLength({
-      min: 5,
+      min: 3,
     }),
     body("avatar", "Add a photo").optional().isLength({ min: 4 }),
   ],
@@ -107,7 +107,7 @@ router.post(
   [
     body("email", "Enter Valid Email").isEmail(),
     body("password", "Password Length must be at least 5 chars").isLength({
-      min: 5,
+      min: 3,
     }),
   ],
   async (req, res) => {
@@ -257,21 +257,22 @@ router.delete("/deleteAdmin/:id", async (req, res) => {
   }
 });
 
-// Update user details
 router.put(
   "/updateDetails/:id",
   FetchUser,
   [
     body("name", "Enter Valid UserName").isLength({ min: 3 }),
     body("password", "Password Length must be at least 5 chars").isLength({
-      min: 5,
+      min: 3,
     }),
   ],
   async (req, res) => {
     let success = false;
     try {
+      // Validate input
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        console.log("Validation errors:", errors.array());
         return res
           .status(400)
           .json({ Success: success, errors: errors.array() });
@@ -280,8 +281,10 @@ router.put(
       const { avatar, name, password } = req.body;
       const newUserDetails = {};
 
+      // Check if user exists
       const userExists = await User.findById(req.params.id);
       if (!userExists) {
+        // console.log("User not found for ID:", req.params.id);
         return res
           .status(404)
           .json({ Success: success, Error: "User Not Exists.." });
@@ -309,7 +312,9 @@ router.put(
             public_id: uploadResult.public_id,
             url: uploadResult.secure_url,
           };
+          // console.log("Avatar uploaded successfully:", uploadResult);
         } catch (uploadError) {
+          console.error("Avatar upload error:", uploadError.message);
           return res
             .status(500)
             .json({
@@ -319,6 +324,7 @@ router.put(
         }
       }
 
+      // Update user
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         { $set: newUserDetails },
@@ -326,9 +332,10 @@ router.put(
       );
 
       success = true;
+      // console.log("User updated successfully:", updatedUser);
       res.json({ Success: success, updatedUser });
     } catch (error) {
-      console.error(error);
+      console.error("Internal Server Error:", error.message);
       res
         .status(500)
         .json({
@@ -338,5 +345,6 @@ router.put(
     }
   }
 );
+
 
 module.exports = router;

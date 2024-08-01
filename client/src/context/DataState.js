@@ -124,6 +124,7 @@ const DataState = (props) => {
       const responseData = await response.json();
       if (responseData.Success) {
         setAdmin(responseData.allAdmin);
+        // console.log(responseData.allAdmin)
       } else {
         console.error("Failed to fetch admins");
       }
@@ -618,20 +619,21 @@ const loginProfile = async (email, password, navigate) => {
 };
 
 
-  //update Profile
-  const updateProfile=async(id,name,password,avatar)=>{
-    const url = `http://localhost:8800/updateDetails/${id}`;
 
-    if (Array.isArray(name)) {
-      name = name[0];
-    }
-    if (Array.isArray(password)) {
-      password = password[0];
-    }
-    if (Array.isArray(avatar)) {
-      avatar = avatar[0];
-    }
+const updateProfile = async (id, name, password, avatar) => {
+  const url = `http://localhost:8800/updateDetails/${id}`;
 
+  if (Array.isArray(name)) {
+    name = name[0];
+  }
+  if (Array.isArray(password)) {
+    password = password[0];
+  }
+  if (Array.isArray(avatar)) {
+    avatar = avatar[0];
+  }
+
+  try {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
@@ -645,8 +647,14 @@ const loginProfile = async (email, password, navigate) => {
       }),
     });
 
-    await response.json();
-    const data = JSON.parse(JSON.stringify(salary));
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      console.error("Failed to update profile:", responseData);
+      return false;
+    }
+console.log(responseData)
+    const data = JSON.parse(JSON.stringify(admin)); // Replace `salary` with `admin` or the appropriate state
     for (let i = 0; i < data.length; i++) {
       const element = data[i];
       if (element._id === id) {
@@ -656,8 +664,15 @@ const loginProfile = async (email, password, navigate) => {
         break;
       }
     }
-    setAdmin(data);
+    setAdmin(data); // Ensure `setAdmin` is defined in your context or component
+
+    return true;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return false;
   }
+};
+
 
 
 

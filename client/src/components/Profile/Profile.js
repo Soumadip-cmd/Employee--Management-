@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import Img from "../Admin/Img";
 
 const Profile = () => {
   const { id } = useParams();
-  const { updateProfile, admin } = useContext(DataContext);
+  const { updateProfile, admin, getAdmin } = useContext(DataContext);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [editProfile, setEditProfile] = useState({ id: id, name: "", password: "" });
@@ -14,82 +15,81 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Try to get admin details from localStorage
-    const storedAdminDetails = JSON.parse(localStorage.getItem(`adminDetails-${id}`));
-    
-    if (storedAdminDetails) {
-      // If details are found in localStorage, use them
-      setEditProfile({
-        id: storedAdminDetails._id,
-        name: storedAdminDetails.name,
-      });
-      setPhotoUrl(storedAdminDetails.avatar.url);
-      setPreviewUrl(storedAdminDetails.avatar.url);
-    } else {
-      // If not, find the admin details from the context
-      const adminDetails = admin.find((k) => k._id === id);
-      if (adminDetails) {
-        setEditProfile({
-          id: adminDetails._id,
-          name: adminDetails.name,
-        });
-        setPhotoUrl(adminDetails.avatar.url);
-        setPreviewUrl(adminDetails.avatar.url);
+    getAdmin();
+  }, []); // Add getAdmin as a dependency to ensure it's correctly referenced
 
-        // Save the details in localStorage
-        localStorage.setItem(`adminDetails-${id}`, JSON.stringify(adminDetails));
-      }
+  useEffect(() => {
+    const adminDetails = admin.find((k) => k._id === id);
+    if (adminDetails) {
+      setEditProfile({
+        id: adminDetails._id,
+        name: adminDetails.name,
+        password: "" // Keep password empty initially
+      });
+      setPhotoUrl(adminDetails.avatar.url);
+      setPreviewUrl(adminDetails.avatar.url); // Set the initial preview URL
     }
   }, [id, admin]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("authToken")) {
+      navigate("/");
+    }
+    // eslint-disable-next-line
+  }, [navigate]); // Add navigate as a dependency
 
   const handleUpdate = async (e) => {
     e.preventDefault();
 
     let photoUrlToUse = photoUrl;
+
     if (file) {
       const reader = new FileReader();
 
       reader.onloadend = async () => {
         photoUrlToUse = reader.result;
+        try {
+          const success = await updateProfile(
+            editProfile.id,
+            editProfile.name || admin.find((k) => k._id === id).name, // Use existing name if empty
+            editProfile.password || "", // Use existing password if empty
+            photoUrlToUse
+          );
 
-        await updateProfile(
-          editProfile.id,
-          editProfile.name,
-          editProfile.password,
-          photoUrlToUse
-        );
-
-        setEditProfile({ id: id, name: "", password: "" });
-        setFile(null);
-        setPreviewUrl(""); // Reset preview URL
-        navigate("/dashboard");
-
-        // Update localStorage with new profile data
-        localStorage.setItem(`adminDetails-${id}`, JSON.stringify({
-          _id: editProfile.id,
-          name: editProfile.name,
-          avatar: { url: photoUrlToUse },
-        }));
+          if (success) {
+            setEditProfile({ id: id, name: "", password: "" });
+            setFile(null);
+            setPreviewUrl(""); // Reset preview URL
+            navigate("/dashboard");
+          } else {
+            alert("Failed to update profile. Please try again.");
+          }
+        } catch (error) {
+          console.error("Error updating profile:", error);
+          alert("An error occurred. Please try again.");
+        }
       };
       reader.readAsDataURL(file);
     } else {
-      await updateProfile(
-        editProfile.id,
-        editProfile.name,
-        editProfile.password,
-        photoUrlToUse
-      );
+      try {
+        const success = await updateProfile(
+          editProfile.id,
+          editProfile.name || admin.find((k) => k._id === id).name, // Use existing name if empty
+          editProfile.password || "", // Use existing password if empty
+          photoUrlToUse
+        );
 
-      setEditProfile({ id: id, name: "", password: "" });
-      setPreviewUrl(""); // Reset preview URL
-      navigate("/dashboard");
-
-      // Update localStorage with new profile data
-      localStorage.setItem(`adminDetails-${id}`, JSON.stringify({
-        _id: editProfile.id,
-        name: editProfile.name,
-        avatar: { url: photoUrlToUse },
-      }));
+        if (success) {
+          setEditProfile({ id: id, name: "", password: "" });
+          setPreviewUrl(""); // Reset preview URL
+          navigate("/dashboard");
+        } else {
+          alert("Failed to update profile. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("An error occurred. Please try again.");
+      }
     }
   };
 
@@ -97,18 +97,11 @@ const Profile = () => {
     camera.current.click();
   };
 
-  useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      navigate("/");
-    }
-    // eslint-disable-next-line
-  }, []);
-
   const previewImg = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setPreviewUrl(reader.result);
+      setPreviewUrl(reader.result); // Set preview URL
     };
   };
 
@@ -120,7 +113,7 @@ const Profile = () => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
     if (selectedFile) {
-      previewImg(selectedFile);
+      previewImg(selectedFile); // Preview the selected image
     }
   };
 
@@ -172,6 +165,7 @@ const Profile = () => {
                   type="file"
                   ref={camera}
                   className="d-none"
+                  required
                   onChange={photoChange}
                   accept="image/jpeg, image/png, image/webp, image/svg+xml"
                 />
@@ -185,6 +179,7 @@ const Profile = () => {
                   placeholder="Soumadip Santra"
                   onChange={handleChange}
                   name="name"
+                  required
                   value={editProfile.name}
                 />
                 <label htmlFor="floatingInput">Full Name</label>
@@ -198,6 +193,7 @@ const Profile = () => {
                   placeholder="Password"
                   onChange={handleChange}
                   name="password"
+                  required
                   value={editProfile.password}
                 />
                 <label htmlFor="floatingPassword">Password</label>
