@@ -6,8 +6,7 @@ import DataContext from "./DataContext";
 const DataState = (props) => {
   const [dept, setDept] = useState([]);
 
-  const link="http://localhost:8800"
-
+  const link=process.env.REACT_APP_BACKEND_URL
   // -------------DEpartment-------------------
 
   //get all departments
