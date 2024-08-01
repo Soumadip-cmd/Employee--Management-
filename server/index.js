@@ -9,28 +9,33 @@ const app = express();
 connectTomongo();
 const port = process.env.PORT || "8000";
 
-app.use(cors())
-//image or video max size i srequired for json file
+// CORS configuration
+const corsOptions = {
+  origin: process.env.CLIENT_URL, // Replace with your front-end URL or use '*' to allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
+// Image or video max size is required for JSON file
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(express.json());
 app.use(require(path.join(__dirname, "Routes/Department.js")));
 app.use(require(path.join(__dirname, "Routes/Leave.js")));
 app.use(require(path.join(__dirname, "Routes/Salary.js")));
 app.use(require(path.join(__dirname, "Routes/Staff.js")));
 app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
 
-app.post('/test',(req,res)=>{
+app.post('/test', (req, res) => {
   try {
-    res.json({Success:true,msg:'Api is Working Properly..'})
+    res.json({ Success: true, msg: 'API is Working Properly..' });
   } catch (error) {
-    console.error(error.message)
-    res.status(500).json({Success:false,msg:'Api is not Working Properly..'})
+    console.error(error.message);
+    res.status(500).json({ Success: false, msg: 'API is not Working Properly..' });
   }
-})
-  
-  
+});
 
 app.listen(port, () => {
   console.log(`Server is Running on http://localhost:${port}`);
