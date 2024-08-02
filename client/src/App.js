@@ -23,6 +23,7 @@ import EditDepartment from "./components/Department/EditDepartment";
 import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
 import EditSalary from "./components/Salary/EditSalary";
+import  { Toaster } from 'react-hot-toast';
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -232,6 +233,7 @@ function App() {
   return (
     <>
       <DataState>
+      <Toaster/>
         <RouterProvider router={router} />
       </DataState>
     </>

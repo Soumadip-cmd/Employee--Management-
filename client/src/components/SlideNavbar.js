@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./SlideNavBar.css";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import toast from "react-hot-toast";
 
 export default function SlideNavbar() {
   useEffect(() => {
@@ -34,19 +34,22 @@ export default function SlideNavbar() {
       document.removeEventListener("click", handleCloseSidebar);
     };
   }, []);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
-  const logOut=()=>{
-    localStorage.removeItem('authToken')
-    alert("logout Successfull")
-    navigate('/')
-  }
-
+  const logOut = () => {
+    try {
+      localStorage.removeItem("authToken");
+      toast.success("Logout Successful");
+      navigate("/");
+    } catch (error) {
+      toast.error("Logout Failed");
+    }
+  };
   return (
     <>
       <div className="wrapper">
         <div className="backdrop"></div>
-    
+
         <aside id="sidebar" className="scroll">
           <div className="d-flex">
             <button className="toggle-btn" type="button">
@@ -75,7 +78,7 @@ export default function SlideNavbar() {
           </form>
           <div
             className="px-4 py-2 text-capitalize text-white text-opacity-50 main-navigation"
-            style={{ background: "#586682b0" ,whiteSpace:'nowrap'}}
+            style={{ background: "#586682b0", whiteSpace: "nowrap" }}
           >
             main navigation
           </div>
@@ -89,7 +92,6 @@ export default function SlideNavbar() {
 
             <li className="sidebar-item">
               <NavLink
-                
                 className="NavBody sidebar-link collapsed has-dropdown"
                 data-bs-toggle="collapse"
                 data-bs-target="#Department"
@@ -110,7 +112,10 @@ export default function SlideNavbar() {
                   </NavLink>
                 </li>
                 <li className="sidebar-item">
-                  <NavLink to="/manageDepartment" className="NavBody sidebar-link">
+                  <NavLink
+                    to="/manageDepartment"
+                    className="NavBody sidebar-link"
+                  >
                     Manage Department
                   </NavLink>
                 </li>
@@ -119,7 +124,6 @@ export default function SlideNavbar() {
 
             <li className="sidebar-item">
               <NavLink
-                
                 className="NavBody sidebar-link collapsed has-dropdown"
                 data-bs-toggle="collapse"
                 data-bs-target="#Staff"
@@ -149,7 +153,6 @@ export default function SlideNavbar() {
 
             <li className="sidebar-item">
               <NavLink
-                
                 className="NavBody sidebar-link collapsed has-dropdown"
                 data-bs-toggle="collapse"
                 data-bs-target="#Salary"
@@ -169,7 +172,7 @@ export default function SlideNavbar() {
                     Add Salary
                   </NavLink>
                 </li>
-                
+
                 <li className="sidebar-item">
                   <NavLink to="/manageSalary" className="NavBody sidebar-link">
                     Manage Salary
@@ -180,7 +183,6 @@ export default function SlideNavbar() {
 
             <li className="sidebar-item">
               <NavLink
-                
                 className="NavBody sidebar-link collapsed has-dropdown"
                 data-bs-toggle="collapse"
                 data-bs-target="#Leave"
@@ -204,7 +206,6 @@ export default function SlideNavbar() {
             </li>
             <li className="sidebar-item">
               <NavLink
-                
                 className="NavBody sidebar-link collapsed has-dropdown"
                 data-bs-toggle="collapse"
                 data-bs-target="#Admin"
@@ -232,9 +233,12 @@ export default function SlideNavbar() {
               </ul>
             </li>
           </ul>
-          <hr className=" border-1 text-white m-0" style={{ background: "#586682b0" }}/>
+          <hr
+            className=" border-1 text-white m-0"
+            style={{ background: "#586682b0" }}
+          />
           <div className="sidebar-footer">
-            <NavLink  className="NavBody sidebar-link" onClick={logOut}>
+            <NavLink className="NavBody sidebar-link" onClick={logOut}>
               <i className="lni lni-exit"></i>
               <span>Logout</span>
             </NavLink>

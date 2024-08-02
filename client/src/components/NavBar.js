@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../context/DataContext";
 import Img from "./Admin/Img";
+import toast from "react-hot-toast";
 
 const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -19,20 +20,24 @@ const NavBar = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const moveRoute=(id)=>{
+  const moveRoute = (id) => {
     setDropdownOpen(false);
-    navigate(`/profile/${id}`)
-  }
+    navigate(`/profile/${id}`);
+  };
 
   const closeDropdown = () => {
     setDropdownOpen(false);
   };
 
   const logOut = () => {
-    setDropdownOpen(false);
-    localStorage.removeItem("authToken");
-    alert("Logout Successful");
-    navigate("/");
+    try {
+      setDropdownOpen(false);
+      localStorage.removeItem("authToken");
+      toast.success("Logout Successful");
+      navigate("/");
+    } catch (error) {
+      toast.error("Logout Failed");
+    }
   };
 
   useEffect(() => {
@@ -103,7 +108,7 @@ const NavBar = () => {
               <NavLink
                 className="dropdown-item"
                 to={`/profile/${Adminlogin._id}`}
-                onClick={()=>moveRoute(Adminlogin._id)}
+                onClick={() => moveRoute(Adminlogin._id)}
               >
                 Profile
               </NavLink>

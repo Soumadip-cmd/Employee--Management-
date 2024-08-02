@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import DataContext from "./DataContext";
-
-
+import toast from "react-hot-toast";
 
 const DataState = (props) => {
   const [dept, setDept] = useState([]);
@@ -11,7 +10,7 @@ const DataState = (props) => {
 
   //get all departments
   const getDept = async () => {
-    const url = `${link}/get-departments`
+    const url = `${link}/get-departments`;
 
     const response = await fetch(url, {
       headers: {
@@ -26,7 +25,7 @@ const DataState = (props) => {
 
   //add departments
   const addDept = async (deptName, employeeId) => {
-    const url = `${link}/add-department`
+    const url = `${link}/add-department`;
 
     if (Array.isArray(deptName)) {
       deptName = deptName[0];
@@ -34,26 +33,31 @@ const DataState = (props) => {
     if (Array.isArray(employeeId)) {
       employeeId = employeeId[0];
     }
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("authToken"),
+        },
+        method: "POST",
+        body: JSON.stringify({
+          deptName: String(deptName),
+          employeeId: String(employeeId),
+        }),
+      });
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("authToken"),
-      },
-      method: "POST",
-      body: JSON.stringify({
-        deptName: String(deptName),
-        employeeId: String(employeeId),
-      }),
-    });
-
-    await response.json();
-    setDept(dept.concat());
+      await response.json();
+      setDept(dept.concat());
+      toast.success("Department added successfully");
+    } catch (error) {
+      console.error("Failed to add department:", error);
+      toast.error("Failed to add department");
+    }
   };
 
   //delete department
   const deleteDept = async (id) => {
-    const url = `${link}/delete-department/${id}`
+    const url = `${link}/delete-department/${id}`;
 
     try {
       const response = await fetch(url, {
@@ -72,14 +76,16 @@ const DataState = (props) => {
       const delDept = dept.filter((depts) => depts._id !== id);
 
       setDept(delDept);
+      toast.success("Department deleted successfully");
     } catch (error) {
       console.error("Failed to delete department:", error);
+      toast.error("Failed to delete department");
     }
   };
 
   //edit department
   const editDept = async (id, deptName, employeeId) => {
-    const url = `${link}/edit-department/${id}`
+    const url = `${link}/edit-department/${id}`;
 
     if (Array.isArray(deptName)) {
       deptName = deptName[0];
@@ -87,30 +93,35 @@ const DataState = (props) => {
     if (Array.isArray(employeeId)) {
       employeeId = employeeId[0];
     }
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("authToken"),
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          deptName: String(deptName),
+          employeeId: String(employeeId),
+        }),
+      });
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("authToken"),
-      },
-      method: "PUT",
-      body: JSON.stringify({
-        deptName: String(deptName),
-        employeeId: String(employeeId),
-      }),
-    });
-
-    await response.json();
-    const data = JSON.parse(JSON.stringify(dept));
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      if (element._id === id) {
-        element.employeeId = employeeId;
-        element.deptName = deptName;
-        break;
+      await response.json();
+      const data = JSON.parse(JSON.stringify(dept));
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        if (element._id === id) {
+          element.employeeId = employeeId;
+          element.deptName = deptName;
+          break;
+        }
       }
+      setDept(data);
+      toast.success("Department updated successfully");
+    } catch (error) {
+      console.error("Failed to edit department:", error);
+      toast.error("Failed to update department");
     }
-    setDept(data);
   };
 
   // ---------------Admin--------------------
@@ -119,7 +130,7 @@ const DataState = (props) => {
 
   //getAdmin
   const getAdmin = async () => {
-    const url = `${link}/get-all-admin`
+    const url = `${link}/get-all-admin`;
     try {
       const response = await fetch(url);
       const responseData = await response.json();
@@ -136,7 +147,7 @@ const DataState = (props) => {
 
   // Add admin
   const addAdmin = async (name, email, password, avatar) => {
-    const url = `${link}/create-user`
+    const url = `${link}/create-user`;
 
     try {
       const response = await fetch(url, {
@@ -156,26 +167,26 @@ const DataState = (props) => {
 
       if (!response.ok) {
         console.error("Response error:", response.status, response.statusText);
-        alert(`Error: ${data.msg || "Invalid Credentials!"}`);
+        toast.error(`Error: ${data.msg || "Invalid Credentials!"}`);
         return;
       }
 
       if (!data.success) {
         console.error("Backend error:", data.errors);
-        alert(`Error: ${data.msg || "Check your inputs."}`);
+        toast.error(`Error: ${data.msg || "Check your inputs."}`);
         return;
       }
 
-      // alert('Admin created successfully!');
+      toast.success("Admin created successfully");
     } catch (error) {
       console.error("Fetch error:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
   };
 
   //delete Admin
   const deleteAdmin = async (id) => {
-    const url = `${link}/deleteAdmin/${id}`
+    const url = `${link}/deleteAdmin/${id}`;
 
     try {
       const response = await fetch(url, {
@@ -191,14 +202,16 @@ const DataState = (props) => {
       const delAdmin = admin.filter((k) => k._id !== id);
 
       setAdmin(delAdmin);
+      toast.success("Admin deleted successfully");
     } catch (error) {
-      console.error("Failed to delete department:", error);
+      console.error("Failed to delete admin:", error);
+      toast.error("Failed to delete admin");
     }
   };
 
   //edit Admin
   const editAdmin = async (id, name, email) => {
-    const url = `${link}/editAdmin/${id}`
+    const url = `${link}/editAdmin/${id}`;
 
     if (Array.isArray(name)) {
       name = name[0];
@@ -206,34 +219,36 @@ const DataState = (props) => {
     if (Array.isArray(email)) {
       email = email[0];
     }
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          name: String(name),
+          email: String(email),
+        }),
+      });
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "PUT",
-      body: JSON.stringify({
-        name: String(name),
-        email: String(email),
-      }),
-    });
-
-    await response.json();
-    const data = JSON.parse(JSON.stringify(dept));
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      if (element._id === id) {
-        element.email = email;
-        element.name = name;
-        break;
+      await response.json();
+      const data = JSON.parse(JSON.stringify(dept));
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        if (element._id === id) {
+          element.email = email;
+          element.name = name;
+          break;
+        }
       }
+
+      setAdmin(data);
+      toast.success("Admin updated successfully");
+    } catch (error) {
+      console.error("Failed to update admin:", error);
+      toast.error("Failed to update admin");
     }
-    setAdmin(data);
   };
-
-
-  
-
 
   // ------Staff ----------------------
 
@@ -241,7 +256,7 @@ const DataState = (props) => {
 
   //get staff
   const getStaff = async () => {
-    const url = `${link}/get-staffs`
+    const url = `${link}/get-staffs`;
     try {
       const response = await fetch(url, {
         headers: {
@@ -273,7 +288,7 @@ const DataState = (props) => {
     state,
     address
   ) => {
-    const url = `${link}/add-Staff`
+    const url = `${link}/add-Staff`;
     try {
       const response = await fetch(url, {
         headers: {
@@ -299,14 +314,16 @@ const DataState = (props) => {
 
       await response.json();
       setStaff(staff.concat());
+      toast.success("Staff added successfully");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error adding staff:", error);
+      toast.error("Failed to add staff");
     }
   };
 
   //delete Staff
   const deleteStaff = async (id) => {
-    const url = `${link}/delete-Staff/${id}`
+    const url = `${link}/delete-Staff/${id}`;
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -322,8 +339,10 @@ const DataState = (props) => {
       await response.json();
       const updateStaffList = staff.filter((k) => k._id !== id);
       setStaff(updateStaffList);
+      toast.success("Staff deleted successfully");
     } catch (error) {
-      console.error("Error deleting admin:", error);
+      console.error("Failed to delete staff:", error);
+      toast.error("Failed to delete staff");
     }
   };
 
@@ -343,7 +362,7 @@ const DataState = (props) => {
     state,
     address
   ) => {
-    const url = `${link}/edit-Staff/${id}`
+    const url = `${link}/edit-Staff/${id}`;
     try {
       const response = await fetch(url, {
         headers: {
@@ -389,8 +408,10 @@ const DataState = (props) => {
       }
 
       setStaff(strData);
+      toast.success("Staff updated successfully");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Failed to update staff:", error);
+      toast.error("Failed to update staff");
     }
   };
 
@@ -400,7 +421,7 @@ const DataState = (props) => {
 
   //get all salary
   const getSal = async () => {
-    const url = `${link}/get-all-Salary`
+    const url = `${link}/get-all-Salary`;
 
     const response = await fetch(url, {
       headers: {
@@ -415,7 +436,7 @@ const DataState = (props) => {
 
   //add salary
   const addSal = async (StaffName, department, Paid_Salary) => {
-    const url = `${link}/add-Salary`
+    const url = `${link}/add-Salary`;
 
     if (Array.isArray(StaffName)) {
       StaffName = StaffName[0];
@@ -426,27 +447,32 @@ const DataState = (props) => {
     if (Array.isArray(Paid_Salary)) {
       Paid_Salary = Paid_Salary[0];
     }
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("authToken"),
+        },
+        method: "POST",
+        body: JSON.stringify({
+          StaffName: String(StaffName),
+          department: String(department),
+          Paid_Salary: String(Paid_Salary),
+        }),
+      });
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("authToken"),
-      },
-      method: "POST",
-      body: JSON.stringify({
-        StaffName: String(StaffName),
-        department: String(department),
-        Paid_Salary: String(Paid_Salary),
-      }),
-    });
-
-    await response.json();
-    setSalary(salary.concat());
+      await response.json();
+      setSalary(salary.concat());
+      toast.success("Salary added successfully!");
+    } catch (error) {
+      console.error("Failed to add salary:", error);
+      toast.error("Failed to add salary");
+    }
   };
 
   //delete salary
   const deleteSal = async (id) => {
-    const url = `${link}/delete-Salary/${id}`
+    const url = `${link}/delete-Salary/${id}`;
 
     try {
       const response = await fetch(url, {
@@ -466,14 +492,16 @@ const DataState = (props) => {
 
       // Assuming setDept is the function to update the state
       setSalary(delSalary);
+      toast.success("Salary deleted successfully!");
     } catch (error) {
-      console.error("Failed to delete department:", error);
+      console.error("Failed to delete salary:", error);
+      toast.error("Failed to delete salary");
     }
   };
 
   //edit Salary
   const editSal = async (id, StaffName, department, Paid_Salary) => {
-    const url = `${link}/edit-Salary/${id}`
+    const url = `${link}/edit-Salary/${id}`;
 
     if (Array.isArray(StaffName)) {
       StaffName = StaffName[0];
@@ -484,165 +512,159 @@ const DataState = (props) => {
     if (Array.isArray(Paid_Salary)) {
       Paid_Salary = Paid_Salary[0];
     }
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("authToken"),
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          StaffName: String(StaffName),
+          department: String(department),
+          Paid_Salary: String(Paid_Salary),
+        }),
+      });
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("authToken"),
-      },
-      method: "PUT",
-      body: JSON.stringify({
-        StaffName: String(StaffName),
-        department: String(department),
-        Paid_Salary: String(Paid_Salary),
-      }),
-    });
-
-    await response.json();
-    const data = JSON.parse(JSON.stringify(salary));
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      if (element._id === id) {
-        element.StaffName = StaffName;
-        element.department = department;
-        element.Paid_Salary = Paid_Salary;
-        break;
+      await response.json();
+      const data = JSON.parse(JSON.stringify(salary));
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        if (element._id === id) {
+          element.StaffName = StaffName;
+          element.department = department;
+          element.Paid_Salary = Paid_Salary;
+          break;
+        }
       }
+      setSalary(data);
+      toast.success("Salary updated successfully!");
+    } catch (error) {
+      console.error("Failed to update salary:", error);
+      toast.error("Failed to update salary");
     }
-    setSalary(data);
   };
 
-
-  
-  const [Adminlogin, setAdminlogin] = useState({ avatar: { url: '' } });
-
+  const [Adminlogin, setAdminlogin] = useState({ avatar: { url: "" } });
 
   //get Admin
   const getAdminProfile = async () => {
     try {
-      const url = `${link}/get-user`
-  
+      const url = `${link}/get-user`;
+
       const response = await fetch(url, {
         headers: {
           token: localStorage.getItem("authToken"),
         },
         method: "GET",
       });
-  
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-  
+
       const result = await response.json();
-  
+
       // Check if the data is structured as expected
       if (result.data && result.data.avatar) {
         setAdminlogin(result.data);
       } else {
         console.error("Unexpected response structure:", result);
-        setAdminlogin({ avatar: { url: 'path/to/default/image.jpg' } });
+        setAdminlogin({ avatar: { url: "path/to/default/image.jpg" } });
       }
     } catch (error) {
       console.error("Error fetching admin profile:", error);
       // Set a default state if there is an error
-      setAdminlogin({ avatar: { url: 'path/to/default/image.jpg' } });
+      setAdminlogin({ avatar: { url: "path/to/default/image.jpg" } });
     }
   };
-  
-  
-
 
   // Inside your context or wherever loginProfile is defined
-const loginProfile = async (email, password, navigate) => {
-  const url = `${link}/login`
+  const loginProfile = async (email, password, navigate) => {
+    const url = `${link}/login`;
 
-  if (Array.isArray(email)) {
-    email = email[0];
-  }
-  if (Array.isArray(password)) {
-    password = password[0];
-  }
+    if (Array.isArray(email)) {
+      email = email[0];
+    }
+    if (Array.isArray(password)) {
+      password = password[0];
+    }
 
-  const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({
-      email: String(email),
-      password: String(password),
-    }),
-  });
-
-  const data = await response.json();
-  if (data.Success) {
-    localStorage.setItem('authToken', data.token);
-    setAdminlogin(data.adminData);
-    // console.log(data.adminData);
-    // Navigate to dashboard after successful login
-    navigate('/dashboard');
-  } else {
-    alert('Invalid Credentials!..Check Again..');
-  }
-};
-
-
-
-const updateProfile = async (id, name, password, avatar) => {
-  const url = `${link}/updateDetails/${id}`
-
-  if (Array.isArray(name)) {
-    name = name[0];
-  }
-  if (Array.isArray(password)) {
-    password = password[0];
-  }
-  if (Array.isArray(avatar)) {
-    avatar = avatar[0];
-  }
-
-  try {
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
-        token: localStorage.getItem("authToken"),
       },
-      method: "PUT",
+      method: "POST",
       body: JSON.stringify({
-        name: String(name),
+        email: String(email),
         password: String(password),
-        avatar: String(avatar),
       }),
     });
 
-    const responseData = await response.json();
+    const data = await response.json();
+    if (data.Success) {
+      localStorage.setItem("authToken", data.token);
+      setAdminlogin(data.adminData);
+      toast.success("Login Successfully!!");
+      navigate("/dashboard");
+    } else {
+      toast.error("Invalid Credentials!..Check Again..");
+    }
+  };
 
-    if (!response.ok) {
-      console.error("Failed to update profile:", responseData);
+  const updateProfile = async (id, name, password, avatar) => {
+    const url = `${link}/updateDetails/${id}`;
+
+    if (Array.isArray(name)) {
+      name = name[0];
+    }
+    if (Array.isArray(password)) {
+      password = password[0];
+    }
+    if (Array.isArray(avatar)) {
+      avatar = avatar[0];
+    }
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("authToken"),
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          name: String(name),
+          password: String(password),
+          avatar: String(avatar),
+        }),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.error("Failed to update profile:", responseData);
+        return false;
+      }
+      // console.log(responseData)
+      const data = JSON.parse(JSON.stringify(admin)); // Replace `salary` with `admin` or the appropriate state
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        if (element._id === id) {
+          element.name = name;
+          element.password = password;
+          element.avatar = avatar;
+          break;
+        }
+      }
+      setAdmin(data);
+      toast.success("Profile Updated..");
+      return true;
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error(`Error updating profile:${error}`);
       return false;
     }
-// console.log(responseData)
-    const data = JSON.parse(JSON.stringify(admin)); // Replace `salary` with `admin` or the appropriate state
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      if (element._id === id) {
-        element.name = name;
-        element.password = password;
-        element.avatar = avatar;
-        break;
-      }
-    }
-    setAdmin(data); // Ensure `setAdmin` is defined in your context or component
-
-    return true;
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    return false;
-  }
-};
-
-
-
+  };
 
   return (
     <DataContext.Provider
@@ -666,7 +688,11 @@ const updateProfile = async (id, name, password, avatar) => {
         deleteSal,
         addSal,
         getSal,
-        salary,loginProfile,Adminlogin,getAdminProfile,updateProfile
+        salary,
+        loginProfile,
+        Adminlogin,
+        getAdminProfile,
+        updateProfile,
       }}
     >
       {props.children}

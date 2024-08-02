@@ -1,13 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const { id } = useParams();
   const { updateProfile, admin, getAdmin } = useContext(DataContext);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [editProfile, setEditProfile] = useState({ id: id, name: "", password: "" });
+  const [editProfile, setEditProfile] = useState({
+    id: id,
+    name: "",
+    password: "",
+  });
   const [photoUrl, setPhotoUrl] = useState("");
 
   const camera = useRef(null);
@@ -24,7 +29,7 @@ const Profile = () => {
       setEditProfile({
         id: adminDetails._id,
         name: adminDetails.name,
-        password: "" // Keep password empty initially
+        password: "", // Keep password empty initially
       });
       setPhotoUrl(adminDetails.avatar.url);
       setPreviewUrl(adminDetails.avatar.url); // Set the initial preview URL
@@ -41,7 +46,12 @@ const Profile = () => {
     e.preventDefault();
 
     if (!file) {
-      alert("Image should be updated.");
+      toast((t) => (
+        <span>
+          Image should be <b>updated.</b>
+          <button onClick={() => toast.dismiss(t.id)} className="badge text-bg-warning ms-2 border-0">Dismiss</button>
+        </span>
+      ));
       return; // Exit the function if no file is provided
     }
 
@@ -55,7 +65,7 @@ const Profile = () => {
         try {
           const success = await updateProfile(
             editProfile.id,
-            editProfile.name || admin.find((k) => k._id === id).name, // Use existing name if empty
+            editProfile.name ,// Use existing name if empty
             editProfile.password || "", // Use existing password if empty
             photoUrlToUse
           );
@@ -66,11 +76,11 @@ const Profile = () => {
             setPreviewUrl(""); // Reset preview URL
             navigate("/dashboard");
           } else {
-            alert("Failed to update profile. Please try again.");
+            toast.error("Failed to update profile. Please try again.");
           }
         } catch (error) {
           console.error("Error updating profile:", error);
-          alert("An error occurred. Please try again.");
+          toast.error("An error occurred. Please try again.");
         }
       };
       reader.readAsDataURL(file);
@@ -78,7 +88,7 @@ const Profile = () => {
       try {
         const success = await updateProfile(
           editProfile.id,
-          editProfile.name || admin.find((k) => k._id === id).name, // Use existing name if empty
+          editProfile.name , // Use existing name if empty
           editProfile.password || "", // Use existing password if empty
           photoUrlToUse
         );
@@ -211,7 +221,7 @@ const Profile = () => {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate("/dashboard")}
                 >
                   Cancel
                 </button>
