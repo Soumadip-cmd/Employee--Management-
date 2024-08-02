@@ -609,6 +609,8 @@ const DataState = (props) => {
       navigate("/dashboard");
     } else {
       toast.error("Invalid Credentials!..Check Again..");
+      navigate("/");
+      localStorage.removeItem("authToken");
     }
   };
 
