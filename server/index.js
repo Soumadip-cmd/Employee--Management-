@@ -11,7 +11,7 @@ const port = process.env.PORT || 8000; // Default port 8000
 
 // CORS configuration
 const corsOptions = {
-  origin:"http://localhost:3000",
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true, // Allow credentials (cookies, headers)
 };
