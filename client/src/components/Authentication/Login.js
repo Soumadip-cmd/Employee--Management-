@@ -17,13 +17,16 @@ const Login = () => {
     setLogin({ ...login, [e.target.name]: [e.target.value] });
   };
 
-  const facebook=()=>{
-    window.open('http://localhost:8800/auth/facebook','_self')
-  }
-
-  const google=()=>{
-    window.open('http://localhost:8800/auth/google','_self')
-  }
+  const facebook = () => {
+    const url = process.env.REACT_APP_FACEBOOK_URL;
+    window.open(url, '_self');
+  };
+  
+  const google = () => {
+    const url = process.env.REACT_APP_GOOGLE_URL;
+    window.open(url, '_self');
+  };
+  
 
   return (
     <div
