@@ -18,12 +18,12 @@ const Login = () => {
   };
 
   const facebook = () => {
-    const url = process.env.REACT_APP_FACEBOOK_URL;
+    const url = "https://employee-management-uyw0.onrender.com/auth/facebook";
     window.open(url, '_self');
   };
   
   const google = () => {
-    const url = process.env.REACT_APP_GOOGLE_URL;
+    const url = 'https://employee-management-uyw0.onrender.com/auth/google';
     window.open(url, '_self');
   };
   
