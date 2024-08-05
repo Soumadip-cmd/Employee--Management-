@@ -209,8 +209,7 @@ function App() {
       path: "/applyLeave",
       element: (
         <>
-          {isLargeDevice && <SlideNavbar />}
-          <NavBar />
+          
           <ApplyLeave />
         </>
       ),
