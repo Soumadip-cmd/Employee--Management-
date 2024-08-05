@@ -3,11 +3,22 @@ const express = require("express");
 const path = require("path");
 const connectToMongo = require("./Db");
 const cors = require("cors");
+const passport=require('passport')
+const passportAuth=require('./Routes/Auth/Passport.auth')
 
 const app = express();
 
 connectToMongo(); // Connect to MongoDB
 const port = process.env.PORT || 8000; // Default port 8000
+
+
+app.use('/auth',passportAuth)
+
+// Parse incoming requests with JSON payloads
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // CORS configuration
 const corsOptions = {
@@ -18,9 +29,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Parse incoming requests with JSON payloads
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
 
 // Routes
 app.use(require(path.join(__dirname, "Routes/Department.js")));
@@ -28,6 +37,8 @@ app.use(require(path.join(__dirname, "Routes/Leave.js")));
 app.use(require(path.join(__dirname, "Routes/Salary.js")));
 app.use(require(path.join(__dirname, "Routes/Staff.js")));
 app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
+
+
 
 // Test Route
 app.get("/test", (req, res) => {

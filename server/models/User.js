@@ -32,6 +32,14 @@ const userSchema = new Schema({
     type: Date,
     default:Date.now
   },
+  googleId: {
+    type: String,
+    unique: true,
+  },
+  facebookId: {
+    type: String,
+    unique: true,
+  },
 });
 
 module.exports = mongoose.model("admin", userSchema);
