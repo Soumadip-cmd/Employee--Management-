@@ -24,7 +24,7 @@ import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
 import EditSalary from "./components/Salary/EditSalary";
 import  { Toaster } from 'react-hot-toast';
-import AuthCallback from "./components/AuthCallback";
+
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -229,10 +229,7 @@ function App() {
       path: "/test",
       element: <Test />,
     },
-    {
-      path: "/auth/callback",
-      element: <AuthCallback/>,
-    },
+   
   ]);
 
   return (
