@@ -40,7 +40,7 @@ router.get('/google/callback',
   function (req, res) {
        
     if (req.user && req.user.token) {
-      res.redirect(`http://localhost:3000/home?token=${req.user.token}`);
+      res.redirect(`http://localhost:3000/dashboard`);
       const token=req.user.token
     } else {
       res.redirect('/auth/login/failed'); 
