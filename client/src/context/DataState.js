@@ -5,7 +5,8 @@ import toast from "react-hot-toast";
 const DataState = (props) => {
   const [dept, setDept] = useState([]);
 
-  const link = process.env.REACT_APP_BACKEND_URL || "http://localhost:8800";
+  // const link = process.env.REACT_APP_BACKEND_URL || "http://localhost:8800";
+  const link = "http://localhost:8800";
   // -------------DEpartment-------------------
 
   //get all departments
