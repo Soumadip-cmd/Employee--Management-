@@ -4,7 +4,7 @@ var FacebookStrategy = require("passport-facebook").Strategy;
 
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const User = require("./models/User");
+const User = require("./models/authLogin");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -34,11 +34,19 @@ passport.use(
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
+            avatar: {
+              url: profile.photos[0].value, // Extract avatar URL
+            },
           });
         } else {
           // If user exists but doesn't have a Google ID, add it
           if (!user.googleId) {
             user.googleId = profile.id;
+          }
+
+          // Update the avatar URL if changed
+          if (profile.photos && profile.photos.length > 0) {
+            user.avatar.url = profile.photos[0].value;
           }
         }
 
@@ -61,6 +69,7 @@ passport.use(
   )
 );
 
+
 // Facebook Strategy
 passport.use(
   new FacebookStrategy(
@@ -68,7 +77,7 @@ passport.use(
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
       callbackURL: "/auth/facebook/callback",
-      profileFields: ["id", "displayName", "email"],
+      profileFields: ["id", "displayName", "email", "photos"], // Add photos to profileFields
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -83,11 +92,19 @@ passport.use(
             facebookId: profile.id,
             name: profile.displayName,
             email: profile.emails ? profile.emails[0].value : "",
+            avatar: {
+              url: profile.photos[0].value, // Extract avatar URL
+            },
           });
         } else {
           // If user exists but doesn't have a Facebook ID, add it
           if (!user.facebookId) {
             user.facebookId = profile.id;
+          }
+
+          // Update the avatar URL if changed
+          if (profile.photos && profile.photos.length > 0) {
+            user.avatar.url = profile.photos[0].value;
           }
         }
 
@@ -109,6 +126,7 @@ passport.use(
     }
   )
 );
+
 
 // Serialize User
 passport.serializeUser(function (user, done) {

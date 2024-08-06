@@ -16,7 +16,7 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    // required: true,
+    required: true,
   },
   avatar:{
     public_id:{
@@ -32,14 +32,7 @@ const userSchema = new Schema({
     type: Date,
     default:Date.now
   },
-  googleId: {
-    type: String,
-    unique: true,
-  },
-  facebookId: {
-    type: String,
-    unique: true,
-  },
+  
 });
 
 module.exports = mongoose.model("admin", userSchema);
