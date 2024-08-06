@@ -41,7 +41,7 @@ router.get('/google/callback',
        
     if (req.user && req.user.token) {
       const token=req.user.token
-      res.redirect(`https://employee-management-sb5z.vercel.app/applyLeave?token:${token}`);
+      res.redirect(`https://employee-management-sb5z.vercel.app/applyLeave`);
       // res.redirect(`http://localhost:3000/applyLeave?token:${token}`);
 
     } else {
@@ -63,7 +63,7 @@ router.get('/facebook/callback',
        
     if (req.user && req.user.token) {
       const token=req.user.token
-      res.redirect(`https://employee-management-sb5z.vercel.app/applyLeave?token:${token}`);
+      res.redirect(`https://employee-management-sb5z.vercel.app/applyLeave`);
       // res.redirect(`http://localhost:3000/applyLeave?token:${token}`);
     } else {
       res.redirect('/auth/login/failed'); 
