@@ -1,10 +1,9 @@
 require("dotenv").config();
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
-var FacebookStrategy = require("passport-facebook").Strategy;
-
+const FacebookStrategy = require("passport-facebook").Strategy;
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const User = require("./models/authLogin");
+const Auth = require("./models/authLogin");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -24,29 +23,21 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Find user by Google ID or email
-        let user = await User.findOne({
+        let user = await Auth.findOne({
           $or: [{ googleId: profile.id }, { email: profile.emails[0].value }],
         });
 
         if (!user) {
           // Create a new user if none found
-          user = new User({
+          user = new Auth({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
-            avatar: {
-              url: profile.photos[0].value, // Extract avatar URL
-            },
           });
         } else {
           // If user exists but doesn't have a Google ID, add it
           if (!user.googleId) {
             user.googleId = profile.id;
-          }
-
-          // Update the avatar URL if changed
-          if (profile.photos && profile.photos.length > 0) {
-            user.avatar.url = profile.photos[0].value;
           }
         }
 
@@ -68,7 +59,6 @@ passport.use(
     }
   )
 );
-
 
 // Facebook Strategy
 passport.use(
@@ -77,35 +67,28 @@ passport.use(
       clientID: FACEBOOK_APP_ID,
       clientSecret: FACEBOOK_APP_SECRET,
       callbackURL: "/auth/facebook/callback",
-      profileFields: ["id", "displayName", "email", "photos"], // Add photos to profileFields
+      profileFields: ["id", "displayName", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Find user by Facebook ID or email
-        let user = await User.findOne({
+        let user = await Auth.findOne({
           $or: [{ facebookId: profile.id }, { email: profile.emails ? profile.emails[0].value : "" }],
         });
 
         if (!user) {
           // Create a new user if none found
-          user = new User({
+          user = new Auth({
             facebookId: profile.id,
             name: profile.displayName,
             email: profile.emails ? profile.emails[0].value : "",
-            avatar: {
-              url: profile.photos[0].value, // Extract avatar URL
-            },
           });
         } else {
           // If user exists but doesn't have a Facebook ID, add it
           if (!user.facebookId) {
             user.facebookId = profile.id;
           }
-
-          // Update the avatar URL if changed
-          if (profile.photos && profile.photos.length > 0) {
-            user.avatar.url = profile.photos[0].value;
-          }
+         
         }
 
         await user.save();
@@ -127,15 +110,14 @@ passport.use(
   )
 );
 
-
-// Serialize User
+// Serialize Auth
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
-// Deserialize User
+// Deserialize Auth
 passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
+  Auth.findById(id, function (err, user) {
     done(err, user);
   });
 });

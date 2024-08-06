@@ -1,7 +1,8 @@
 const express = require('express');
-const passport=require('passport')
+const passport = require('passport');
 
 const router = express.Router();
+
 router.use(express.json())
 // Route for login failure
 router.get('/login/failed', (req, res) => {
@@ -40,9 +41,7 @@ router.get('/google/callback',
   function (req, res) {
        
     if (req.user && req.user.token) {
-      const token=req.user.token
       res.redirect(`https://employee-management-sb5z.vercel.app/applyLeave`);
-      // res.redirect(`http://localhost:3000/applyLeave?token:${token}`);
 
     } else {
       res.redirect('/auth/login/failed'); 
@@ -62,9 +61,7 @@ router.get('/facebook/callback',
   function (req, res) {
        
     if (req.user && req.user.token) {
-      const token=req.user.token
       res.redirect(`https://employee-management-sb5z.vercel.app/applyLeave`);
-      // res.redirect(`http://localhost:3000/applyLeave?token:${token}`);
     } else {
       res.redirect('/auth/login/failed'); 
     }
