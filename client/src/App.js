@@ -26,6 +26,7 @@ import EditSalary from "./components/Salary/EditSalary";
 import  { Toaster } from 'react-hot-toast';
 import Loading from "./components/Loading/Loading";
 import LoginLoading from "./components/Loading/LoginLoading";
+import LoadingSub from "./components/Loading/LoadingSub";
 
 
 function App() {
@@ -221,7 +222,7 @@ function App() {
       element: (
         <>
           
-          <LoginLoading/>
+          <LoadingSub btnName="Submit" color="success"/>
         </>
       ),
     },

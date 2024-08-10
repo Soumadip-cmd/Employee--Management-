@@ -1,9 +1,12 @@
 import React from "react";
 
-const Loading = () => {
+const Loading = ({height}) => {
   return (
     <>
-      <div className="d-flex justify-content-center align-items-center">
+      <div
+        className="d-flex justify-content-center align-items-center "
+        style={{ height: `${height}` }}
+      >
         <div
           className="spinner-border"
           role="status"

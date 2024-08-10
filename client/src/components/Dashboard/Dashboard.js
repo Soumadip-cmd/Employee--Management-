@@ -1,27 +1,38 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "./Card";
 import './Dashboard.css';
 import DataContext from "../../context/DataContext";
 import { useNavigate } from "react-router-dom";
+import Loading from '../Loading/Loading'; // Assuming you have a Loading component
 
 const Dashboard = () => {
   const { getDept, getStaff, getSal, dept, staff, salary } = useContext(DataContext);
+  const [loading, setLoading] = useState(true);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getDept();
-    getSal();
-    getStaff();
+    const fetchData = async () => {
+      await getDept();
+      await getSal();
+      await getStaff();
+      setLoading(false); // Set loading to false once data is fetched
+    };
+
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const navigate=useNavigate()
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!(localStorage.getItem('authToken'))) {
+      navigate('/');
     }
     // eslint-disable-next-line
   }, []);
+
+  if (loading) {
+    return <Loading height="100vh" />; // Show the loading component while data is being fetched
+  }
 
   return (
     <div className="special mt-5 ms-2">
