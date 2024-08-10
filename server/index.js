@@ -3,6 +3,9 @@ const express = require("express");
 const path = require("path");
 const connectToMongo = require("./Db");
 const cors = require("cors");
+const passport=require('passport')
+const passportAUTH=require('./Passport')
+const passportAuth=require('./Routes/Auth/Passport.auth')
 
 
 const app = express();
@@ -17,6 +20,9 @@ const port = process.env.PORT || 8000; // Default port 8000
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+app.use('/auth',passportAuth)
+
+app.use(passport.initialize());
 
 
 // CORS configuration

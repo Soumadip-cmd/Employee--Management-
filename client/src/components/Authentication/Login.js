@@ -23,14 +23,14 @@ const Login = () => {
   };
 
   const facebook = () => {
-    const url = "https://employee-management-uyw0.onrender.com/auth/facebook";
-    // const url = 'http://localhost:8800/auth/facebook';
+    // const url = "https://employee-management-uyw0.onrender.com/auth/facebook";
+    const url = 'http://localhost:8800/auth/facebook';
     window.open(url, "_self");
   };
 
   const google = () => {
-    const url = "https://employee-management-uyw0.onrender.com/auth/google";
-    //  const url = 'http://localhost:8800/auth/google';
+    // const url = "https://employee-management-uyw0.onrender.com/auth/google";
+     const url = 'http://localhost:8800/auth/google';
     window.open(url, "_self");
   };
 
