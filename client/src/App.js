@@ -24,6 +24,8 @@ import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
 import EditSalary from "./components/Salary/EditSalary";
 import  { Toaster } from 'react-hot-toast';
+import Loading from "./components/Loading/Loading";
+import LoginLoading from "./components/Loading/LoginLoading";
 
 
 function App() {
@@ -211,6 +213,15 @@ function App() {
         <>
           
           <ApplyLeave />
+        </>
+      ),
+    },
+    {
+      path: "/load",
+      element: (
+        <>
+          
+          <LoginLoading/>
         </>
       ),
     },
