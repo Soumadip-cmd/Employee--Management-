@@ -24,9 +24,7 @@ import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
 import EditSalary from "./components/Salary/EditSalary";
 import  { Toaster } from 'react-hot-toast';
-import Loading from "./components/Loading/Loading";
-import LoginLoading from "./components/Loading/LoginLoading";
-import LoadingSub from "./components/Loading/LoadingSub";
+
 
 
 function App() {
@@ -217,15 +215,7 @@ function App() {
         </>
       ),
     },
-    {
-      path: "/load",
-      element: (
-        <>
-          
-          <LoadingSub btnName="Submit" color="success"/>
-        </>
-      ),
-    },
+   
     {
       path: "/leaveHistory",
       element: (

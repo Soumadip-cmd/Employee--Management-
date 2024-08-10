@@ -27,12 +27,19 @@ const ManageDepartment = () => {
   };
 
   const delDept = (id) => {
-    deleteDept(id);
+    if (window.confirm("Are you sure you want to delete this department?")) {
+      deleteDept(id);
+    }
   };
 
   const EditDept = (id) => {
     history(`/editDepartment/${id}`);
   };
+
+  // Filter departments based on the search input
+  const filteredDept = dept.filter((item) =>
+    item.deptName.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <>
@@ -152,14 +159,14 @@ const ManageDepartment = () => {
                   </thead>
 
                   <tbody>
-                    {dept.length === 0 ? (
+                    {filteredDept.length === 0 ? (
                       <tr>
                         <td colSpan="3" className="text-center">
                           <p>No department is added.. Please add Your required Department..</p>
                         </td>
                       </tr>
                     ) : (
-                      dept.map((item, index) => (
+                      filteredDept.map((item, index) => (
                         <tr key={item._id}>
                           <td className="py-2 px-4">{index + 1}</td>
                           <td className="py-2 px-4">{item.deptName}</td>
@@ -188,7 +195,7 @@ const ManageDepartment = () => {
 
               <div className="d-flex justify-content-between align-items-center mt-4">
                 <span className="fs-6">
-                  Showing 1 to {dept.length} of {dept.length} entries
+                  Showing 1 to {filteredDept.length} of {dept.length} entries
                 </span>
                 <div className="d-flex gap-1">
                   <button className="btn btn-primary btn-sm">&lt;</button>

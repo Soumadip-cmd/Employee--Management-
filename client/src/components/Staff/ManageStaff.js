@@ -8,19 +8,21 @@ import Loading from "../Loading/Loading"; // Make sure you have this component
 export default function ManageStaff() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true); // Add loading state
+  const [filteredStaff, setFilteredStaff] = useState([]); // State for filtered staff
   const { getStaff, staff, deleteStaff } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStaff = async () => {
       await getStaff();
+      setFilteredStaff(staff); // Initialize filtered staff with all staff
       setLoading(false); // Set loading to false after fetching
     };
 
     fetchStaff();
 
     // eslint-disable-next-line
-  }, []);
+  }, [staff]); // Dependency array includes staff to refetch when it changes
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
@@ -29,9 +31,23 @@ export default function ManageStaff() {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    const handleFilter = () => {
+      const lowercasedSearch = search.toLowerCase();
+      const filtered = staff.filter((item) =>
+        Object.values(item).some((val) =>
+          val.toString().toLowerCase().includes(lowercasedSearch)
+        )
+      );
+      setFilteredStaff(filtered);
+    };
+
+    handleFilter();
+    // eslint-disable-next-line
+  }, [search, staff]); // Reapply filter when search or staff changes
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    // Filter staff logic here
   };
 
   const delStaff = (id) => {
@@ -139,7 +155,7 @@ export default function ManageStaff() {
               </button>
             </div>
           </div>
-          
+
           {loading ? (
             <Loading height="auto" /> // Show loading indicator
           ) : (
@@ -164,8 +180,8 @@ export default function ManageStaff() {
                     <th>Action</th>
                   </tr>
                 </thead>
-                {staff.length > 0 ? (
-                  staff.map((item, index) => (
+                {filteredStaff.length > 0 ? (
+                  filteredStaff.map((item, index) => (
                     <tbody key={index}>
                       <tr>
                         <td>{index + 1}</td>
@@ -222,7 +238,7 @@ export default function ManageStaff() {
 
           <div className="d-flex justify-content-between align-items-center mt-4">
             <span className="fs-6">
-              Showing 1 to {staff.length} of {staff.length} entries
+              Showing 1 to {filteredStaff.length} of {staff.length} entries
             </span>
             <div className="d-flex gap-2">
               <button className="btn btn-primary btn-sm">&lt;</button>

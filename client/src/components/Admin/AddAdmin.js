@@ -3,28 +3,39 @@ import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import LoadingSub from "../Loading/LoadingSub";
 
 const AddAdmin = () => {
   const { addAdmin } = useContext(DataContext);
   const [add_admin, setAdd_admin] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
     if (file && add_admin.name && add_admin.email && add_admin.password) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = async () => {
-        const photoURL = reader.result;
-        await addAdmin(add_admin.name, add_admin.email, add_admin.password, photoURL);
-        setAdd_admin({ name: "", email: "", password: "" });
-        setFile(null);
+        try {
+          const photoURL = reader.result;
+          await addAdmin(add_admin.name, add_admin.email, add_admin.password, photoURL);
+          setAdd_admin({ name: "", email: "", password: "" });
+          setFile(null);
+          navigate('/manageAdmin'); // Redirect after successful submission
+        } catch (error) {
+          console.error("Error adding admin:", error);
+        } finally {
+          setLoading(false); // Stop loading
+        }
       };
     } else {
       console.error("All fields are required, including a valid photo file.");
+      setLoading(false); // Stop loading in case of error
     }
   };
 
@@ -178,13 +189,19 @@ const AddAdmin = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary float-end mx-1"
-                  id="submit"
-                >
-                  Submit
-                </button>
+                <div className="float-end mx-1">
+                {loading ? (
+                  <LoadingSub btnName="Submit" color="primary" />
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    id="applyleave"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>  
               </div>
             </div>
           </form>
