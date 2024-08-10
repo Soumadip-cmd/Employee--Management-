@@ -2,10 +2,11 @@ import React, { useContext, useState, useEffect } from "react";
 import "../Leave/ApplyLeave.css";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import LoadingSub from "../Loading/LoadingSub";
 
 export default function EditStaff() {
   const { id } = useParams();
-  const { editStaff, staff } = useContext(DataContext);
+  const { editStaff, staff, getDept, dept } = useContext(DataContext);
   const [edit_staff, setEdit_staff] = useState({
     id: id,
     name: "",
@@ -22,7 +23,14 @@ export default function EditStaff() {
   });
   const [file, setFile] = useState(null);
   const [photoUrl, setPhotoUrl] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getDept();
+    // eslint-disable-next-line
+  }, []);
+  
 
   useEffect(() => {
     const staffData = staff.find((data) => data._id === id);
@@ -47,6 +55,8 @@ export default function EditStaff() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when starting update
+
     let photoUrlToUse = photoUrl;
 
     if (file) {
@@ -86,6 +96,7 @@ export default function EditStaff() {
           address: "",
         });
         setFile(null);
+        setLoading(false); // Set loading to false after update
         navigate("/manageStaff");
       };
       reader.readAsDataURL(file);
@@ -121,6 +132,7 @@ export default function EditStaff() {
         state: "",
         address: "",
       });
+      setLoading(false); // Set loading to false after update
       navigate("/manageStaff");
     }
   };
@@ -196,7 +208,7 @@ export default function EditStaff() {
         <form action="" onSubmit={handleSubmit}>
           <div className="row d-flex justify-content-evenly  " style={boxstyle}>
             <h5 style={{ fontSize: "20px" }} className="px-2">
-              Add Staff
+              Edit Staff
             </h5>
             <hr />
             <div className="col-sm-12 col-md-6 col-lg-6">
@@ -301,17 +313,16 @@ export default function EditStaff() {
                   name="department"
                   value={edit_staff.department}
                   style={{ border: "1px solid" }}
-                  defaultValue=""
                   required
                 >
                   <option value="" disabled>
                     --Department Name--
                   </option>
-                  <option>Backend developement</option>
-                  <option>Designing</option>
-                  <option>Front-end developement</option>
-                  <option>Marketing</option>
-                  <option>Finance</option>
+                  {dept.map((item, index) => (
+                    <option key={index} value={item.deptName}>
+                      {item.deptName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3">
@@ -386,13 +397,20 @@ export default function EditStaff() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="btn btn-success float-end"
-                id="applyleave"
-              >
-                Update
-              </button>
+             
+              <div className="float-end mx-1">
+                {loading ? (
+                  <LoadingSub btnName="Updating" color="success" />
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-success"
+                    id="submitstaff"
+                  >
+                    Update
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </form>

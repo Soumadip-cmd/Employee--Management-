@@ -3,14 +3,22 @@ import "../Leave/ApplyLeave.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
 import Img from "../Admin/Img";
+import Loading from "../Loading/Loading"; // Make sure you have this component
 
 export default function ManageStaff() {
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true); // Add loading state
   const { getStaff, staff, deleteStaff } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getStaff();
+    const fetchStaff = async () => {
+      await getStaff();
+      setLoading(false); // Set loading to false after fetching
+    };
+
+    fetchStaff();
+
     // eslint-disable-next-line
   }, []);
 
@@ -23,7 +31,7 @@ export default function ManageStaff() {
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    // Filter department logic here
+    // Filter staff logic here
   };
 
   const delStaff = (id) => {
@@ -131,81 +139,87 @@ export default function ManageStaff() {
               </button>
             </div>
           </div>
-          <div className="table-responsive">
-            <table className="table table-bordered tablestyle table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Photo</th>
-                  <th>Department</th>
-                  <th>Gender</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
-                  <th>DOB</th>
-                  <th>Joined On</th>
-                  <th>Address</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Country</th>
-                  <th>Applied On</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              {staff.length > 0 ? (
-                staff.map((item, index) => (
-                  <tbody key={index}>
+          
+          {loading ? (
+            <Loading height="auto" /> // Show loading indicator
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-bordered tablestyle table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Photo</th>
+                    <th>Department</th>
+                    <th>Gender</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>DOB</th>
+                    <th>Joined On</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Applied On</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                {staff.length > 0 ? (
+                  staff.map((item, index) => (
+                    <tbody key={index}>
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td>{item.name}</td>
+                        <td className="text-center">
+                          <Img
+                            upload_id={item.photo.public_id}
+                            classN="rounded-2"
+                            width="130px"
+                          />
+                        </td>
+                        <td>{item.department}</td>
+                        <td>{item.gender}</td>
+                        <td>{item.phone}</td>
+                        <td>{item.email}</td>
+                        <td>{item.dob}</td>
+                        <td>{item.date_of_join}</td>
+                        <td>{item.address}</td>
+                        <td>{item.city}</td>
+                        <td>{item.state}</td>
+                        <td>{item.country}</td>
+                        <td>{new Date(item.created_at).toLocaleDateString()}</td>
+                        <td className="py-2 px-4">
+                          <span
+                            className="badge text-bg-success mx-1 px-2"
+                            onClick={() => editSTAFF(item._id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            Edit
+                          </span>
+                          <span
+                            className="badge text-bg-danger mx-1 px-2"
+                            onClick={() => delStaff(item._id)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            Delete
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  ))
+                ) : (
+                  <tbody>
                     <tr>
-                      <td>{index + 1}</td>
-                      <td>{item.name}</td>
-                      <td className="text-center">
-                        <Img
-                          upload_id={item.photo.public_id}
-                          classN="rounded-2"
-                          width="130px"
-                        />
-                      </td>
-                      <td>{item.department}</td>
-                      <td>{item.gender}</td>
-                      <td>{item.phone}</td>
-                      <td>{item.email}</td>
-                      <td>{item.dob}</td>
-                      <td>{item.date_of_join}</td>
-                      <td>{item.address}</td>
-                      <td>{item.city}</td>
-                      <td>{item.state}</td>
-                      <td>{item.country}</td>
-                      <td>{new Date(item.created_at).toLocaleDateString()}</td>
-                      <td className="py-2 px-4">
-                        <span
-                          className="badge text-bg-success mx-1 px-2"
-                          onClick={() => editSTAFF(item._id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Edit
-                        </span>
-                        <span
-                          className="badge text-bg-danger mx-1 px-2"
-                          onClick={() => delStaff(item._id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Delete
-                        </span>
+                      <td colSpan="15" className="text-center py-3">
+                        You Don't add any Staff..!
                       </td>
                     </tr>
                   </tbody>
-                ))
-              ) : (
-                <tbody>
-                  <tr>
-                    <td colSpan="15" className="text-center py-3">
-                      You Don't add any Staff..!
-                    </td>
-                  </tr>
-                </tbody>
-              )}
-            </table>
-          </div>
+                )}
+              </table>
+            </div>
+          )}
+
           <div className="d-flex justify-content-between align-items-center mt-4">
             <span className="fs-6">
               Showing 1 to {staff.length} of {staff.length} entries

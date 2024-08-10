@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import Select, { components } from "react-select";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import LoadingSub from "../Loading/LoadingSub";
 
 export default function AddSalary() {
   const [isFocused, setIsFocused] = useState(false);
   const { addSal, getStaff, getDept, staff, dept } = useContext(DataContext);
+  const [loading, setLoading] = useState(false); 
   const [addSalData, setAddSalData] = useState({ StaffName: "", department: "", Paid_Salary: null });
   const [basicSalary, setBasicSalary] = useState(null);
   const [allowance, setAllowance] = useState(null);
@@ -35,17 +37,28 @@ export default function AddSalary() {
     // eslint-disable-next-line
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (addSalData.StaffName && addSalData.department) {
-      addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
-      setAddSalData({ StaffName: "", department: "", Paid_Salary: null });
-      setBasicSalary(null);
-      setAllowance(null);
+      setLoading(true); // Set loading to true when the submit begins
+  
+      try {
+        await addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
+        setAddSalData({ StaffName: "", department: "", Paid_Salary: null });
+        setBasicSalary(null);
+        setAllowance(null);
+      } catch (error) {
+        console.error("Error adding salary:", error);
+        // Handle error if necessary
+      } finally {
+        setLoading(false); // Set loading to false after the operation is complete
+      }
     } else {
       alert("Please select a staff member and department.");
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -203,9 +216,19 @@ export default function AddSalary() {
                 </table>
               </div>
               <div className="mt-4 d-flex justify-content-end">
-                <button className="btn btn-primary text-primary-foreground hover:bg-primary/80 px-4 py-2 rounded-lg">
-                  Submit
-                </button>
+              <div className="float-end mx-1">
+                {loading ? (
+                  <LoadingSub btnName="Submit" color="primary" />
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    id="applyleave"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
               </div>
             </form>
           </div>

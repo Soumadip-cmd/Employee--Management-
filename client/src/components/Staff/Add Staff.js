@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import "../Leave/ApplyLeave.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import LoadingSub from "../Loading/LoadingSub"; // Import your loading button component
 
 export default function AddStaff() {
   const { addStaff, getDept, dept } = useContext(DataContext);
@@ -19,16 +19,17 @@ export default function AddStaff() {
     address: "",
   });
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!localStorage.getItem('authToken')) {
+      navigate('/');
     }
     // eslint-disable-next-line
   }, []);
-  
+
   useEffect(() => {
     getDept();
     // eslint-disable-next-line
@@ -36,6 +37,7 @@ export default function AddStaff() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when starting submit
 
     if (
       file &&
@@ -56,38 +58,45 @@ export default function AddStaff() {
       reader.onloadend = async () => {
         const photoURL = reader.result;
 
-        await addStaff(
-          add_staff.name,
-          add_staff.gender,
-          add_staff.phone,
-          add_staff.dob,
-          add_staff.city,
-          add_staff.country,
-          add_staff.department,
-          add_staff.email,
-          photoURL,
-          add_staff.date_of_join,
-          add_staff.state,
-          add_staff.address
-        );
+        try {
+          await addStaff(
+            add_staff.name,
+            add_staff.gender,
+            add_staff.phone,
+            add_staff.dob,
+            add_staff.city,
+            add_staff.country,
+            add_staff.department,
+            add_staff.email,
+            photoURL,
+            add_staff.date_of_join,
+            add_staff.state,
+            add_staff.address
+          );
 
-        setAdd_staff({
-          name: "",
-          gender: "",
-          phone: "",
-          dob: "",
-          city: "",
-          country: "",
-          department: "",
-          email: "",
-          date_of_join: "",
-          state: "",
-          address: "",
-        });
-        setFile(null);
+          setAdd_staff({
+            name: "",
+            gender: "",
+            phone: "",
+            dob: "",
+            city: "",
+            country: "",
+            department: "",
+            email: "",
+            date_of_join: "",
+            state: "",
+            address: "",
+          });
+          setFile(null);
+        } catch (error) {
+          console.error("Error adding staff:", error);
+        } finally {
+          setLoading(false); // Set loading to false when done
+        }
       };
     } else {
       console.error("All fields are required, including a valid photo file.");
+      setLoading(false); // Set loading to false if validation fails
     }
   };
 
@@ -343,13 +352,20 @@ export default function AddStaff() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="btn btn-primary float-end"
-                id="applyleave"
-              >
-                Submit
-              </button>
+              <div className="float-end mx-1">
+                {loading ? (
+                  <LoadingSub btnName="Submit" color="primary" />
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    id="submitstaff"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
+              
             </div>
           </div>
         </form>

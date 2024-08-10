@@ -2,37 +2,37 @@ import React, { useContext, useEffect, useState } from "react";
 import "./managesalary.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
+import Loading from "../Loading/Loading"; // Make sure this component shows a spinner or some loading indicator
 
 export default function ManageSalary() {
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true); 
   const { getSal, salary, deleteSal } = useContext(DataContext);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getSal();
+    getSal().then(() => setLoading(false));
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!(localStorage.getItem('authToken'))) {
+      navigate('/');
     }
     // eslint-disable-next-line
-  }, []);
-  
+  }, [navigate]);
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    // Filter department logic here
   };
 
   const delSalary = (id) => {
     deleteSal(id);
   };
 
-  const edSalary=(id)=>{
-    navigate(`/editSalary/${id}`)
-  }
+  const edSalary = (id) => {
+    navigate(`/editSalary/${id}`);
+  };
 
   const filteredSalary = salary.filter(
     (item) =>
@@ -42,45 +42,24 @@ export default function ManageSalary() {
 
   return (
     <>
-      <nav
-        className="navbar navbar-expand-lg"
-        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
-      >
+      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
         <div className="container mt-5">
-          <NavLink
-            className="navbar-brand"
-            style={{
-              fontSize: "25px",
-              color: "white",
-              letterSpacing: ".05125em",
-            }}
-            to="/dashboard"
-          >
+          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/dashboard">
             Salary
           </NavLink>
-
           <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink
-                    to="/dashboard"
-                    className="text-dark fw-semibold text-decoration-none"
-                  >
+                  <NavLink to="/dashboard" className="text-dark fw-semibold text-decoration-none">
                     Home
                   </NavLink>
                 </li>
-                <li
-                  className="breadcrumb-item active fw-semibold text-decoration-underline"
-                  aria-current="page"
-                >
+                <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
                   Manage
                 </li>
                 <li className="breadcrumb-item">
-                  <NavLink
-                    to="/addsalary"
-                    className="text-dark fw-semibold text-decoration-none"
-                  >
+                  <NavLink to="/addsalary" className="text-dark fw-semibold text-decoration-none">
                     Add Salary
                   </NavLink>
                 </li>
@@ -94,30 +73,18 @@ export default function ManageSalary() {
           <div className="py-4 border-bottom">
             <h1 className="h3 mb-0">Salary Management</h1>
           </div>
-          <div
-            className="p-4 bg-white rounded-top rounded-bottom-1 shadow"
-            style={{ borderTop: "5px solid #004dffe8" }}
-          >
+          <div className="p-4 bg-white rounded-top rounded-bottom-1 shadow" style={{ borderTop: "5px solid #004dffe8" }}>
             <h2 className="h4 mb-4">View Salary</h2>
             <div className="d-flex justify-content-between align-items-center gap-4 mb-4">
               <div className="d-flex align-items-center gap-2">
-                <label htmlFor="entries" className="form-label fs-6">
-                  Show
-                </label>
-                <select
-                  id="entries"
-                  className="border-1 border-black rounded-2"
-                  onChange={(e) => {
-                    // Handle entries change
-                  }}
-                >
+                <label htmlFor="entries" className="form-label fs-6">Show</label>
+                <select id="entries" className="border-1 border-black rounded-2">
                   <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="15">15</option>
                 </select>
                 <span className="fs-6">entries</span>
               </div>
-
               <div className="d-flex align-items-center gap-2">
                 <input
                   type="text"
@@ -133,60 +100,65 @@ export default function ManageSalary() {
                   value={search}
                   onChange={handleSearch}
                 />
-                <button className="btn btn-danger btn-sm d-none d-md-flex">
+                <button className="btn btn-danger btn-sm d-none d-md-flex" onClick={() => handleSearch()}>
                   Search
                 </button>
               </div>
             </div>
             <div className="table-responsive">
-              <table className="table table-bordered">
-                <thead className="table-secondary">
-                  <tr>
-                    <th>#</th>
-                    <th>Staff Name</th>
-                    <th>Department</th>
-                    <th>Salary</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                {filteredSalary.length > 0 ? (
-                  filteredSalary.map((item, index) => (
-                <tbody>
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{item.StaffName}</td>
-                      <td>{item.department}</td>
-                      <td>{item.Paid_Salary}</td>
-                      <td className="py-2 px-4">
-                        <span
-                          className="badge text-bg-success mx-1 px-2"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => edSalary(item._id)}
-                        >
-                          Edit
-                        </span>
-                        <span
-                          className="badge text-bg-danger mx-1 px-2"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => delSalary(item._id)}
-                        >
-                          Delete
-                        </span>
-                      </td>
+              {loading ? (
+                <div className="d-flex justify-content-center align-items-center" style={{ height: '200px' }}>
+                  <Loading />
+                </div>
+              ) : (
+                <table className="table table-bordered">
+                  <thead className="table-secondary">
+                    <tr>
+                      <th>#</th>
+                      <th>Staff Name</th>
+                      <th>Department</th>
+                      <th>Salary</th>
+                      <th>Action</th>
                     </tr>
-                  
-                </tbody>
-              ))
-            ) : (
-                <tbody>
-                  <tr>
-                    <td colSpan="5" className="text-center py-2">
-                      You Don't add any Staff's Paid Salary...
-                    </td>
-                  </tr>
-                </tbody>
+                  </thead>
+                  {filteredSalary.length > 0 ? (
+                    <tbody>
+                      {filteredSalary.map((item, index) => (
+                        <tr key={item._id}>
+                          <td>{index + 1}</td>
+                          <td>{item.StaffName}</td>
+                          <td>{item.department}</td>
+                          <td>{item.Paid_Salary}</td>
+                          <td className="py-2 px-4">
+                            <span
+                              className="badge text-bg-success mx-1 px-2"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => edSalary(item._id)}
+                            >
+                              Edit
+                            </span>
+                            <span
+                              className="badge text-bg-danger mx-1 px-2"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => delSalary(item._id)}
+                            >
+                              Delete
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <td colSpan="5" className="text-center py-2">
+                          You Don't have any staff's paid salary...
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
+                </table>
               )}
-              </table>
             </div>
             <div className="d-flex justify-content-between align-items-center mt-4">
               <span className="fs-6">
