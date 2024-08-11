@@ -61,7 +61,7 @@ const Login = () => {
             required
           />
           <p className="page-link">
-            <span className="page-link-label">Forgot Password?</span>
+            <NavLink className="page-link-label" to='/forgetPass'>Forgot Password?</NavLink>
           </p>
 
           {/* Conditionally render LoginLoading if isLoading is true */}

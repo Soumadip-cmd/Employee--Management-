@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Special.css";
+import "./login.css";
 import { useNavigate } from "react-router-dom";
 
 const ForgetPass = () => {

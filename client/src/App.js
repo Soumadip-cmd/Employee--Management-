@@ -24,6 +24,7 @@ import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
 import EditSalary from "./components/Salary/EditSalary";
 import  { Toaster } from 'react-hot-toast';
+import ForgetPass from "./components/Authentication/ForgetPass";
 
 
 
@@ -212,6 +213,15 @@ function App() {
         <>
           
           <ApplyLeave />
+        </>
+      ),
+    },
+    {
+      path: "/forgetPass",
+      element: (
+        <>
+          
+          <ForgetPass/>
         </>
       ),
     },
