@@ -72,12 +72,10 @@ router.post(
             url: uploadResult.secure_url,
           };
         } catch (uploadError) {
-          return res
-            .status(500)
-            .json({
-              success,
-              msg: `Error uploading image to Cloudinary: ${uploadError.message}`,
-            });
+          return res.status(500).json({
+            success,
+            msg: `Error uploading image to Cloudinary: ${uploadError.message}`,
+          });
         }
       } else {
         user.avatar = {
@@ -138,17 +136,15 @@ router.post(
       success = true;
       const data = { user: { id: user.id } };
       const token = jwt.sign(data, jwt_Secret);
-      const adminData = await User.findOne({ email }).select('-_id -password');
+      const adminData = await User.findOne({ email }).select("-_id -password");
 
-      res.json({ Success: success,adminData, token });
+      res.json({ Success: success, adminData, token });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({
-          Success: success,
-          msg: `Internal Server Error: ${error.message}`,
-        });
+      res.status(500).json({
+        Success: success,
+        msg: `Internal Server Error: ${error.message}`,
+      });
     }
   }
 );
@@ -163,12 +159,10 @@ router.get("/get-user", FetchUser, async (req, res) => {
     res.json({ Success: success, data });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        Success: success,
-        msg: `Internal Server Error: ${error.message}`,
-      });
+    res.status(500).json({
+      Success: success,
+      msg: `Internal Server Error: ${error.message}`,
+    });
   }
 });
 
@@ -315,12 +309,10 @@ router.put(
           // console.log("Avatar uploaded successfully:", uploadResult);
         } catch (uploadError) {
           console.error("Avatar upload error:", uploadError.message);
-          return res
-            .status(500)
-            .json({
-              Success: success,
-              msg: `Avatar Error: ${uploadError.message}`,
-            });
+          return res.status(500).json({
+            Success: success,
+            msg: `Avatar Error: ${uploadError.message}`,
+          });
         }
       }
 
@@ -336,15 +328,99 @@ router.put(
       res.json({ Success: success, updatedUser });
     } catch (error) {
       console.error("Internal Server Error:", error.message);
-      res
-        .status(500)
-        .json({
-          Success: success,
-          msg: `Internal Server Error: ${error.message}`,
-        });
+      res.status(500).json({
+        Success: success,
+        msg: `Internal Server Error: ${error.message}`,
+      });
     }
   }
 );
+
+//forget password
+router.post("/forget-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const oldPassword = await User.findOne({ email: email });
+    if (!oldPassword) {
+      return res
+        .status(404)
+        .json({ msg: "User Not Exists", status: "Not Verified" });
+    }
+    const token = jwt.sign(
+      {
+        data: oldPassword._id,
+      },
+      jwt_Secret,
+      { expiresIn: "1h" }
+    );
+
+    const link = `http://localhost:8800/reset-password/${oldPassword._id}/${token}`;
+    res.send(link);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: error });
+  }
+});
+
+//reset-password get 
+router.get("/reset-password/:id/:token", async (req, res) => {
+  try {
+    const { id, token } = req.params;
+    const oldUser = await User.findOne({ _id: id });
+    
+    if (!oldUser) {
+      return res.status(404).json({ msg: "User Not Exists", status: "Not Verified" });
+    }
+    
+    const verify = jwt.verify(token, jwt_Secret);
+
+    // Render the reset password page with the user's name and email
+    res.render("reset-password", {
+      userName: oldUser.name,
+      email: verify.email,
+      status:"Not Verified"
+    });
+  } catch (error) {
+    res.status(500).json({ Error: error });
+  }
+});
+
+
+//reset-password post
+router.post("/reset-password/:id/:token", async (req, res) => {
+  try {
+    const { id, token } = req.params;
+    const { password } = req.body;
+
+    const oldUser = await User.findOne({ _id: id });
+
+    if (!oldUser) {
+      return res.status(404).json({ msg: "User Not Exists", status: "Not Verified" });
+    }
+
+    const verify = jwt.verify(token, jwt_Secret);
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const secpass = await bcrypt.hash(password, salt);
+  
+
+    // Update the user's password in the database
+    await User.updateOne(
+      { _id: id },
+      { $set: { password: secpass } }
+    );
+
+    // Respond with a success message or redirect to a login page
+    res.render("reset-password", {
+      userName: oldUser.name,
+      email: verify.email,
+      status:"verified"
+    });
+  } catch (error) {
+    res.status(500).json({ Error: error });
+  }
+});
 
 
 module.exports = router;
