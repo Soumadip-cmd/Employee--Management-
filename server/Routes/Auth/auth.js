@@ -338,56 +338,6 @@ router.put(
   }
 );
 
-//forget password
-router.post("/forget-password", async (req, res) => {
-  try {
-    const { email } = req.body;
-    const oldPassword = await User.findOne({ email: email });
-    if (!oldPassword) {
-      return res
-        .status(404)
-        .json({ msg: "User Not Exists", status: "Not Verified" });
-    }
-    const token = jwt.sign(
-      {
-        data: oldPassword._id,
-      },
-      jwt_Secret,
-      { expiresIn: "1h" }
-    );
-
-    // const link = `http://localhost:8800/reset-password/${oldPassword._id}/${token}`;
-    const link = `https://employee-management-uyw0.onrender.com/test`;
-    // const link = `https://employee-management-uyw0.onrender.com/reset-password/${oldPassword._id}/${token}`;
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.ADMIN_EMAIL,
-        pass: process.env.SMTP_PASS
-      }
-    });
-    
-    var mailOptions = {
-      from: 'soumadipsantra2004@gmail.com',
-      to: email,
-      subject: 'Reset Your Password From Employee Management System!!...',
-      text: `Click the Link\n${link}`
-    };
-    
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        res.json({msg:error})
-      } else {
-        
-        res.json({msg:'Email sent: ' + info.response})
-      }
-    });
-    
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ Error: error });
-  }
-});
 
 //reset-password get 
 router.get("/reset-password/:id/:token", async (req, res) => {
@@ -448,6 +398,57 @@ router.post("/reset-password/:id/:token", async (req, res) => {
     res.status(500).json({ Error: error });
   }
 });
+
+//forget password
+router.post("/forget-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const oldPassword = await User.findOne({ email: email });
+    if (!oldPassword) {
+      return res
+        .status(404)
+        .json({ msg: "User Not Exists", status: "Not Verified" });
+    }
+    const token = jwt.sign(
+      {
+        data: oldPassword._id,
+      },
+      jwt_Secret,
+      { expiresIn: "1h" }
+    );
+
+    // const link = `http://localhost:8800/reset-password/${oldPassword._id}/${token}`;
+    const link = `https://employee-management-uyw0.onrender.com/reset-password/${oldPassword._id}/${token}`;
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.SMTP_PASS
+      }
+    });
+    
+    var mailOptions = {
+      from: 'soumadipsantra2004@gmail.com',
+      to: email,
+      subject: 'Reset Your Password From Employee Management System!!...',
+      text: `Click the Link\n${link}`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        res.json({msg:error})
+      } else {
+        
+        res.json({msg:'Email sent: ' + info.response})
+      }
+    });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Error: error });
+  }
+});
+
 
 
 module.exports = router;
