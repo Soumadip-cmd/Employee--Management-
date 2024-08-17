@@ -15,7 +15,8 @@ const port = process.env.PORT || 8000; // Default port 8000
 
 
 //ejs innitialize
-app.set("view engine","ejs");
+app.set('views', path.join(__dirname, 'views')); // Adjust the path if necessary
+app.set('view engine', 'ejs');
 
 
 
