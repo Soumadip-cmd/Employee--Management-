@@ -450,5 +450,9 @@ router.post("/forget-password", async (req, res) => {
 });
 
 
+router.get("/test-ejs", (req, res) => {
+  res.render("test", { message: "EJS is working!" });
+});
+
 
 module.exports = router;
