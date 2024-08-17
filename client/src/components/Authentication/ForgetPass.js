@@ -1,40 +1,57 @@
 import React, { useState } from "react";
 import "./login.css";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import LoadingSub from "../Loading/LoadingSub"; // Make sure to import the LoadingSub component
 
 const ForgetPass = () => {
-  // State to track email input and OTP input visibility
+  // State to track email input, error message, and loading status
   const [email, setEmail] = useState("");
-  const [showOTP, setShowOTP] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Email validation regex pattern
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Function to handle email input change
-  const handleEmailChange = (e) => {
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Start loading
+
+    try {
+      const url = `http://localhost:8800/forget-password`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log(responseData);
+
+      toast.success("Email Sent Successfully..");
+    } catch (error) {
+      console.error("There was an error with the request:", error);
+      toast.error("Email Failed to send");
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
+  const handleChange = (e) => {
     const inputValue = e.target.value;
     setEmail(inputValue);
 
-    // Validate email and update error state
     if (!emailPattern.test(inputValue)) {
       setEmailError("Please enter a valid email address.");
     } else {
       setEmailError("");
-    }
-  };
-
-  const navigate=useNavigate()
-
-  const handleSubmit=()=>{
-      navigate('/')
-  }
-
-  // Function to handle the Send OTP button click
-  const handleSendOTP = (e) => {
-    e.preventDefault(); // Prevent form submission
-    if (emailPattern.test(email)) {
-      setShowOTP(true); // Show the OTP input and Submit button if email is valid
     }
   };
 
@@ -44,44 +61,30 @@ const ForgetPass = () => {
       style={{ height: "100vh" }}
     >
       <div className="form-container">
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <input
             type="email"
             className={`input ${emailError ? "input-error" : ""}`}
             placeholder="Email"
+            name="email"
             value={email}
-            onChange={handleEmailChange}
+            onChange={handleChange}
             required
           />
           {emailError && <span className="error-text">{emailError}</span>}
 
-          <button
-            className="form-btn"
-            onClick={handleSendOTP}
-            disabled={!email || emailError} // Disable button if email is invalid
-          >
-            Send OTP
-          </button>
-
-          {/* Conditionally render the OTP input and Submit button */}
-          {showOTP && (
-            <>
-              <label htmlFor="otp">Verify OTP</label>
-              <input
-                type="number"
-                className="input"
-                placeholder="OTP"
-                id="otp"
-                required
-              />
-              <button type="submit" className="btn btn-success" onClick={handleSubmit}>
-                Submit
-              </button>
-            </>
+          {loading ? (
+            <LoadingSub btnName="Sending..." color="primary" />
+          ) : (
+            <button
+              type="submit"
+              className="form-btn"
+              disabled={!email || emailError}
+            >
+              Send Email
+            </button>
           )}
         </form>
-
-        <div className="buttons-container"></div>
       </div>
     </div>
   );

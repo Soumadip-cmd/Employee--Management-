@@ -3,9 +3,11 @@ const User = require("../../models/User");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+var nodemailer = require('nodemailer');
 const FetchUser = require("../../middleware/FetchUser");
 const cloudinary = require("../../Cloudnary");
 const router = express.Router();
+
 const jwt_Secret = process.env.JWT_SECRET;
 
 //get-all-admin
@@ -355,7 +357,30 @@ router.post("/forget-password", async (req, res) => {
     );
 
     const link = `http://localhost:8800/reset-password/${oldPassword._id}/${token}`;
-    res.send(link);
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'soumadipsantra2004@gmail.com',
+        pass: 'csdk lwbt hvjr auyg'
+      }
+    });
+    
+    var mailOptions = {
+      from: 'soumadipsantra2004@gmail.com',
+      to: email,
+      subject: 'Reset Your Password From Employee Management System!!...',
+      text: `Click the Link\n${link}`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        res.json({msg:error})
+      } else {
+        
+        res.json({msg:'Email sent: ' + info.response})
+      }
+    });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ Error: error });
