@@ -18,7 +18,8 @@ const ForgetPass = () => {
     setLoading(true); // Start loading
 
     try {
-      const url = `http://localhost:8800/forget-password`;
+      const link = process.env.REACT_APP_BACKEND_URL || "http://localhost:8800";
+      const url = `${link}/forget-password`;
 
       const response = await fetch(url, {
         method: "POST",
