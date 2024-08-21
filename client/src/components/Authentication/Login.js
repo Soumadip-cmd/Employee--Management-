@@ -1,25 +1,37 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./login.css";
+import toast from "react-hot-toast";
 import DataContext from "../../context/DataContext";
-import LoginLoading from "../Loading/LoginLoading"; // Import your LoginLoading component
+import LoginLoading from "../Loading/LoginLoading";
 
 const Login = () => {
   const { loginProfile } = useContext(DataContext);
   const [login, setLogin] = useState({ email: "", password: "" });
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isLoading, setIsLoading] = useState(false); 
+  const [isRequestLoading, setIsRequestLoading] = useState(false);
+  const [requestSuccess, setRequestSuccess] = useState(false); 
 
-  const navigate = useNavigate(); // Initialize useNavigate here
+  const navigate = useNavigate(); 
 
-  const handlelogin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading to true when login starts
-    await loginProfile(login.email, login.password, navigate); // Pass navigate as an argument
-    setIsLoading(false); // Set loading to false after login finishes
+    setIsLoading(true); 
+    await loginProfile(login.email, login.password, navigate); 
+    setIsLoading(false); 
   };
 
   const handleChange = (e) => {
-    setLogin({ ...login, [e.target.name]: e.target.value }); // Fix handleChange
+    setLogin({ ...login, [e.target.name]: e.target.value }); 
+  };
+
+  const handleRequestToAdmin = async () => {
+    setIsRequestLoading(true);
+    
+    await new Promise((resolve) => setTimeout(resolve, 2000)); 
+    setIsRequestLoading(false); 
+    setRequestSuccess(true); 
+     toast.success("Request sent successfully!");
   };
 
   const facebook = () => {
@@ -36,12 +48,12 @@ const Login = () => {
 
   return (
     <div
-      className="stylishBG d-flex justify-content-center align-items-center flex-column "
+      className="stylishBG d-flex justify-content-center align-items-center flex-column"
       style={{ height: "100vh" }}
     >
       <div className="form-container">
         <p className="title">Welcome back</p>
-        <form className="form" onSubmit={handlelogin}>
+        <form className="form" onSubmit={handleLogin}>
           <input
             type="email"
             className="input"
@@ -73,9 +85,19 @@ const Login = () => {
         </form>
         <p className="sign-up-label">
           Don't have an account?
-          <NavLink to="/" className="sign-up-link">
-            Send Request to Admin
-          </NavLink>
+          <span 
+            className="sign-up-link"
+            onClick={handleRequestToAdmin}
+            style={{ cursor: "pointer" }}
+          >
+            {isRequestLoading ? (
+              <span>Sending...</span> // Show loading text while sending request
+            ) : requestSuccess ? (
+              <span>✓ Sent Successfully</span> // Show success message
+            ) : (
+              "Send Request to Admin" // Default button text
+            )}
+          </span>
         </p>
         <div className="buttons-container">
           <div className="apple-login-button mx-1" onClick={facebook}>
