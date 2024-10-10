@@ -418,7 +418,7 @@ router.post("/forget-password", async (req, res) => {
     );
 
     // const link = `http://localhost:8800/reset-password/${oldPassword._id}/${token}`;
-    const link = `https://employee-management-uyw0.onrender.com/reset-password/${oldPassword._id}/${token}`;
+    const link = `https://employee-management-qwn3.onrender.com/reset-password/${oldPassword._id}/${token}`;
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
