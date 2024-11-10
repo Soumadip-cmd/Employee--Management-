@@ -7,7 +7,7 @@ import LoginLoading from "../Loading/LoginLoading";
 
 const Login = () => {
   const { loginProfile } = useContext(DataContext);
-  const [login, setLogin] = useState({ email: "", password: "" });
+  const [login, setLogin] = useState({ email: "test@gmail.com", password: "test123" });
   const [isLoading, setIsLoading] = useState(false); 
   const [isRequestLoading, setIsRequestLoading] = useState(false);
   const [requestSuccess, setRequestSuccess] = useState(false); 
