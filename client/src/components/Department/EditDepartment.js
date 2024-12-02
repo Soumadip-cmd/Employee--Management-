@@ -20,6 +20,7 @@ const EditDepartment = () => {
     if (deptData) {
       setEditDeptData({ id: deptData._id, employeeId: deptData.employeeId, deptName: deptData.deptName });
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmit = (e) => {

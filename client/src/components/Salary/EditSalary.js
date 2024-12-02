@@ -36,6 +36,7 @@ export default function EditSalary() {
       setBasicSalary(editSal_Data.Paid_Salary); // Initial value for basicSalary
       setAllowance(editSal_Data.Paid_Salary); // Initial value for allowance
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function EditSalary() {
       ...prevState,
       Paid_Salary: sum
     }));
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmit = (e) => {

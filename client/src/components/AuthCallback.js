@@ -20,6 +20,7 @@ const AuthCallback = () => {
     };
 
     handleAuthCallback();
+    // eslint-disable-next-line
   }, []);
 
   return <div>Loading...</div>;

@@ -18,6 +18,7 @@ const EditAdmin = () => {
         email: adminData.email,
       });
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleChange = (e) => {

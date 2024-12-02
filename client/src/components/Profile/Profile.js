@@ -34,12 +34,14 @@ const Profile = () => {
       setPhotoUrl(adminDetails.avatar.url);
       setPreviewUrl(adminDetails.avatar.url); // Set the initial preview URL
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
       navigate("/");
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleUpdate = async (e) => {

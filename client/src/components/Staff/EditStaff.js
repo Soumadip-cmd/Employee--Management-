@@ -51,6 +51,7 @@ export default function EditStaff() {
       });
       setPhotoUrl(staffData.photo.url);
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmit = async (e) => {

@@ -20,6 +20,7 @@ export default function AddSalary() {
   useEffect(() => {
     getDept();
     getStaff();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
