@@ -2,25 +2,26 @@ import React, { useContext, useEffect, useState } from "react";
 import "./managesalary.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import DataContext from "../../context/DataContext";
-import Loading from "../Loading/Loading"; // Make sure this component shows a spinner or some loading indicator
+import Loading from "../Loading/Loading";
 
 export default function ManageSalary() {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true); 
-  const { getSal, salary, deleteSal } = useContext(DataContext);
+  const [loading, setLoading] = useState(true);
+  const { getSal, salary, deleteSal, getStaff, staff } =
+    useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getSal().then(() => setLoading(false));
+    Promise.all([getSal(), getStaff()]).then(() => setLoading(false));
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (!(localStorage.getItem('authToken'))) {
-      navigate('/');
+    if (!localStorage.getItem("authToken")) {
+      navigate("/");
     }
     // eslint-disable-next-line
-  }, [navigate]);
+  }, []);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -34,6 +35,11 @@ export default function ManageSalary() {
     navigate(`/editSalary/${id}`);
   };
 
+  const getStaffEmail = (staffName) => {
+    const staffMember = staff.find((s) => s.name === staffName);
+    return staffMember ? staffMember.email : "";
+  };
+
   const filteredSalary = salary.filter(
     (item) =>
       item.StaffName.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,24 +48,44 @@ export default function ManageSalary() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
+      <nav
+        className="navbar navbar-expand-lg"
+        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
+      >
         <div className="container mt-5">
-          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/dashboard">
+          <NavLink
+            className="navbar-brand"
+            style={{
+              fontSize: "25px",
+              color: "white",
+              letterSpacing: ".05125em",
+            }}
+            to="/dashboard"
+          >
             Salary
           </NavLink>
           <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink to="/dashboard" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/dashboard"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Home
                   </NavLink>
                 </li>
-                <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
+                <li
+                  className="breadcrumb-item active fw-semibold text-decoration-underline"
+                  aria-current="page"
+                >
                   Manage
                 </li>
                 <li className="breadcrumb-item">
-                  <NavLink to="/addsalary" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/addsalary"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Add Salary
                   </NavLink>
                 </li>
@@ -73,12 +99,20 @@ export default function ManageSalary() {
           <div className="py-4 border-bottom">
             <h1 className="h3 mb-0">Salary Management</h1>
           </div>
-          <div className="p-4 bg-white rounded-top rounded-bottom-1 shadow" style={{ borderTop: "5px solid #004dffe8" }}>
+          <div
+            className="p-4 bg-white rounded-top rounded-bottom-1 shadow"
+            style={{ borderTop: "5px solid #004dffe8" }}
+          >
             <h2 className="h4 mb-4">View Salary</h2>
             <div className="d-flex justify-content-between align-items-center gap-4 mb-4">
               <div className="d-flex align-items-center gap-2">
-                <label htmlFor="entries" className="form-label fs-6">Show</label>
-                <select id="entries" className="border-1 border-black rounded-2">
+                <label htmlFor="entries" className="form-label fs-6">
+                  Show
+                </label>
+                <select
+                  id="entries"
+                  className="border-1 border-black rounded-2"
+                >
                   <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="15">15</option>
@@ -100,14 +134,20 @@ export default function ManageSalary() {
                   value={search}
                   onChange={handleSearch}
                 />
-                <button className="btn btn-danger btn-sm d-none d-md-flex" onClick={() => handleSearch()}>
+                <button
+                  className="btn btn-danger btn-sm d-none d-md-flex"
+                  onClick={() => handleSearch()}
+                >
                   Search
                 </button>
               </div>
             </div>
             <div className="table-responsive">
               {loading ? (
-                <div className="d-flex justify-content-center align-items-center" style={{ height: '200px' }}>
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ height: "200px" }}
+                >
                   <Loading />
                 </div>
               ) : (
@@ -116,8 +156,10 @@ export default function ManageSalary() {
                     <tr>
                       <th>#</th>
                       <th>Staff Name</th>
+                      <th>Staff Email</th>
                       <th>Department</th>
                       <th>Salary</th>
+                      <th>Payment</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -127,8 +169,18 @@ export default function ManageSalary() {
                         <tr key={item._id}>
                           <td>{index + 1}</td>
                           <td>{item.StaffName}</td>
+                          <td>{getStaffEmail(item.StaffName)}</td>
                           <td>{item.department}</td>
                           <td>{item.Paid_Salary}</td>
+                          <td className=" text-center">
+                            <button
+                              type="pay"
+                              className=" w-100 btn btn-sm btn-primary"
+                              id="pay"
+                            >
+                              PAY
+                            </button>
+                          </td>
                           <td className="py-2 px-4">
                             <span
                               className="badge text-bg-success mx-1 px-2"
@@ -151,7 +203,7 @@ export default function ManageSalary() {
                   ) : (
                     <tbody>
                       <tr>
-                        <td colSpan="5" className="text-center py-2">
+                        <td colSpan="6" className="text-center py-2">
                           You Don't have any staff's paid salary...
                         </td>
                       </tr>

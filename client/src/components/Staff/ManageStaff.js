@@ -22,7 +22,7 @@ export default function ManageStaff() {
     fetchStaff();
 
     // eslint-disable-next-line
-  }, [staff]); // Dependency array includes staff to refetch when it changes
+  }, []); // Dependency array includes staff to refetch when it changes
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
@@ -44,7 +44,7 @@ export default function ManageStaff() {
 
     handleFilter();
     // eslint-disable-next-line
-  }, [search, staff]); // Reapply filter when search or staff changes
+  }, []); // Reapply filter when search or staff changes
 
   const handleSearch = (e) => {
     setSearch(e.target.value);

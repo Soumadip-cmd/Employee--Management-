@@ -34,13 +34,13 @@ const Profile = () => {
       setPhotoUrl(adminDetails.avatar.url);
       setPreviewUrl(adminDetails.avatar.url); // Set the initial preview URL
     }
-  }, [id, admin]);
+  }, []);
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
       navigate("/");
     }
-  }, [navigate]);
+  }, []);
 
   const handleUpdate = async (e) => {
     e.preventDefault();

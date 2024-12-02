@@ -269,6 +269,7 @@ const DataState = (props) => {
       const data = await response.json();
 
       setStaff(data);
+      console.log(data)
     } catch (error) {
       console.error("Error:", error);
     }

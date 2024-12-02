@@ -24,7 +24,7 @@ const ManageAdmin = () => {
     if (!localStorage.getItem("authToken")) {
       navigate("/");
     }
-  }, [navigate]);
+  }, []);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);

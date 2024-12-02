@@ -20,7 +20,7 @@ const EditDepartment = () => {
     if (deptData) {
       setEditDeptData({ id: deptData._id, employeeId: deptData.employeeId, deptName: deptData.deptName });
     }
-  }, [id, dept]);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

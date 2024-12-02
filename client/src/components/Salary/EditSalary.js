@@ -36,7 +36,7 @@ export default function EditSalary() {
       setBasicSalary(editSal_Data.Paid_Salary); // Initial value for basicSalary
       setAllowance(editSal_Data.Paid_Salary); // Initial value for allowance
     }
-  }, [id, salary]);
+  }, []);
 
   useEffect(() => {
     // Calculate Paid_Salary whenever basicSalary or allowance changes
@@ -45,7 +45,7 @@ export default function EditSalary() {
       ...prevState,
       Paid_Salary: sum
     }));
-  }, [basicSalary, allowance]);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

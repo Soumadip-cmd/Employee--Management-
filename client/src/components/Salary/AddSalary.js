@@ -20,12 +20,12 @@ export default function AddSalary() {
   useEffect(() => {
     getDept();
     getStaff();
-  }, [getDept, getStaff]);
+  }, []);
 
   useEffect(() => {
     calculate();
     // eslint-disable-next-line
-  }, [basicSalary, allowance]);
+  }, []);
 
   
   const navigate=useNavigate()

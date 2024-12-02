@@ -20,7 +20,7 @@ const AuthCallback = () => {
     };
 
     handleAuthCallback();
-  }, [navigate]);
+  }, []);
 
   return <div>Loading...</div>;
 };

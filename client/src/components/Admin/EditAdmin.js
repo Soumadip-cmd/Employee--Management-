@@ -18,7 +18,7 @@ const EditAdmin = () => {
         email: adminData.email,
       });
     }
-  }, [id, admin]);
+  }, []);
 
   const handleChange = (e) => {
     setEdit_admin({ ...edit_admin, [e.target.name]: e.target.value });
