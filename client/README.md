@@ -126,6 +126,10 @@ The application uses React Context API for centralized state management and API 
 To authenticate requests, the JWT is stored in the **browser's local storage**. When making API calls, include the **token** in the **request headers** to ensure successful authorization. Failing to include it may result in an error message like:  
 `{"msg":"No token, authorization denied"}`
 
+## File Name
+
+-  Middleware > FetchUser.js
+
 ### Adding JWT to Request Headers
 
 - **Key**: `token`  
