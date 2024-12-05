@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
-const connectToMongo = require("./Db");
+const connectToMongo = require("./config/Db");
 const cors = require("cors");
 const passport=require('passport')
 const passportAUTH=require('./Passport')
