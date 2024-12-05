@@ -129,8 +129,7 @@ const Profile = () => {
   if (isLoading) {
     return (
       <div 
-        className="vh-100 vw-100 position-fixed top-0 start-0 d-flex justify-content-center align-items-center bg-white"
-        style={{ zIndex: 1000 }}
+        
       >
         <Loading />
       </div>
