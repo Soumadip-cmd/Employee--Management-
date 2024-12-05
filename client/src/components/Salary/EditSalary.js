@@ -47,7 +47,7 @@ export default function EditSalary() {
       Paid_Salary: sum
     }));
     // eslint-disable-next-line
-  }, []);
+  }, [basicSalary, allowance]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
