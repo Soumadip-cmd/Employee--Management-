@@ -23,10 +23,9 @@ import EditDepartment from "./components/Department/EditDepartment";
 import EditAdmin from "./components/Admin/EditAdmin";
 import EditStaff from "./components/Staff/EditStaff";
 import EditSalary from "./components/Salary/EditSalary";
-import  { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import ForgetPass from "./components/Authentication/ForgetPass";
-
-
+import Alert from "./components/Alert";
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -54,9 +53,14 @@ function App() {
     },
     {
       path: "/",
-      element: <Login />,
+      element: (
+        <>
+          {/* <Alert /> */}
+          <Login />,
+        </>
+      ),
     },
-    
+
     {
       path: "/addDepartment",
       element: (
@@ -83,7 +87,7 @@ function App() {
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <EditAdmin/>
+          <EditAdmin />
         </>
       ),
     },
@@ -133,7 +137,7 @@ function App() {
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <EditDepartment/>
+          <EditDepartment />
         </>
       ),
     },
@@ -153,7 +157,7 @@ function App() {
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <EditStaff/>
+          <EditStaff />
         </>
       ),
     },
@@ -183,7 +187,7 @@ function App() {
         <>
           {isLargeDevice && <SlideNavbar />}
           <NavBar />
-          <EditSalary/>
+          <EditSalary />
         </>
       ),
     },
@@ -211,7 +215,6 @@ function App() {
       path: "/applyLeave",
       element: (
         <>
-          
           <ApplyLeave />
         </>
       ),
@@ -220,12 +223,11 @@ function App() {
       path: "/forgetPass",
       element: (
         <>
-          
-          <ForgetPass/>
+          <ForgetPass />
         </>
       ),
     },
-   
+
     {
       path: "/leaveHistory",
       element: (
@@ -240,13 +242,12 @@ function App() {
       path: "/test",
       element: <Test />,
     },
-   
   ]);
 
   return (
     <>
       <DataState>
-      <Toaster/>
+        <Toaster />
         <RouterProvider router={router} />
       </DataState>
     </>
