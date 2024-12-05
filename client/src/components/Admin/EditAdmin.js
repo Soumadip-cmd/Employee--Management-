@@ -19,7 +19,7 @@ const EditAdmin = () => {
       });
     }
     // eslint-disable-next-line
-  }, []);
+  }, [id, admin]);
 
   const handleChange = (e) => {
     setEdit_admin({ ...edit_admin, [e.target.name]: e.target.value });
@@ -28,9 +28,13 @@ const EditAdmin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    editAdmin(edit_admin.id, edit_admin.name, edit_admin.email);
-    setEdit_admin({ id: id, name: "", email: "" });
-    navigate("/manageAdmin");
+    try {
+      await editAdmin(edit_admin.id, edit_admin.name, edit_admin.email);
+      setEdit_admin({ id: id, name: "", email: "" });
+      navigate("/manageAdmin", { state: { refresh: true } });
+    } catch (error) {
+      console.error("Error updating admin:", error);
+    }
   };
 
   return (

@@ -25,8 +25,65 @@ const {
   editStaff,
   deleteStaff,
 } = require("../controllers/Staff.controller");
+const {
+  getAllAdmin,
+  createUser,
+  loginUser,
+  getUser,
+  editAdmin,
+  deleteAdmin,
+  updateDetails,
+  getResetPassword,
+  postResetPassword,
+  forgetPassword,
+  testEjs,
+} = require("../controllers/Auth/Auth.controller");
 
 const router = express.Router();
+
+// Authentication Routes
+
+// Validation rules
+const createUserValidation = [
+  body("name", "Enter a valid name").isLength({ min: 3 }),
+  body("email", "Enter a valid email").isEmail(),
+  body("password", "Password length must be at least 5 characters").isLength({
+    min: 3,
+  }),
+  body("avatar", "Add a photo").optional().isLength({ min: 4 }),
+];
+
+const loginValidation = [
+  body("email", "Enter Valid Email").isEmail(),
+  body("password", "Password Length must be at least 5 chars").isLength({
+    min: 3,
+  }),
+];
+
+const updateValidation = [
+  body("name", "Enter Valid UserName").isLength({ min: 3 }),
+  body("password", "Password Length must be at least 5 chars").isLength({
+    min: 3,
+  }),
+];
+
+const editAdminValidation = [
+  body("name", "Enter a valid username").isLength({ min: 3 }),
+  body("email", "Enter a valid email").isEmail(),
+];
+
+// Routes
+router.get("/get-all-admin", getAllAdmin);
+router.post("/create-user", createUserValidation, createUser);
+router.post("/login", loginValidation, loginUser);
+router.get("/get-user", FetchUser, getUser);
+router.put("/editAdmin/:id", editAdminValidation, editAdmin);
+router.delete("/deleteAdmin/:id", deleteAdmin);
+router.put("/updateDetails/:id", FetchUser, updateValidation, updateDetails);
+router.get("/reset-password/:id/:token", getResetPassword);
+router.post("/reset-password/:id/:token", postResetPassword);
+router.post("/forget-password", forgetPassword);
+router.get("/test-ejs", testEjs);
 
 // Department Routes
 router.get("/get-departments", FetchUser, getDepartments);

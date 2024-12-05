@@ -5,7 +5,7 @@ const connectToMongo = require("./Db");
 const cors = require("cors");
 const passport=require('passport')
 const passportAUTH=require('./Passport')
-const passportAuth=require('./Routes/Auth/Passport.auth');
+const passportAuth=require('./controllers/Auth/Passport.auth');
 const router = require("./Routes/route");
 
 
@@ -42,7 +42,6 @@ app.use(cors(corsOptions));
 
 
 // Routes
-app.use(require(path.join(__dirname, "Routes/Auth/auth.js")));
 app.use(router)
 
 

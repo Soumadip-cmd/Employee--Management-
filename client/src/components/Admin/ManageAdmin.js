@@ -24,8 +24,7 @@ const ManageAdmin = () => {
     if (!localStorage.getItem("authToken")) {
       navigate("/");
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [navigate]);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
