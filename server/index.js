@@ -32,10 +32,11 @@ app.use(passport.initialize());
 
 // CORS configuration
 const corsOptions = {
-  origin: [process.env.CLIENT_URL , "http://localhost:3000"],
+  origin: "*", 
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // Allow credentials (cookies, headers)
+  credentials: true, 
 };
+
 
 app.use(cors(corsOptions));
 
