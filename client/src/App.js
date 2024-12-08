@@ -232,8 +232,6 @@ function App() {
       path: "/leaveHistory",
       element: (
         <>
-          {isLargeDevice && <SlideNavbar />}
-          <NavBar />
           <LeaveHistory />
         </>
       ),

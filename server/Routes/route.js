@@ -11,6 +11,8 @@ const {
   addLeave,
   editLeave,
   deleteLeave,
+  getAllLeaves,
+  reviewLeave,
 } = require("../controllers/Leave.controller");
 const {
   getSalary,
@@ -136,6 +138,8 @@ router.put(
 );
 
 router.delete("/delete-leave/:id", FetchUser, deleteLeave);
+router.get('/leaves', FetchUser, getAllLeaves);
+router.put('/leaves/:id/review', FetchUser, reviewLeave);
 
 // Salary Routes
 router.get("/get-all-salary", FetchUser, getSalary);
