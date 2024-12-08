@@ -153,7 +153,7 @@ const Profile = () => {
                 width={100}
                 height={100}
                 alt="User Profile"
-                className="rounded-circle mb-3"
+                className="rounded-circle mb-3  object-fit-cover"
               />
               <span
                 className="rounded-circle p-2 d-flex justify-content-center align-items-center bg-opacity-80 border-2 bg-light position-absolute"
@@ -182,7 +182,7 @@ const Profile = () => {
               <input
                 type="file"
                 ref={camera}
-                className="d-none"
+                className="d-none "
                 onChange={photoChange}
                 accept="image/jpeg, image/png, image/webp, image/svg+xml"
               />
