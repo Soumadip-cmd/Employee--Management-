@@ -41,8 +41,8 @@ const addLeave = async (req, res) => {
       start,
       end,
       description,
-      userId: req.user.id,
-      status: 'pending'  // Set initial status
+      userId: req.staff._id, // Use staff ID instead of user ID
+      status: 'pending'
     });
 
     await data.save();
