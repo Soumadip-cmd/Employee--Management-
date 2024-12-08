@@ -11,8 +11,6 @@ const {
   addLeave,
   editLeave,
   deleteLeave,
-  getAllLeaves,
-  reviewLeave,
 } = require("../controllers/Leave.controller");
 const {
   getSalary,
@@ -26,7 +24,6 @@ const {
   addStaff,
   editStaff,
   deleteStaff,
-  verifyStaffLogin,
 } = require("../controllers/Staff.controller");
 const {
   getAllAdmin,
@@ -41,8 +38,6 @@ const {
   forgetPassword,
   testEjs,
 } = require("../controllers/Auth/Auth.controller");
-const verifyStaffEmail = require("../middleware/StaffAuthMiddleware");
-const fetchStaff = require("../middleware/FetchStaff");
 
 const router = express.Router();
 
@@ -116,12 +111,17 @@ router.delete("/delete-department/:id", FetchUser, deleteDepartment);
 // Routes
 router.get("/get-leaves", FetchUser, getLeaves);
 
-router.post('/add-leave', fetchStaff, [
-  body("reason", "Write a suitable Reason").isLength({ min: 3 }),
-  body("start", "Enter a valid Date").exists(),
-  body("end", "Enter a valid Date").exists(),
-  body("description", "Enter a valid description").isLength({ min: 3 }),
-], addLeave);
+router.post(
+  "/add-leave",
+  [
+    body("reason", "Write a suitable Reason").isLength({ min: 3 }),
+    body("start", "Enter a valid Date").exists(),
+    body("end", "Enter a valid Date").exists(),
+    body("description", "Enter a valid description").isLength({ min: 3 }),
+  ],
+  FetchUser,
+  addLeave
+);
 
 router.put(
   "/edit-leave/:id",
@@ -131,13 +131,11 @@ router.put(
     body("end", "Enter a valid Date").exists(),
     body("description", "Enter a valid description").isLength({ min: 3 }),
   ],
-  fetchStaff,
+  FetchUser,
   editLeave
 );
 
-router.delete("/delete-leave/:id", fetchStaff, deleteLeave);
-router.get('/leaves', FetchUser, getAllLeaves);
-router.put('/leaves/:id/review', FetchUser, reviewLeave);
+router.delete("/delete-leave/:id", FetchUser, deleteLeave);
 
 // Salary Routes
 router.get("/get-all-salary", FetchUser, getSalary);
@@ -187,9 +185,5 @@ router.get("/get-staffs", FetchUser, getAllStaff);
 router.post("/add-Staff", staffValidationRules, FetchUser, addStaff);
 router.put("/edit-Staff/:id", staffValidationRules, FetchUser, editStaff);
 router.delete("/delete-Staff/:id", FetchUser, deleteStaff);
-router.post('/staff/verify', verifyStaffEmail, verifyStaffLogin);
-
-// Modify the leave routes to use staff authentication
-
 
 module.exports = router;

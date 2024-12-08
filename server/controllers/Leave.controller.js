@@ -1,4 +1,4 @@
-const { validationResult } = require("express-validator");
+const {  validationResult } = require("express-validator");
 const Leave = require("../models/LeaveSchema");
 
 // Get all leaves for a user
@@ -7,19 +7,6 @@ const getLeaves = async (req, res) => {
     const user = req.user.id;
     const leave = await Leave.find({ userId: user });
     res.send(leave);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
-  }
-};
-
-// Get all leaves (for admin)
-const getAllLeaves = async (req, res) => {
-  try {
-    const leaves = await Leave.find()
-      .populate('userId', 'name email')
-      .populate('reviewedBy', 'name email');
-    res.json(leaves);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
@@ -41,8 +28,7 @@ const addLeave = async (req, res) => {
       start,
       end,
       description,
-      userId: req.staff._id, // Use staff ID instead of user ID
-      status: 'pending'
+      userId: req.user.id,
     });
 
     await data.save();
@@ -57,69 +43,13 @@ const addLeave = async (req, res) => {
   }
 };
 
-// Review leave (approve/reject) - Admin only
-const reviewLeave = async (req, res) => {
-  let success = false;
-  try {
-    const { status, comments } = req.body;
-    
-    // Validate status
-    if (!['approved', 'rejected'].includes(status)) {
-      return res.status(400).json({ 
-        success, 
-        errors: "Invalid status. Must be 'approved' or 'rejected'" 
-      });
-    }
-
-    const leave = await Leave.findById(req.params.id);
-    if (!leave) {
-      return res.status(404).json({ errors: "Leave not found" });
-    }
-
-    // Update leave status
-    const updatedLeave = await Leave.findByIdAndUpdate(
-      req.params.id,
-      {
-        status: status,
-        reviewedBy: req.user.id,
-        reviewedAt: Date.now(),
-        reviewComments: comments || ''
-      },
-      { new: true }
-    ).populate('userId', 'name email')
-     .populate('reviewedBy', 'name email');
-
-    success = true;
-    res.json({ success, leave: updatedLeave });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success,
-      errors: `Unexpected Error Occurred: ${error.message}`,
-    });
-  }
-};
-
-// Edit an existing leave (only if status is pending)
+// Edit an existing leave
 const editLeave = async (req, res) => {
   let success = false;
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
-    }
-
-    const leave = await Leave.findById(req.params.id);
-    if (!leave) {
-      return res.status(404).json({ errors: "Leave not found" });
-    }
-
-    // Only allow editing if leave is still pending
-    if (leave.status !== 'pending') {
-      return res.status(400).json({ 
-        success,
-        errors: "Cannot edit leave that has already been reviewed" 
-      });
     }
 
     const { reason, start, end, description } = req.body;
@@ -129,6 +59,11 @@ const editLeave = async (req, res) => {
     if (start) updatedLeave.start = start;
     if (end) updatedLeave.end = end;
     if (description) updatedLeave.description = description;
+
+    const leave = await Leave.findById(req.params.id);
+    if (!leave) {
+      return res.status(404).json({ errors: "Leave not found" });
+    }
 
     const updated = await Leave.findByIdAndUpdate(
       req.params.id,
@@ -147,21 +82,13 @@ const editLeave = async (req, res) => {
   }
 };
 
-// Delete a leave (only if status is pending)
+// Delete a leave
 const deleteLeave = async (req, res) => {
   let success = false;
   try {
     const leave = await Leave.findById(req.params.id);
     if (!leave) {
       return res.status(404).json({ errors: "Leave not found" });
-    }
-
-    // Only allow deletion if leave is still pending
-    if (leave.status !== 'pending') {
-      return res.status(400).json({ 
-        success,
-        errors: "Cannot delete leave that has already been reviewed" 
-      });
     }
 
     const deleted = await Leave.findByIdAndDelete(req.params.id);
@@ -176,11 +103,4 @@ const deleteLeave = async (req, res) => {
   }
 };
 
-module.exports = { 
-  getLeaves, 
-  getAllLeaves,
-  addLeave, 
-  editLeave, 
-  deleteLeave,
-  reviewLeave 
-};
+module.exports = { getLeaves, addLeave, editLeave, deleteLeave };
