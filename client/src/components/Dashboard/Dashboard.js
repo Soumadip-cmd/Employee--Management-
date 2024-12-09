@@ -64,7 +64,7 @@ const Dashboard = () => {
               number="5"
               category="Leave Requests"
               cardbgcolor="#c70d0d"
-              pageLink="/Staffleave",
+              pageLink="/Staffleave"
             />
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
