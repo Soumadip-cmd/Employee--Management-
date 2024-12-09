@@ -8,13 +8,14 @@ export default function EditSalary() {
   const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
   const { editSal, getStaff, getDept, staff, dept, salary } = useContext(DataContext);
-  
+
   const [editSaldata, setEditSaldata] = useState({
     id: id,
     StaffName: "",
     department: "",
     Paid_Salary: "",
   });
+  const [filteredStaff, setFilteredStaff] = useState([]); // Filtered staff based on department
   const [basicSalary, setBasicSalary] = useState(0);
   const [allowance, setAllowance] = useState(0);
 
@@ -33,18 +34,28 @@ export default function EditSalary() {
         department: editSal_Data.department,
         Paid_Salary: editSal_Data.Paid_Salary,
       });
-      setBasicSalary(editSal_Data.Paid_Salary); // Initial value for basicSalary
-      setAllowance(editSal_Data.Paid_Salary); // Initial value for allowance
+      setBasicSalary(editSal_Data.Paid_Salary);
+      setAllowance(editSal_Data.Paid_Salary);
     }
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
+    // Filter staff based on department
+    if (editSaldata.department) {
+      const filtered = staff.filter((s) => s.department === editSaldata.department);
+      setFilteredStaff(filtered);
+    } else {
+      setFilteredStaff(staff); // Show all staff if no department is selected
+    }
+  }, [editSaldata.department, staff]);
+
+  useEffect(() => {
     // Calculate Paid_Salary whenever basicSalary or allowance changes
     const sum = basicSalary + allowance;
-    setEditSaldata(prevState => ({
+    setEditSaldata((prevState) => ({
       ...prevState,
-      Paid_Salary: sum
+      Paid_Salary: sum,
     }));
     // eslint-disable-next-line
   }, [basicSalary, allowance]);
@@ -52,7 +63,7 @@ export default function EditSalary() {
   const handleSubmit = (e) => {
     e.preventDefault();
     editSal(editSaldata.id, editSaldata.StaffName.value, editSaldata.department, editSaldata.Paid_Salary);
-    navigate('/manageSalary'); // Redirect after submit if needed
+    navigate("/manageSalary");
   };
 
   const handleInputChange = (e) => {
@@ -66,6 +77,11 @@ export default function EditSalary() {
 
   const handleSelectChange = (selectedOption) => {
     setEditSaldata({ ...editSaldata, StaffName: selectedOption });
+  };
+
+  const handleDepartmentChange = (e) => {
+    const { value } = e.target;
+    setEditSaldata({ ...editSaldata, department: value, StaffName: "" });
   };
 
   const handleFocus = () => {
@@ -117,7 +133,7 @@ export default function EditSalary() {
                   required
                   name="department"
                   value={editSaldata.department}
-                  onChange={(e) => setEditSaldata({ ...editSaldata, department: e.target.value })}
+                  onChange={handleDepartmentChange}
                 >
                   <option value="" disabled>--Department Name--</option>
                   {dept.map((item, index) => (
@@ -171,10 +187,14 @@ export default function EditSalary() {
                             }),
                           }}
                           menuPosition="fixed"
-                          components={{ DropdownIndicator: () => null, ClearIndicator: (props) => isFocused ? <components.ClearIndicator {...props} /> : null }}
+                          components={{
+                            DropdownIndicator: () => null,
+                            ClearIndicator: (props) =>
+                              isFocused ? <components.ClearIndicator {...props} /> : null,
+                          }}
                           onFocus={handleFocus}
                           onBlur={handleBlur}
-                          options={staff.map(s => ({ value: s.name, label: s.name }))}
+                          options={filteredStaff.map((s) => ({ value: s.name, label: s.name }))}
                           required
                         />
                       </td>

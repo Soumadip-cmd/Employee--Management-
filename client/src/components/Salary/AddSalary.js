@@ -7,10 +7,11 @@ import LoadingSub from "../Loading/LoadingSub";
 export default function AddSalary() {
   const [isFocused, setIsFocused] = useState(false);
   const { addSal, getStaff, getDept, staff, dept } = useContext(DataContext);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [addSalData, setAddSalData] = useState({ StaffName: "", department: "", Paid_Salary: null });
   const [basicSalary, setBasicSalary] = useState(null);
   const [allowance, setAllowance] = useState(null);
+  const [filteredStaff, setFilteredStaff] = useState([]);
 
   const calculate = () => {
     const sum = (basicSalary || 0) + (allowance || 0);
@@ -28,61 +29,58 @@ export default function AddSalary() {
     // eslint-disable-next-line
   }, [basicSalary, allowance]);
 
-  
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
-    if(!(localStorage.getItem('authToken')))
-    {
-      navigate('/')
+    if (!localStorage.getItem("authToken")) {
+      navigate("/");
     }
     // eslint-disable-next-line
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (addSalData.StaffName && addSalData.department) {
-      setLoading(true); // Set loading to true when the submit begins
-  
+      setLoading(true);
+
       try {
         await addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
         setAddSalData({ StaffName: "", department: "", Paid_Salary: null });
         setBasicSalary(null);
         setAllowance(null);
+        setFilteredStaff([]);
       } catch (error) {
         console.error("Error adding salary:", error);
-        // Handle error if necessary
       } finally {
-        setLoading(false); // Set loading to false after the operation is complete
+        setLoading(false);
       }
     } else {
       alert("Please select a staff member and department.");
     }
   };
-  
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAddSalData({ ...addSalData, [name]: value });
+  const handleDepartmentChange = (e) => {
+    const department = e.target.value;
+    setAddSalData({ ...addSalData, department });
+
+    // Filter staff based on the selected department
+    const filtered = staff.filter((s) => s.department === department);
+    setFilteredStaff(filtered);
   };
 
-  const handleSelectChange = (selectedOption) => {
+  const handleStaffChange = (selectedOption) => {
     setAddSalData({ ...addSalData, StaffName: selectedOption });
-  };
-
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
   };
 
   return (
     <>
       <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
         <div className="container mt-5">
-          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/dashboard">
+          <NavLink
+            className="navbar-brand"
+            style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }}
+            to="/dashboard"
+          >
             Salary
           </NavLink>
           <div className="mt-2 pt-2">
@@ -109,22 +107,31 @@ export default function AddSalary() {
       <div className="bg-muted pt-2 extra-special2 min-h-screen d-flex justify-content-center align-items-center">
         <div className="bg-card p-6 w-100 max-w-4xl">
           <h1 className="text-2xl font-bold text-foreground mb-4">Salary</h1>
-          <div className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1" style={{ borderTop: "5px solid #004dffe8" }}>
+          <div
+            className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1"
+            style={{ borderTop: "5px solid #004dffe8" }}
+          >
             <form onSubmit={handleSubmit}>
               <h2 className="text-xl font-semibold text-foreground mb-4">Add Salary</h2>
               <div className="mb-4">
-                <label className="form-label text-muted-foreground mb-2"><b>Department Name</b></label>
+                <label className="form-label text-muted-foreground mb-2">
+                  <b>Department Name</b>
+                </label>
                 <select
                   className="form-control"
                   style={{ border: "1px solid" }}
                   required
                   name="department"
                   value={addSalData.department}
-                  onChange={handleInputChange}
+                  onChange={handleDepartmentChange}
                 >
-                  <option value="" disabled>--Department Name--</option>
+                  <option value="" disabled>
+                    --Select Department--
+                  </option>
                   {dept.map((item, index) => (
-                    <option key={index} value={item.deptName}>{item.deptName}</option>
+                    <option key={index} value={item.deptName}>
+                      {item.deptName}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -144,7 +151,7 @@ export default function AddSalary() {
                         <Select
                           name="StaffName"
                           value={addSalData.StaffName}
-                          onChange={handleSelectChange}
+                          onChange={handleStaffChange}
                           placeholder="Select Staff Name.."
                           isClearable
                           menuPortalTarget={document.body}
@@ -168,16 +175,9 @@ export default function AddSalary() {
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                             }),
-                            clearIndicator: (base) => ({
-                              ...base,
-                              display: isFocused ? "block" : "none",
-                            }),
                           }}
                           menuPosition="fixed"
-                          components={{ DropdownIndicator: () => null, ClearIndicator: (props) => isFocused ? <components.ClearIndicator {...props} /> : null }}
-                          onFocus={handleFocus}
-                          onBlur={handleBlur}
-                          options={staff.map(s => ({ value: s.name, label: s.name }))}
+                          options={filteredStaff.map((s) => ({ value: s.name, label: s.name }))}
                           required
                         />
                       </td>
@@ -188,7 +188,9 @@ export default function AddSalary() {
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
                           value={basicSalary || ""}
-                          onChange={(e) => { setBasicSalary(parseFloat(e.target.value) || 0); }}
+                          onChange={(e) => {
+                            setBasicSalary(parseFloat(e.target.value) || 0);
+                          }}
                         />
                       </td>
                       <td className="p-1 px-2 tablestyle">
@@ -198,7 +200,9 @@ export default function AddSalary() {
                           className="rounded-2 w-100 px-2"
                           style={{ border: "1px solid black" }}
                           value={allowance || ""}
-                          onChange={(e) => { setAllowance(parseFloat(e.target.value) || 0); }}
+                          onChange={(e) => {
+                            setAllowance(parseFloat(e.target.value) || 0);
+                          }}
                         />
                       </td>
                       <td className="p-1 px-2 tablestyle">
@@ -217,19 +221,15 @@ export default function AddSalary() {
                 </table>
               </div>
               <div className="mt-4 d-flex justify-content-end">
-              <div className="float-end mx-1">
-                {loading ? (
-                  <LoadingSub btnName="Submit" color="primary" />
-                ) : (
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    id="applyleave"
-                  >
-                    Submit
-                  </button>
-                )}
-              </div>
+                <div className="float-end mx-1">
+                  {loading ? (
+                    <LoadingSub btnName="Submit" color="primary" />
+                  ) : (
+                    <button type="submit" className="btn btn-primary" id="applyleave">
+                      Submit
+                    </button>
+                  )}
+                </div>
               </div>
             </form>
           </div>
