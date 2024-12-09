@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Test from "./components/Test";
-import SlideNavbar from "./components/SlideNavbar";
-import NavBar from "./components/NavBar";
+import SlideNavbar from "./components/Navbar/SlideNavbar";
+import NavBar from "./components/Navbar/NavBar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import ApplyLeave from "./components/Leave/ApplyLeave";
 import LeaveHistory from "./components/Leave/LeaveHistory";
@@ -26,6 +26,10 @@ import EditSalary from "./components/Salary/EditSalary";
 import { Toaster } from "react-hot-toast";
 import ForgetPass from "./components/Authentication/ForgetPass";
 import Alert from "./components/Alert";
+import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard";
+import EmployeeSlideNav from "./components/Navbar/EmployeeSlideNav";
+import EmployeeNav from "./components/Navbar/EmployeeNav";
+import EmployeeProfile from "./components/Profile/EmployeeProfile";
 
 function App() {
   const [isLargeDevice, setIsLargeDevice] = useState(window.innerWidth >= 1300);
@@ -41,6 +45,7 @@ function App() {
   }, []);
 
   const router = createBrowserRouter([
+    // admin
     {
       path: "/dashboard",
       element: (
@@ -201,24 +206,7 @@ function App() {
         </>
       ),
     },
-    {
-      path: "/yoursalary",
-      element: (
-        <>
-          {isLargeDevice && <SlideNavbar />}
-          <NavBar />
-          <YourSalary />
-        </>
-      ),
-    },
-    {
-      path: "/applyLeave",
-      element: (
-        <>
-          <ApplyLeave />
-        </>
-      ),
-    },
+
     {
       path: "/forgetPass",
       element: (
@@ -228,14 +216,63 @@ function App() {
       ),
     },
 
+    // Employee
+    {
+      path: "/employee/dashboard",
+      element: (
+        <>
+          {<EmployeeSlideNav />}
+          <EmployeeNav />
+          <EmployeeDashboard />
+        </>
+      ),
+    },
+    {
+      path: "/applyLeave",
+      element: (
+        <>
+          {isLargeDevice && <EmployeeSlideNav />}
+          <EmployeeNav />
+
+          <ApplyLeave />
+        </>
+      ),
+    },
     {
       path: "/leaveHistory",
       element: (
         <>
+          {isLargeDevice && <EmployeeSlideNav />}
+          <EmployeeNav />
+
           <LeaveHistory />
         </>
       ),
     },
+    {
+      path: "/employee/salary",
+      element: (
+        <>
+          {isLargeDevice && <EmployeeSlideNav />}
+          <EmployeeNav />
+
+          <YourSalary />
+        </>
+      ),
+    },
+    {
+      path: "/employee/profile/:id",
+      element: (
+        <>
+          {isLargeDevice && <EmployeeSlideNav />}
+          <EmployeeNav />
+
+          <EmployeeProfile/>
+        </>
+      ),
+    },
+
+    // test
     {
       path: "/test",
       element: <Test />,

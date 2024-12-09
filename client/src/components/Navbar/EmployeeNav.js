@@ -1,19 +1,31 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import DataContext from "../context/DataContext";
-import Img from "./Admin/Img";
 import toast from "react-hot-toast";
 
-const NavBar = () => {
+const EmployeeNav = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [staffProfile, setStaffProfile] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  const { getAdminProfile, Adminlogin } = useContext(DataContext);
-
   useEffect(() => {
-    getAdminProfile();
-    // eslint-disable-next-line
+    const fetchStaffData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/get-staff`, {
+          headers: {
+            'staff-token': localStorage.getItem('staff-token')
+          }
+        });
+        const { success, data } = await response.json();
+        if (success && data) {
+          setStaffProfile(data); // Store the data directly
+        }
+      } catch (error) {
+        console.error('Error fetching staff data:', error);
+      }
+    };
+
+    fetchStaffData();
   }, []);
 
   const toggleDropdown = () => {
@@ -21,8 +33,10 @@ const NavBar = () => {
   };
 
   const moveRoute = (id) => {
-    setDropdownOpen(false);
-    navigate(`/profile/${id}`);
+    if (id) {
+      setDropdownOpen(false);
+      navigate(`/employee/profile/${id}`);
+    }
   };
 
   const closeDropdown = () => {
@@ -32,7 +46,8 @@ const NavBar = () => {
   const logOut = () => {
     try {
       setDropdownOpen(false);
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("staff-token");
+      setStaffProfile(null);
       toast.success("Logout Successful");
       navigate("/");
     } catch (error) {
@@ -66,7 +81,7 @@ const NavBar = () => {
         }}
       >
         <NavLink
-          to="/dashboard"
+          to="/employee/dashboard"
           className="float-start fw-bold text-decoration-none"
           style={{ fontFamily: '"Playwrite US Modern", cursive' }}
         >
@@ -78,17 +93,30 @@ const NavBar = () => {
 
         <div className="flex-shrink-0 dropdown mx-2 mx-lg-3" ref={dropdownRef}>
           <NavLink
-            to="/dashboard"
+            to="/employee/dashboard"
             className="d-block link-body-emphasis text-decoration-none dropdown-toggle dropdown-toggle-no-caret"
             data-bs-toggle="dropdown"
             aria-expanded="false"
             onClick={toggleDropdown}
           >
-            <Img
-              upload_id={Adminlogin.avatar.public_id}
-              classN="rounded-circle"
-              width="32px"
-            />
+            {staffProfile?.photo?.public_id ? (
+              <img
+                src={staffProfile.photo.url}
+                alt={staffProfile.name || "Profile"}
+                className="rounded-circle"
+                width="32"
+                height="32"
+                style={{ objectFit: "cover" }}
+              />
+            ) : (
+              <img
+                src="https://placehold.co/32x32"
+                alt="Profile"
+                className="rounded-circle"
+                width="32"
+                height="32"
+              />
+            )}
           </NavLink>
           <ul
             className={`dropdown-menu text-small shadow ${
@@ -98,7 +126,7 @@ const NavBar = () => {
             <li>
               <NavLink
                 className="dropdown-item"
-                to="/dashboard"
+                to="/employee/dashboard"
                 onClick={closeDropdown}
               >
                 Home
@@ -107,8 +135,8 @@ const NavBar = () => {
             <li>
               <NavLink
                 className="dropdown-item"
-                to={`/profile/${Adminlogin._id}`}
-                onClick={() => moveRoute(Adminlogin._id)}
+                to={`/employee/profile/${staffProfile?._id}`}
+                onClick={() => moveRoute(staffProfile?._id)}
               >
                 Profile
               </NavLink>
@@ -128,4 +156,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default EmployeeNav;

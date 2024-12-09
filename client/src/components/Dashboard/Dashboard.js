@@ -3,35 +3,50 @@ import Card from "./Card";
 import './Dashboard.css';
 import DataContext from "../../context/DataContext";
 import { useNavigate } from "react-router-dom";
-import Loading from '../Loading/Loading'; // Assuming you have a Loading component
+import Loading from '../Loading/Loading';
 
 const Dashboard = () => {
   const { getDept, getStaff, getSal, dept, staff, salary } = useContext(DataContext);
   const [loading, setLoading] = useState(true);
+  const [leaveCount, setLeaveCount] = useState(0);
   
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      await getDept();
-      await getSal();
-      await getStaff();
-      setLoading(false); // Set loading to false once data is fetched
+      try {
+        await getDept();
+        await getSal();
+        await getStaff();
+        
+        // Fetch leave requests count
+
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/leaves`, {
+          headers: {
+            'token': localStorage.getItem('authToken')
+          }
+        });
+        const data = await response.json();
+        setLeaveCount(Array.isArray(data) ? data.length : 0);
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getDept, getSal, getStaff]);
 
   useEffect(() => {
     if (!(localStorage.getItem('authToken'))) {
       navigate('/');
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [navigate]);
 
   if (loading) {
-    return <Loading height="100vh" />; // Show the loading component while data is being fetched
+    return <Loading height="100vh" />;
   }
 
   return (
@@ -61,7 +76,7 @@ const Dashboard = () => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number="5"
+              number={leaveCount}
               category="Leave Requests"
               cardbgcolor="#c70d0d"
               pageLink="/Staffleave"
@@ -69,7 +84,7 @@ const Dashboard = () => {
           </div>
           <div className="col-sm-12 col-md-6 col-lg-3">
             <Card
-              number={`${salary?.length ?? 0}`}
+              number={salary?.length ?? 0}
               category="Salary Paid"
               cardbgcolor="green"
               pageLink="/manageSalary"

@@ -570,6 +570,7 @@ const DataState = (props) => {
       // Check if the data is structured as expected
       if (result.data && result.data.avatar) {
         setAdminlogin(result.data);
+        console.log(result.data)
       } else {
         console.error("Unexpected response structure:", result);
         setAdminlogin({ avatar: { url: "path/to/default/image.jpg" } });

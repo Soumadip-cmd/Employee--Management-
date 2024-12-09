@@ -1,106 +1,146 @@
-const {  validationResult } = require("express-validator");
+// controllers/StaffLeave.controller.js
 const Leave = require("../models/LeaveSchema");
 
-// Get all leaves for a user
-const getLeaves = async (req, res) => {
+// Get staff leaves
+const getStaffLeaves = async (req, res) => {
   try {
-    const user = req.user.id;
-    const leave = await Leave.find({ userId: user });
-    res.send(leave);
+    const leaves = await Leave.find({ staffId: req.staff.id })
+      .populate("staffId", "name email department photo")
+      .sort({ created_at: -1 });
+    res.json(leaves);
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+    res.status(500).json({ msg: "Server error" });
   }
 };
 
-// Add a new leave
+// Add leave request
 const addLeave = async (req, res) => {
-  let success = false;
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { reason, start, end, description } = req.body;
-    const data = new Leave({
+
+    const leave = new Leave({
+      staffId: req.staff.id,
+      userId: req.staff.userId, // Including userId from staff record
       reason,
       start,
       end,
       description,
+    });
+
+    await leave.save();
+
+    // Populate staff details before sending response
+    const populatedLeave = await Leave.findById(leave._id).populate(
+      "staffId",
+      "name email department photo"
+    );
+
+    res.json({ success: true, leave: populatedLeave });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+// Edit leave request
+const editLeave = async (req, res) => {
+  try {
+    const { reason, start, end, description } = req.body;
+
+    // Find leave and verify ownership
+    const leave = await Leave.findOne({
+      _id: req.params.id,
+      staffId: req.staff.id,
+    });
+
+    if (!leave) {
+      return res.status(404).json({ msg: "Leave not found or unauthorized" });
+    }
+
+    if (leave.status !== "pending") {
+      return res.status(400).json({ msg: "Can only edit pending leaves" });
+    }
+
+    const updatedLeave = await Leave.findByIdAndUpdate(
+      req.params.id,
+      { reason, start, end, description },
+      { new: true }
+    ).populate("staffId", "name email department photo");
+
+    res.json({ success: true, leave: updatedLeave });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+// Delete leave request
+const deleteLeave = async (req, res) => {
+  try {
+    const leave = await Leave.findOne({
+      _id: req.params.id,
+      staffId: req.staff.id,
+    });
+
+    if (!leave) {
+      return res.status(404).json({ msg: "Leave not found or unauthorized" });
+    }
+
+    if (leave.status !== "pending") {
+      return res.status(400).json({ msg: "Can only delete pending leaves" });
+    }
+
+    await Leave.findByIdAndDelete(req.params.id);
+    res.json({ success: true, msg: "Leave deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+// Admin controllers
+const getAllLeaves = async (req, res) => {
+  try {
+    const leaves = await Leave.find({ userId: req.user.id })
+      .populate("staffId", "name email department photo")
+      .sort({ created_at: -1 });
+    res.json(leaves);
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+const updateLeaveStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ msg: "Invalid status" });
+    }
+
+    const leave = await Leave.findOne({
+      _id: req.params.id,
       userId: req.user.id,
     });
 
-    await data.save();
-    success = true;
-    res.json({ success, data });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success,
-      errors: `Unexpected Error Occurred: ${error.message}`,
-    });
-  }
-};
-
-// Edit an existing leave
-const editLeave = async (req, res) => {
-  let success = false;
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { reason, start, end, description } = req.body;
-    const updatedLeave = {};
-
-    if (reason) updatedLeave.reason = reason;
-    if (start) updatedLeave.start = start;
-    if (end) updatedLeave.end = end;
-    if (description) updatedLeave.description = description;
-
-    const leave = await Leave.findById(req.params.id);
     if (!leave) {
-      return res.status(404).json({ errors: "Leave not found" });
+      return res.status(404).json({ msg: "Leave not found or unauthorized" });
     }
 
-    const updated = await Leave.findByIdAndUpdate(
+    const updatedLeave = await Leave.findByIdAndUpdate(
       req.params.id,
-      { $set: updatedLeave },
+      { status },
       { new: true }
-    );
+    ).populate("staffId", "name email department photo");
 
-    success = true;
-    res.json({ success, updated });
+    res.json({ success: true, leave: updatedLeave });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success,
-      errors: `Unexpected Error Occurred: ${error.message}`,
-    });
+    res.status(500).json({ success: false, msg: "Server error" });
   }
 };
 
-// Delete a leave
-const deleteLeave = async (req, res) => {
-  let success = false;
-  try {
-    const leave = await Leave.findById(req.params.id);
-    if (!leave) {
-      return res.status(404).json({ errors: "Leave not found" });
-    }
-
-    const deleted = await Leave.findByIdAndDelete(req.params.id);
-    success = true;
-    res.json({ success, details: "Data Deleted", leave: deleted });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success,
-      errors: `Unexpected Error Occurred: ${error.message}`,
-    });
-  }
+module.exports = {
+  updateLeaveStatus,
+  getAllLeaves,
+  deleteLeave,
+  editLeave,
+  addLeave,
+  getStaffLeaves,
 };
-
-module.exports = { getLeaves, addLeave, editLeave, deleteLeave };

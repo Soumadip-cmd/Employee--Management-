@@ -17,8 +17,10 @@
   .card-responsive{
     width: auto;
   }
-  @media (min-width: 1279px) {
+  @media (min-width: 1805px) {
     .card {
       width: 17rem;
     }
   }
+  
+  

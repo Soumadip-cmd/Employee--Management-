@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Staff = require("../models/StaffSchema");
 const cloudinary = require("../Cloudnary");
+const jwt = require('jsonwebtoken');
 
 // Get all staff
 const getAllStaff = async (req, res) => {
@@ -176,9 +177,120 @@ const deleteStaff = async (req, res) => {
   }
 };
 
+const staffLogin = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    // Find staff member using existing Staff model
+    const staff = await Staff.findOne({ email });
+    if (!staff) {
+      return res.status(404).json({ success: false, msg: "Staff not found" });
+    }
+
+    // Generate token
+    const data = { staff: { id: staff._id } };
+    const token = jwt.sign(data, process.env.JWT_SECRET);
+
+    res.json({ 
+      success: true, 
+      token,
+      staff: {
+        name: staff.name,
+        email: staff.email,
+        department: staff.department,
+        photo: staff.photo.url
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, msg: "Server error" });
+  }
+};
+
+const getStaff = async (req, res) => {
+  let success = false;
+  try {
+    const staffId = req.staff.id;
+    const data = await Staff.findById(staffId);
+    
+    if (!data) {
+      return res.status(404).json({ success, msg: "Staff not found" });
+    }
+    
+    success = true;
+    res.json({ 
+      success,
+      data
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success, msg: `Internal Server Error: ${error.message}` });
+  }
+};
+
+const updateStaff = async (req, res) => {
+  let success = false;
+  try {
+    const { name, photo } = req.body;
+
+    // Find staff by ID
+    const staff = await Staff.findById(req.params.id);
+    if (!staff) {
+      return res.status(404).json({ success, errors: "Staff not found" });
+    }
+
+    // Create update object with name
+    const updateFields = {};
+    if (name) {
+      updateFields.name = name;
+    }
+
+    // Handle photo update if provided
+    if (photo) {
+      // Delete existing photo if it exists
+      if (staff.photo.public_id) {
+        await cloudinary.uploader.destroy(staff.photo.public_id);
+      }
+
+      // Upload new photo
+      const uploadResult = await cloudinary.uploader.upload(photo, {
+        upload_preset: "employee_data",
+        public_id: `employees_img${staff._id}`,
+        allowed_formats: ["png", "jpg", "jpeg", "webp", "svg"],
+      });
+
+      // Add photo data to update fields
+      updateFields.photo = {
+        public_id: uploadResult.public_id,
+        url: uploadResult.secure_url,
+      };
+    }
+
+    // Update staff with new data
+    const updatedStaff = await Staff.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields },
+      { new: true }
+    );
+
+    success = true;
+    res.json({ success, data: updatedStaff });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({
+      success,
+      errors: `Unexpected Error Occurred: ${error.message}`,
+    });
+  }
+};
+
+
 module.exports = {
   getAllStaff,
   addStaff,
   editStaff,
   deleteStaff,
+  staffLogin,
+  getStaff,
+  updateStaff,
 };

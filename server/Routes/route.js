@@ -11,6 +11,9 @@ const {
   addLeave,
   editLeave,
   deleteLeave,
+  getStaffLeaves,
+  getAllLeaves,
+  updateLeaveStatus,
 } = require("../controllers/Leave.controller");
 const {
   getSalary,
@@ -24,6 +27,9 @@ const {
   addStaff,
   editStaff,
   deleteStaff,
+  staffLogin,
+  getStaff,
+  updateStaff,
 } = require("../controllers/Staff.controller");
 const {
   getAllAdmin,
@@ -38,6 +44,7 @@ const {
   forgetPassword,
   testEjs,
 } = require("../controllers/Auth/Auth.controller");
+const staffAuth = require("../middleware/StaffAuth");
 
 const router = express.Router();
 
@@ -107,35 +114,7 @@ router.put(
 );
 router.delete("/delete-department/:id", FetchUser, deleteDepartment);
 
-// Leave Routes
-// Routes
-router.get("/get-leaves", FetchUser, getLeaves);
 
-router.post(
-  "/add-leave",
-  [
-    body("reason", "Write a suitable Reason").isLength({ min: 3 }),
-    body("start", "Enter a valid Date").exists(),
-    body("end", "Enter a valid Date").exists(),
-    body("description", "Enter a valid description").isLength({ min: 3 }),
-  ],
-  FetchUser,
-  addLeave
-);
-
-router.put(
-  "/edit-leave/:id",
-  [
-    body("reason", "Write a suitable Reason").isLength({ min: 3 }),
-    body("start", "Enter a valid Date").exists(),
-    body("end", "Enter a valid Date").exists(),
-    body("description", "Enter a valid description").isLength({ min: 3 }),
-  ],
-  FetchUser,
-  editLeave
-);
-
-router.delete("/delete-leave/:id", FetchUser, deleteLeave);
 
 // Salary Routes
 router.get("/get-all-salary", FetchUser, getSalary);
@@ -185,5 +164,41 @@ router.get("/get-staffs", FetchUser, getAllStaff);
 router.post("/add-Staff", staffValidationRules, FetchUser, addStaff);
 router.put("/edit-Staff/:id", staffValidationRules, FetchUser, editStaff);
 router.delete("/delete-Staff/:id", FetchUser, deleteStaff);
+
+
+
+// Staff routes
+router.post('/staff/login', [
+  body('email', 'Enter valid email').isEmail()
+], staffLogin);
+
+router.get('/staff/leaves', staffAuth, getStaffLeaves);
+router.get('/get-staff', staffAuth, getStaff);
+
+router.post('/staff/addleave', [
+  body('reason', 'Reason is required').notEmpty(),
+  body('start', 'Start date is required').isDate(),
+  body('end', 'End date is required').isDate(),
+  body('description', 'Description is required').notEmpty()
+], staffAuth, addLeave);
+
+router.put('/staff/editleave/:id', [
+  body('reason', 'Reason is required').notEmpty(),
+  body('start', 'Start date is required').isDate(),
+  body('end', 'End date is required').isDate(),
+  body('description', 'Description is required').notEmpty()
+], staffAuth, editLeave);
+
+router.delete('/staff/delleave/:id', staffAuth, deleteLeave);
+router.put("/staff/update/:id", staffAuth, updateStaff);
+
+// Admin routes
+router.get('/admin/leaves', FetchUser, getAllLeaves);
+
+router.put('/admin/leave/:id/status', [
+  body('status', 'Status is required').isIn(['approved', 'rejected'])
+], FetchUser, updateLeaveStatus);
+
+
 
 module.exports = router;

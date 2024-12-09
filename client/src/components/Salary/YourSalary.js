@@ -3,7 +3,6 @@ import "./managesalary.css";
 
 import { NavLink } from "react-router-dom";
 export default function ManageSalary() {
-
   const [entries, setEntries] = useState(1);
   const [search, setSearch] = useState("");
 
@@ -22,7 +21,7 @@ export default function ManageSalary() {
                 color: "white",
                 letterSpacing: ".05125em",
               }}
-              to="/dashboard"
+              to="/employee/dashboard"
             >
               Salary
             </NavLink>
@@ -32,7 +31,7 @@ export default function ManageSalary() {
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
                     <NavLink
-                      to="/dashboard"
+                      to="/employee/dashboard"
                       className=" text-dark fw-semibold text-decoration-none"
                     >
                       Home
@@ -42,16 +41,9 @@ export default function ManageSalary() {
                     className="breadcrumb-item active fw-semibold text-decoration-underline"
                     aria-current="page"
                   >
-                    Manage
+                    View Salary
                   </li>
-                  <li className="breadcrumb-item">
-                    <NavLink
-                      to="/addsalary"
-                      className=" text-dark fw-semibold text-decoration-none"
-                    >
-                      AddSalary
-                    </NavLink>
-                  </li>
+                  
                 </ol>
               </nav>
             </div>
@@ -104,8 +96,7 @@ export default function ManageSalary() {
                       <th>Staff Name</th>
                       <th>Department</th>
                       <th>Salary</th>
-
-                      
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -114,7 +105,11 @@ export default function ManageSalary() {
                       <td>Mr. Soumadip Santra</td>
                       <td>Backend Development</td>
                       <td>$2 M</td>
-                      
+                      <td>
+                        <span className="badge text-bg-warning">
+                          Pending
+                        </span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

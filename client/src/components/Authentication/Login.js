@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import Alert from "../Alert"; // Import the Alert component
+import Alert from "../Alert";
 import "./login.css";
 import toast from "react-hot-toast";
 import DataContext from "../../context/DataContext";
@@ -8,22 +8,78 @@ import LoginLoading from "../Loading/LoginLoading";
 
 const Login = () => {
   const { loginProfile } = useContext(DataContext);
-  const [login, setLogin] = useState({
-    email: "test@gmail.com",
-    password: "test123",
-  });
   const [isLoading, setIsLoading] = useState(false);
   const [isRequestLoading, setIsRequestLoading] = useState(false);
   const [requestSuccess, setRequestSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
+  const [role, setRole] = useState('admin');
+  const [login, setLogin] = useState({
+    email: "test@gmail.com",
+    password: "test123",
+  });
 
   const navigate = useNavigate();
+
+  const handleRoleChange = (newRole) => {
+    setRole(newRole);
+    if (newRole === 'employee') {
+      setLogin({
+        email: "robin@mail.com"
+      });
+    } else {
+      setLogin({
+        email: "test@gmail.com",
+        password: "test123"
+      });
+    }
+  };
+
+  const handleStaffLogin = async (email) => {
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/staff/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('staff-token', data.token);
+        toast.success('Staff Login Successful!');
+        navigate('/employee/dashboard', { 
+          state: { 
+            staffData: data.staff 
+          }
+        });
+      } else {
+        toast.error(data.msg || 'Login Failed');
+      }
+    } catch (error) {
+      toast.error('Error connecting to server');
+      console.error(error);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await loginProfile(login.email, login.password, navigate);
-    setIsLoading(false);
+    
+    try {
+      if (role === 'employee') {
+        await handleStaffLogin(login.email);
+      } else {
+        await loginProfile(login.email, login.password, navigate);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -52,7 +108,6 @@ const Login = () => {
     <>
       {showAlert && <Alert onClose={() => setShowAlert(false)} />}
 
-      {/* Replace the outer div style with this */}
       <div
         className="stylishBG d-flex justify-content-center align-items-center flex-column"
         style={{
@@ -67,6 +122,33 @@ const Login = () => {
       >
         <div className="form-container">
           <p className="title">Welcome back</p>
+          
+          {/* Role selection buttons */}
+          <div className="d-flex justify-content-center gap-2 mb-4">
+            <button
+              onClick={() => handleRoleChange('employee')}
+              className={`btn rounded-pill px-4 ${
+                role === 'employee' 
+                  ? 'btn-success' 
+                  : 'btn-outline-success'
+              }`}
+              style={{ fontSize: '0.9rem' }}
+            >
+              Employee
+            </button>
+            <button
+              onClick={() => handleRoleChange('admin')}
+              className={`btn rounded-pill px-4 ${
+                role === 'admin' 
+                  ? 'btn-danger' 
+                  : 'btn-outline-danger'
+              }`}
+              style={{ fontSize: '0.9rem' }}
+            >
+              Admin
+            </button>
+          </div>
+
           <form className="form" onSubmit={handleLogin}>
             <input
               type="email"
@@ -77,28 +159,32 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-            <input
-              type="password"
-              className="input"
-              placeholder="Password"
-              name="password"
-              value={login.password}
-              onChange={handleChange}
-              required
-            />
-            <p className="page-link">
-              <NavLink className="page-link-label" to="/forgetPass">
-                Forgot Password?
-              </NavLink>
-            </p>
+            {role === 'admin' && (
+              <>
+                <input
+                  type="password"
+                  className="input"
+                  placeholder="Password"
+                  name="password"
+                  value={login.password}
+                  onChange={handleChange}
+                  required
+                />
+                <p className="page-link">
+                  <NavLink className="page-link-label" to="/forgetPass">
+                    Forgot Password?
+                  </NavLink>
+                </p>
+              </>
+            )}
 
-            {/* Conditionally render LoginLoading if isLoading is true */}
             {isLoading ? (
               <LoginLoading />
             ) : (
               <button className="form-btn">Log in</button>
             )}
           </form>
+          
           <p className="sign-up-label">
             Don't have an account?
             <span
@@ -107,14 +193,16 @@ const Login = () => {
               style={{ cursor: "pointer" }}
             >
               {isRequestLoading ? (
-                <span>Sending...</span> // Show loading text while sending request
+                <span>Sending...</span>
               ) : requestSuccess ? (
-                <span>✓ Sent Successfully</span> // Show success message
+                <span>✓ Sent Successfully</span>
               ) : (
-                "Send Request to Admin" // Default button text
+                "Send Request to Admin"
               )}
             </span>
           </p>
+
+          {/* Social login buttons */}
           <div className="buttons-container">
             <div className="apple-login-button mx-1" onClick={facebook}>
               <svg
@@ -145,24 +233,19 @@ const Login = () => {
               >
                 <path
                   fill="#FFC107"
-                  d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12
-c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24
-c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+                  d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
                 ></path>
                 <path
                   fill="#FF3D00"
-                  d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
-C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+                  d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
                 ></path>
                 <path
                   fill="#4CAF50"
-                  d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36
-c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+                  d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
                 ></path>
                 <path
                   fill="#1976D2"
-                  d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571
-c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+                  d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
                 ></path>
               </svg>
               <span>Log in with Google</span>

@@ -1,41 +1,43 @@
-//Leave Schema
-// this is for apply leave (not for admin)
+const mongoose = require('mongoose');
 
-const mongoose=require('mongoose')
-const {Schema}=mongoose
+const leaveSchema = new mongoose.Schema({
+  staffId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "staff", // Updated to match your existing model name
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
+  reason: {
+    type: String,
+    required: true,
+  },
+  start: {
+    type: Date,
+    required: true,
+  },
+  end: {
+    type: Date,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+});
 
-const LeaveSchema=new Schema({
-      userId:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'user',
-      },
-      reason:{
-            type:String,
-            required:true,
-      },
-      start:{
-            type:String,
-            required:true,
-      },
-      end:{
-            type:String,
-            required:true,
-      },
-      description:{
-            type:String,
-            required:true,
-      },
-      created_at:{
-            type:Date,
-            default:Date.now,
-            immutable: true,  // This ensures the field is set once and cannot be changed
-
-      }
-})
-
-const Leave=mongoose.model('leave',LeaveSchema)
+const Leave = mongoose.model("Leave", leaveSchema);
 module.exports=Leave
-
-
-
-// name,gender,phone,dob,city,country,department,email,photo,date_of_join,state,address
