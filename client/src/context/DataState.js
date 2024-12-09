@@ -137,7 +137,6 @@ const DataState = (props) => {
       const responseData = await response.json();
       if (responseData.Success) {
         setAdmin(responseData.allAdmin);
-        // console.log(responseData.allAdmin)
       } else {
         console.error("Failed to fetch admins");
       }
@@ -269,7 +268,6 @@ const DataState = (props) => {
       const data = await response.json();
 
       setStaff(data);
-      console.log(data)
     } catch (error) {
       console.error("Error:", error);
     }
@@ -570,7 +568,6 @@ const DataState = (props) => {
       // Check if the data is structured as expected
       if (result.data && result.data.avatar) {
         setAdminlogin(result.data);
-        console.log(result.data)
       } else {
         console.error("Unexpected response structure:", result);
         setAdminlogin({ avatar: { url: "path/to/default/image.jpg" } });
