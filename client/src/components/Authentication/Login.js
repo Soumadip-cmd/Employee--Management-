@@ -24,7 +24,7 @@ const Login = () => {
     setRole(newRole);
     if (newRole === 'employee') {
       setLogin({
-        email: "robin@mail.com"
+        email: "william@mail.com"
       });
     } else {
       setLogin({
