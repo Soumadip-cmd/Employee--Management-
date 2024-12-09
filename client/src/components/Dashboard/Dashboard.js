@@ -37,7 +37,8 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, [getDept, getSal, getStaff]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (!(localStorage.getItem('authToken'))) {
