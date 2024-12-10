@@ -7,7 +7,8 @@ export default function EditSalary() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
-  const { editSal, getStaff, getDept, staff, dept, salary } = useContext(DataContext);
+  const { editSal, getStaff, getDept, staff, dept, salary } =
+    useContext(DataContext);
 
   const [editSaldata, setEditSaldata] = useState({
     id: id,
@@ -30,7 +31,10 @@ export default function EditSalary() {
     if (editSal_Data) {
       setEditSaldata({
         id: editSal_Data._id,
-        StaffName: { value: editSal_Data.StaffName, label: editSal_Data.StaffName },
+        StaffName: {
+          value: editSal_Data.StaffName,
+          label: editSal_Data.StaffName,
+        },
         department: editSal_Data.department,
         Paid_Salary: editSal_Data.Paid_Salary,
       });
@@ -43,7 +47,9 @@ export default function EditSalary() {
   useEffect(() => {
     // Filter staff based on department
     if (editSaldata.department) {
-      const filtered = staff.filter((s) => s.department === editSaldata.department);
+      const filtered = staff.filter(
+        (s) => s.department === editSaldata.department
+      );
       setFilteredStaff(filtered);
     } else {
       setFilteredStaff(staff); // Show all staff if no department is selected
@@ -62,7 +68,12 @@ export default function EditSalary() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editSal(editSaldata.id, editSaldata.StaffName.value, editSaldata.department, editSaldata.Paid_Salary);
+    editSal(
+      editSaldata.id,
+      editSaldata.StaffName.value,
+      editSaldata.department,
+      editSaldata.Paid_Salary
+    );
     navigate("/manageSalary");
   };
 
@@ -94,24 +105,44 @@ export default function EditSalary() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
+      <nav
+        className="navbar navbar-expand-lg"
+        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
+      >
         <div className="container mt-5">
-          <NavLink className="navbar-brand" style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }} to="/dashboard">
+          <NavLink
+            className="navbar-brand"
+            style={{
+              fontSize: "25px",
+              color: "white",
+              letterSpacing: ".05125em",
+            }}
+            to="/dashboard"
+          >
             Salary
           </NavLink>
           <div className="mt-2 pt-2">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink to="/dashboard" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/dashboard"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Home
                   </NavLink>
                 </li>
-                <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
+                <li
+                  className="breadcrumb-item active fw-semibold text-decoration-underline"
+                  aria-current="page"
+                >
                   Edit
                 </li>
                 <li className="breadcrumb-item">
-                  <NavLink to="/manageSalary" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/manageSalary"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Manage Salary
                   </NavLink>
                 </li>
@@ -122,11 +153,18 @@ export default function EditSalary() {
       </nav>
       <div className="bg-muted pt-2 extra-special2 min-h-screen d-flex justify-content-center align-items-center">
         <div className="bg-card p-6 w-100 max-w-4xl">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Edit Salary</h1>
-          <div className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1" style={{ borderTop: "5px solid #004dffe8" }}>
+          <h1 className="text-2xl font-bold text-foreground mb-4">
+            Edit Salary
+          </h1>
+          <div
+            className="bg-white p-4 rounded-lg shadow-md rounded-top rounded-bottom-1"
+            style={{ borderTop: "5px solid #004dffe8" }}
+          >
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="form-label text-muted-foreground mb-2"><b>Department Name</b></label>
+                <label className="form-label text-muted-foreground mb-2">
+                  <b>Department Name</b>
+                </label>
                 <select
                   className="form-control"
                   style={{ border: "1px solid" }}
@@ -135,9 +173,13 @@ export default function EditSalary() {
                   value={editSaldata.department}
                   onChange={handleDepartmentChange}
                 >
-                  <option value="" disabled>--Department Name--</option>
+                  <option value="" disabled>
+                    --Department Name--
+                  </option>
                   {dept.map((item, index) => (
-                    <option key={index} value={item.deptName}>{item.deptName}</option>
+                    <option key={index} value={item.deptName}>
+                      {item.deptName}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -181,20 +223,21 @@ export default function EditSalary() {
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                             }),
-                            clearIndicator: (base) => ({
-                              ...base,
-                              display: isFocused ? "block" : "none",
-                            }),
                           }}
                           menuPosition="fixed"
                           components={{
-                            DropdownIndicator: () => null,
+                            DropdownIndicator: () => null, // Removes the dropdown arrow
                             ClearIndicator: (props) =>
-                              isFocused ? <components.ClearIndicator {...props} /> : null,
+                              isFocused ? (
+                                <components.ClearIndicator {...props} />
+                              ) : null,
                           }}
                           onFocus={handleFocus}
                           onBlur={handleBlur}
-                          options={filteredStaff.map((s) => ({ value: s.name, label: s.name }))}
+                          options={filteredStaff.map((s) => ({
+                            value: s.name,
+                            label: s.name,
+                          }))}
                           required
                         />
                       </td>

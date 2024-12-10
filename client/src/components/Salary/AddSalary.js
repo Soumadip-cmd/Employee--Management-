@@ -8,7 +8,11 @@ export default function AddSalary() {
   const [isFocused, setIsFocused] = useState(false);
   const { addSal, getStaff, getDept, staff, dept } = useContext(DataContext);
   const [loading, setLoading] = useState(false);
-  const [addSalData, setAddSalData] = useState({ StaffName: "", department: "", Paid_Salary: null });
+  const [addSalData, setAddSalData] = useState({
+    StaffName: "",
+    department: "",
+    Paid_Salary: null,
+  });
   const [basicSalary, setBasicSalary] = useState(null);
   const [allowance, setAllowance] = useState(null);
   const [filteredStaff, setFilteredStaff] = useState([]);
@@ -44,7 +48,11 @@ export default function AddSalary() {
       setLoading(true);
 
       try {
-        await addSal(addSalData.StaffName.value, addSalData.department, addSalData.Paid_Salary);
+        await addSal(
+          addSalData.StaffName.value,
+          addSalData.department,
+          addSalData.Paid_Salary
+        );
         setAddSalData({ StaffName: "", department: "", Paid_Salary: null });
         setBasicSalary(null);
         setAllowance(null);
@@ -74,11 +82,18 @@ export default function AddSalary() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}>
+      <nav
+        className="navbar navbar-expand-lg"
+        style={{ backgroundColor: "rgb(0 77 255 / 65%)" }}
+      >
         <div className="container mt-5">
           <NavLink
             className="navbar-brand"
-            style={{ fontSize: "25px", color: "white", letterSpacing: ".05125em" }}
+            style={{
+              fontSize: "25px",
+              color: "white",
+              letterSpacing: ".05125em",
+            }}
             to="/dashboard"
           >
             Salary
@@ -87,15 +102,24 @@ export default function AddSalary() {
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <NavLink to="/dashboard" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/dashboard"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Home
                   </NavLink>
                 </li>
-                <li className="breadcrumb-item active fw-semibold text-decoration-underline" aria-current="page">
+                <li
+                  className="breadcrumb-item active fw-semibold text-decoration-underline"
+                  aria-current="page"
+                >
                   Add
                 </li>
                 <li className="breadcrumb-item">
-                  <NavLink to="/manageSalary" className="text-dark fw-semibold text-decoration-none">
+                  <NavLink
+                    to="/manageSalary"
+                    className="text-dark fw-semibold text-decoration-none"
+                  >
                     Manage Salary
                   </NavLink>
                 </li>
@@ -112,7 +136,9 @@ export default function AddSalary() {
             style={{ borderTop: "5px solid #004dffe8" }}
           >
             <form onSubmit={handleSubmit}>
-              <h2 className="text-xl font-semibold text-foreground mb-4">Add Salary</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-4">
+                Add Salary
+              </h2>
               <div className="mb-4">
                 <label className="form-label text-muted-foreground mb-2">
                   <b>Department Name</b>
@@ -155,6 +181,7 @@ export default function AddSalary() {
                           placeholder="Select Staff Name.."
                           isClearable
                           menuPortalTarget={document.body}
+                          components={{ DropdownIndicator: () => null }} // Removes the caret
                           styles={{
                             container: (provided) => ({
                               ...provided,
@@ -177,7 +204,10 @@ export default function AddSalary() {
                             }),
                           }}
                           menuPosition="fixed"
-                          options={filteredStaff.map((s) => ({ value: s.name, label: s.name }))}
+                          options={filteredStaff.map((s) => ({
+                            value: s.name,
+                            label: s.name,
+                          }))}
                           required
                         />
                       </td>
@@ -213,7 +243,11 @@ export default function AddSalary() {
                           style={{ border: "1px solid black" }}
                           readOnly
                           name="Paid_Salary"
-                          value={addSalData.Paid_Salary !== null ? addSalData.Paid_Salary : ""}
+                          value={
+                            addSalData.Paid_Salary !== null
+                              ? addSalData.Paid_Salary
+                              : ""
+                          }
                         />
                       </td>
                     </tr>
@@ -225,7 +259,11 @@ export default function AddSalary() {
                   {loading ? (
                     <LoadingSub btnName="Submit" color="primary" />
                   ) : (
-                    <button type="submit" className="btn btn-primary" id="applyleave">
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      id="applyleave"
+                    >
                       Submit
                     </button>
                   )}
